@@ -1,0 +1,7 @@
+project_id = "zftgmmoivxvskwflmylq"
+
+[functions.get-shared-library]
+verify_jwt = false
+
+[functions.create-request]
+verify_jwt = false
