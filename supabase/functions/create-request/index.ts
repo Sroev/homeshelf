@@ -7,6 +7,19 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+// HTML escape function to prevent XSS in email templates
+function escapeHtml(text: string | null | undefined): string {
+  if (!text) return "";
+  const map: Record<string, string> = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;",
+  };
+  return text.replace(/[&<>"']/g, (m) => map[m]);
+}
+
 // Simple in-memory rate limiting (per IP)
 const rateLimitMap = new Map<string, number>();
 const RATE_LIMIT_WINDOW = 60000; // 1 minute
@@ -184,19 +197,19 @@ serve(async (req) => {
       const ownerEmail = authUser?.user?.email;
 
       if (ownerEmail) {
-        // Send notification to owner
+        // Send notification to owner (escape user-controlled data to prevent XSS)
         try {
           await resend.emails.send({
             from: "HomeShelf <noreply@resend.dev>",
             to: [ownerEmail],
-            subject: `New book request: ${book.title}`,
+            subject: `New book request: ${escapeHtml(book.title)}`,
             html: `
               <h1>New Book Request</h1>
-              <p><strong>${requester_name}</strong> would like to borrow:</p>
-              <h2>${book.title}</h2>
-              ${book.author ? `<p>by ${book.author}</p>` : ""}
-              <p><strong>Requester email:</strong> ${requester_email}</p>
-              ${message ? `<p><strong>Message:</strong> ${message}</p>` : ""}
+              <p><strong>${escapeHtml(requester_name)}</strong> would like to borrow:</p>
+              <h2>${escapeHtml(book.title)}</h2>
+              ${book.author ? `<p>by ${escapeHtml(book.author)}</p>` : ""}
+              <p><strong>Requester email:</strong> ${escapeHtml(requester_email)}</p>
+              ${message ? `<p><strong>Message:</strong> ${escapeHtml(message)}</p>` : ""}
               <p>
                 <a href="${supabaseUrl.replace('.supabase.co', '.lovable.app')}/app/requests">
                   View and respond to this request
@@ -209,15 +222,15 @@ serve(async (req) => {
         }
       }
 
-      // Send confirmation to requester
+      // Send confirmation to requester (escape user-controlled data to prevent XSS)
       try {
         await resend.emails.send({
           from: "HomeShelf <noreply@resend.dev>",
           to: [requester_email],
-          subject: `Request received: ${book.title}`,
+          subject: `Request received: ${escapeHtml(book.title)}`,
           html: `
             <h1>Request Received</h1>
-            <p>Your request for <strong>${book.title}</strong> has been sent to ${ownerName}.</p>
+            <p>Your request for <strong>${escapeHtml(book.title)}</strong> has been sent to ${escapeHtml(ownerName)}.</p>
             <p>They will contact you at this email address if they approve your request.</p>
             <p>Thank you for using HomeShelf!</p>
           `,
