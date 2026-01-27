@@ -39,7 +39,7 @@ export function AppLayout({ children }: AppLayoutProps) {
       {navItems.map((item) => {
         const isActive = location.pathname === item.href;
         const Icon = item.icon;
-        const showBadge = item.href === "/app/requests" && pendingCount && pendingCount > 0;
+        const showBadge = item.href === "/app/requests" && !!pendingCount && pendingCount > 0;
         
         return (
           <Link
