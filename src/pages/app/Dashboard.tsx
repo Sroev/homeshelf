@@ -93,7 +93,7 @@ export default function Dashboard() {
               <Link to="/app/requests">
                 <MessageSquare className="mr-2 h-4 w-4" />
                 View Requests
-                {pendingCount && pendingCount > 0 && (
+                {!!pendingCount && pendingCount > 0 && (
                   <span className="ml-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-accent text-xs font-semibold">
                     {pendingCount}
                   </span>
