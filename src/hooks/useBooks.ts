@@ -103,7 +103,22 @@ export function useUpdateBook() {
   const { data: library } = useLibrary();
 
   return useMutation({
-    mutationFn: async ({ id, ...updates }: Partial<Book> & { id: string }) => {
+    mutationFn: async ({ 
+      id, 
+      notifyWaitlist = false, 
+      ...updates 
+    }: Partial<Book> & { id: string; notifyWaitlist?: boolean }) => {
+      // Get current book status before updating
+      let previousStatus: BookStatus | null = null;
+      if (notifyWaitlist && updates.status === "available") {
+        const { data: currentBook } = await supabase
+          .from("books")
+          .select("status")
+          .eq("id", id)
+          .maybeSingle();
+        previousStatus = currentBook?.status || null;
+      }
+
       const { data, error } = await supabase
         .from("books")
         .update(updates)
@@ -112,6 +127,24 @@ export function useUpdateBook() {
         .single();
       
       if (error) throw error;
+
+      // If book became available and was previously lent out, notify waitlist
+      if (
+        notifyWaitlist &&
+        updates.status === "available" &&
+        previousStatus &&
+        (previousStatus === "lent_out" || previousStatus === "reading")
+      ) {
+        try {
+          await supabase.functions.invoke("notify-waitlist", {
+            body: { book_id: id },
+          });
+        } catch (notifyError) {
+          console.error("Failed to notify waitlist:", notifyError);
+          // Don't throw - the book was updated successfully
+        }
+      }
+
       return data as Book;
     },
     onSuccess: (data) => {

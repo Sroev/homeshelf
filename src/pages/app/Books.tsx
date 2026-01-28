@@ -66,8 +66,21 @@ export default function Books() {
 
   const handleStatusChange = async (bookId: string, status: BookStatus) => {
     try {
-      await updateBook.mutateAsync({ id: bookId, status });
-      toast({ title: "Status updated" });
+      const result = await updateBook.mutateAsync({ 
+        id: bookId, 
+        status,
+        notifyWaitlist: status === "available",
+      });
+      
+      // Show appropriate toast based on whether waitlist was notified
+      if (status === "available") {
+        toast({ 
+          title: "Status updated",
+          description: "The first person on the waitlist will be notified.",
+        });
+      } else {
+        toast({ title: "Status updated" });
+      }
     } catch {
       toast({ title: "Failed to update status", variant: "destructive" });
     }
@@ -95,6 +108,9 @@ export default function Books() {
   const handleEditSubmit = async () => {
     if (!editingBook) return;
 
+    const wasUnavailable = editingBook.status === "lent_out" || editingBook.status === "reading";
+    const becomingAvailable = editStatus === "available";
+
     try {
       await updateBook.mutateAsync({
         id: editingBook.id,
@@ -104,8 +120,17 @@ export default function Books() {
         notes: editNotes.trim() || null,
         status: editStatus,
         shareable: editShareable,
+        notifyWaitlist: wasUnavailable && becomingAvailable,
       });
-      toast({ title: "Book updated" });
+      
+      if (wasUnavailable && becomingAvailable) {
+        toast({ 
+          title: "Book updated",
+          description: "The first person on the waitlist will be notified.",
+        });
+      } else {
+        toast({ title: "Book updated" });
+      }
       setEditingBook(null);
     } catch {
       toast({ title: "Failed to update book", variant: "destructive" });
