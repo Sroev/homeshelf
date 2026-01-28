@@ -44,7 +44,11 @@ export default function Requests() {
     if (!approveDialog) return;
 
     try {
-      await updateRequest.mutateAsync({ id: approveDialog.id, status: "approved" });
+      await updateRequest.mutateAsync({ 
+        id: approveDialog.id, 
+        status: "approved",
+        sendNotification: true,
+      });
       
       if (markAsLentOut) {
         await updateBook.mutateAsync({ id: approveDialog.book_id, status: "lent_out" });
@@ -52,9 +56,7 @@ export default function Requests() {
 
       toast({
         title: "Request approved",
-        description: markAsLentOut
-          ? `"${approveDialog.books.title}" has been marked as lent out.`
-          : "The requester has been notified.",
+        description: `"${approveDialog.books.title}" approved. The requester will be notified by email.`,
       });
       setApproveDialog(null);
     } catch {

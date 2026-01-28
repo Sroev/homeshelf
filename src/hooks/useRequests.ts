@@ -79,7 +79,11 @@ export function useUpdateRequest() {
   const { data: library } = useLibrary();
 
   return useMutation({
-    mutationFn: async ({ id, status }: { id: string; status: RequestStatus }) => {
+    mutationFn: async ({ id, status, sendNotification = false }: { 
+      id: string; 
+      status: RequestStatus;
+      sendNotification?: boolean;
+    }) => {
       const { data, error } = await supabase
         .from("requests")
         .update({ status })
@@ -88,6 +92,19 @@ export function useUpdateRequest() {
         .single();
       
       if (error) throw error;
+
+      // Send notification email if requested
+      if (sendNotification && (status === "approved" || status === "declined")) {
+        try {
+          await supabase.functions.invoke("send-request-notification", {
+            body: { request_id: id, status },
+          });
+        } catch (emailError) {
+          console.error("Failed to send notification email:", emailError);
+          // Don't throw - the request was updated successfully
+        }
+      }
+
       return data as Request;
     },
     onSuccess: () => {
