@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { Book, MapPin, Send } from "lucide-react";
+import { Book, MapPin, Send, Clock, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -56,6 +56,11 @@ export default function SharedLibrary() {
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<{ name?: string; email?: string; message?: string }>({});
+  const [successInfo, setSuccessInfo] = useState<{
+    bookTitle: string;
+    ownerName: string;
+    waitlistPosition: number | null;
+  } | null>(null);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["shared-library", token],
@@ -105,9 +110,11 @@ export default function SharedLibrary() {
       if (error) throw error;
       if (responseData.error) throw new Error(responseData.error);
 
-      toast({
-        title: "Request sent!",
-        description: `Your request for "${requestingBook.title}" has been sent to ${data.owner_name}.`,
+      // Show success dialog with waitlist info
+      setSuccessInfo({
+        bookTitle: requestingBook.title,
+        ownerName: data.owner_name,
+        waitlistPosition: responseData.waitlist_position || null,
       });
 
       // Reset form
@@ -283,6 +290,49 @@ export default function SharedLibrary() {
             </Button>
             <Button onClick={handleSubmitRequest} disabled={submitting}>
               {submitting ? "Sending..." : "Send Request"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Success Dialog with Waitlist Info */}
+      <Dialog open={!!successInfo} onOpenChange={(open) => !open && setSuccessInfo(null)}>
+        <DialogContent className="max-w-sm text-center">
+          <DialogHeader className="items-center">
+            {successInfo?.waitlistPosition ? (
+              <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900">
+                <Clock className="h-6 w-6 text-amber-600 dark:text-amber-300" />
+              </div>
+            ) : (
+              <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-green-100 dark:bg-green-900">
+                <CheckCircle className="h-6 w-6 text-green-600 dark:text-green-300" />
+              </div>
+            )}
+            <DialogTitle>
+              {successInfo?.waitlistPosition ? "You're on the Waitlist!" : "Request Sent!"}
+            </DialogTitle>
+            <DialogDescription className="text-center">
+              {successInfo?.waitlistPosition ? (
+                <>
+                  <span className="block text-2xl font-bold text-foreground my-2">
+                    #{successInfo.waitlistPosition}
+                  </span>
+                  <span>
+                    "{successInfo?.bookTitle}" is currently unavailable. You're #{successInfo.waitlistPosition} in the waitlist.
+                    {successInfo?.ownerName} will notify you when it becomes available.
+                  </span>
+                </>
+              ) : (
+                <>
+                  Your request for "{successInfo?.bookTitle}" has been sent to {successInfo?.ownerName}.
+                  They'll contact you soon!
+                </>
+              )}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="sm:justify-center">
+            <Button onClick={() => setSuccessInfo(null)}>
+              Got it!
             </Button>
           </DialogFooter>
         </DialogContent>
