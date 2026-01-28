@@ -51,6 +51,11 @@ serve(async (req) => {
       );
     }
 
+    const resendFromEnv = Deno.env.get("RESEND_FROM_EMAIL") || "noreply@resend.dev";
+    const resendFrom = resendFromEnv.includes("<")
+      ? resendFromEnv
+      : `HomeShelf <${resendFromEnv}>`;
+
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
@@ -110,21 +115,65 @@ serve(async (req) => {
     }
 
     try {
-      await resend.emails.send({
-        from: "HomeShelf <noreply@resend.dev>",
+      console.log(
+        "Sending request notification email",
+        JSON.stringify({ request_id, status, to: request.requester_email, subject })
+      );
+
+      const emailResponse: any = await resend.emails.send({
+        from: resendFrom,
         to: [request.requester_email],
         subject,
         html: htmlContent,
       });
 
+      // Resend SDKs may return either { id } or { data: { id }, error }
+      const resendId = emailResponse?.id ?? emailResponse?.data?.id;
+      const resendError = emailResponse?.error;
+
+      console.log(
+        "Resend send response",
+        JSON.stringify({ resendId, hasError: !!resendError })
+      );
+
+      if (resendError) {
+        console.error("Resend API error:", resendError);
+        return new Response(
+          JSON.stringify({
+            success: true,
+            email_sent: false,
+            error: "Resend API error",
+            resend_status: resendError?.statusCode,
+            resend_message: resendError?.message,
+          }),
+          { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+
+      if (!resendId) {
+        console.error("Resend response missing id:", emailResponse);
+        return new Response(
+          JSON.stringify({
+            success: true,
+            email_sent: false,
+            error: "Resend response missing id",
+          }),
+          { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+
       return new Response(
-        JSON.stringify({ success: true, email_sent: true }),
+        JSON.stringify({ success: true, email_sent: true, resend_id: resendId }),
         { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     } catch (emailError) {
       console.error("Email send error:", emailError);
       return new Response(
-        JSON.stringify({ success: true, email_sent: false, error: "Email sending failed" }),
+        JSON.stringify({
+          success: true,
+          email_sent: false,
+          error: "Email sending failed",
+        }),
         { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
