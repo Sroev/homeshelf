@@ -168,7 +168,7 @@ serve(async (req) => {
     }
 
     // Create the request
-    const { error: insertError } = await supabase
+    const { data: newRequest, error: insertError } = await supabase
       .from("requests")
       .insert({
         library_id: library.id,
@@ -177,15 +177,28 @@ serve(async (req) => {
         requester_email: requester_email.trim().toLowerCase(),
         message: message?.trim() || null,
         status: "pending",
-      });
+      })
+      .select("id, created_at")
+      .single();
 
-    if (insertError) {
+    if (insertError || !newRequest) {
       console.error("Insert error:", insertError);
       return new Response(
         JSON.stringify({ error: "Failed to create request" }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
+
+    // Calculate waitlist position for this book (count of pending requests created before this one)
+    const { count: waitlistPosition } = await supabase
+      .from("requests")
+      .select("*", { count: "exact", head: true })
+      .eq("book_id", book.id)
+      .eq("status", "pending")
+      .lte("created_at", newRequest.created_at);
+
+    // Determine if the book is currently unavailable (lent out or reading)
+    const isOnWaitlist = book.status === "lent_out" || book.status === "reading";
 
     // Send emails if RESEND_API_KEY is configured
     const resendApiKey = Deno.env.get("RESEND_API_KEY");
@@ -243,7 +256,11 @@ serve(async (req) => {
     }
 
     return new Response(
-      JSON.stringify({ success: true }),
+      JSON.stringify({ 
+        success: true,
+        waitlist_position: isOnWaitlist ? (waitlistPosition || 1) : null,
+        book_status: book.status,
+      }),
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (error) {
