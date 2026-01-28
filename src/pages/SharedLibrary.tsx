@@ -184,7 +184,7 @@ export default function SharedLibrary() {
               <div>
                 <h1 className="text-2xl font-bold text-foreground">{data.library_name}</h1>
                 <div className="flex items-center gap-2 text-muted-foreground">
-                  <span>{data.owner_name} {t.sharedLibrary.library}</span>
+                  <span>{t.sharedLibrary.libraryOf} {data.owner_name}</span>
                   {data.owner_city && (
                     <>
                       <span>•</span>
