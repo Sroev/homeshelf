@@ -313,15 +313,14 @@ export default function SharedLibrary() {
             </DialogTitle>
             <DialogDescription className="text-center">
               {successInfo?.waitlistPosition ? (
-                <>
-                  <span className="block text-2xl font-bold text-foreground my-2">
-                    #{successInfo.waitlistPosition}
-                  </span>
-                  <span>
-                    "{successInfo?.bookTitle}" is currently unavailable. You're #{successInfo.waitlistPosition} in the waitlist.
-                    {successInfo?.ownerName} will notify you when it becomes available.
-                  </span>
-                </>
+                  <>
+                    <span className="block text-2xl font-bold text-foreground my-2">
+                      #{successInfo.waitlistPosition}
+                    </span>
+                    <span>
+                      "{successInfo?.bookTitle}" is currently unavailable. You're #{successInfo.waitlistPosition} in the waitlist. {successInfo?.ownerName} will notify you when it becomes available.
+                    </span>
+                  </>
               ) : (
                 <>
                   Your request for "{successInfo?.bookTitle}" has been sent to {successInfo?.ownerName}.
