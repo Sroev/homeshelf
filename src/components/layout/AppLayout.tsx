@@ -73,12 +73,11 @@ export function AppLayout({ children }: AppLayoutProps) {
     <div className="flex min-h-screen bg-background">
       {/* Desktop Sidebar */}
       <aside className="hidden w-64 flex-col border-r border-border bg-sidebar p-4 md:flex">
-        <div className="mb-8 flex items-center justify-between">
+        <div className="mb-8">
           <Link to="/app" className="flex items-center gap-2">
             <Book className="h-6 w-6 text-primary" />
             <span className="text-xl font-bold text-foreground">{t.appName}</span>
           </Link>
-          <LanguageToggle />
         </div>
         
         <NavContent />
@@ -92,6 +91,7 @@ export function AppLayout({ children }: AppLayoutProps) {
               )}
             </div>
           )}
+          <LanguageToggle />
           <Button
             variant="ghost"
             className="w-full justify-start gap-3"
@@ -111,42 +111,40 @@ export function AppLayout({ children }: AppLayoutProps) {
             <span className="text-lg font-bold text-foreground">{t.appName}</span>
           </Link>
           
-          <div className="flex items-center gap-2">
-            <LanguageToggle />
-            <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-              <SheetTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <Menu className="h-5 w-5" />
+          <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <Menu className="h-5 w-5" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-64 bg-sidebar p-4">
+              <div className="mb-6">
+                <span className="text-lg font-bold text-foreground">{t.nav.menu}</span>
+              </div>
+              
+              <NavContent />
+              
+              <div className="mt-8 space-y-4">
+                {profile && (
+                  <div className="rounded-lg bg-muted p-3">
+                    <p className="text-sm font-medium text-foreground">{profile.display_name}</p>
+                    {profile.city && (
+                      <p className="text-xs text-muted-foreground">{profile.city}</p>
+                    )}
+                  </div>
+                )}
+                <LanguageToggle />
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start gap-3"
+                  onClick={handleSignOut}
+                >
+                  <LogOut className="h-4 w-4" />
+                  {t.nav.signOut}
                 </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-64 bg-sidebar p-4">
-                <div className="mb-6">
-                  <span className="text-lg font-bold text-foreground">{t.nav.menu}</span>
-                </div>
-                
-                <NavContent />
-                
-                <div className="mt-8 space-y-4">
-                  {profile && (
-                    <div className="rounded-lg bg-muted p-3">
-                      <p className="text-sm font-medium text-foreground">{profile.display_name}</p>
-                      {profile.city && (
-                        <p className="text-xs text-muted-foreground">{profile.city}</p>
-                      )}
-                    </div>
-                  )}
-                  <Button
-                    variant="ghost"
-                    className="w-full justify-start gap-3"
-                    onClick={handleSignOut}
-                  >
-                    <LogOut className="h-4 w-4" />
-                    {t.nav.signOut}
-                  </Button>
-                </div>
-              </SheetContent>
-            </Sheet>
-          </div>
+              </div>
+            </SheetContent>
+          </Sheet>
         </header>
 
         {/* Main Content */}
