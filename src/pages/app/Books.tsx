@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Plus, Search, Edit, Trash2 } from "lucide-react";
 import { useBooks, useUpdateBook, useDeleteBook, Book } from "@/hooks/useBooks";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
@@ -25,18 +26,19 @@ const statusColors: Record<BookStatus, string> = {
   unavailable: "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200",
 };
 
-const statusLabels: Record<BookStatus, string> = {
-  available: "Available",
-  lent_out: "Lent Out",
-  reading: "Reading",
-  unavailable: "Unavailable",
-};
-
 export default function Books() {
   const { data: books, isLoading } = useBooks();
   const updateBook = useUpdateBook();
   const deleteBook = useDeleteBook();
   const { toast } = useToast();
+  const { t } = useLanguage();
+
+  const statusLabels: Record<BookStatus, string> = {
+    available: t.books.available,
+    lent_out: t.books.lentOut,
+    reading: t.books.reading,
+    unavailable: t.books.unavailable,
+  };
 
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<BookStatus | "all">("all");
@@ -66,32 +68,31 @@ export default function Books() {
 
   const handleStatusChange = async (bookId: string, status: BookStatus) => {
     try {
-      const result = await updateBook.mutateAsync({ 
+      await updateBook.mutateAsync({ 
         id: bookId, 
         status,
         notifyWaitlist: status === "available",
       });
       
-      // Show appropriate toast based on whether waitlist was notified
       if (status === "available") {
         toast({ 
-          title: "Status updated",
-          description: "The first person on the waitlist will be notified.",
+          title: t.books.statusUpdated,
+          description: t.books.waitlistNotified,
         });
       } else {
-        toast({ title: "Status updated" });
+        toast({ title: t.books.statusUpdated });
       }
     } catch {
-      toast({ title: "Failed to update status", variant: "destructive" });
+      toast({ title: t.books.failedToUpdateStatus, variant: "destructive" });
     }
   };
 
   const handleShareableToggle = async (bookId: string, shareable: boolean) => {
     try {
       await updateBook.mutateAsync({ id: bookId, shareable });
-      toast({ title: shareable ? "Book is now shareable" : "Book is now private" });
+      toast({ title: shareable ? t.books.bookNowShareable : t.books.bookNowPrivate });
     } catch {
-      toast({ title: "Failed to update", variant: "destructive" });
+      toast({ title: t.books.failedToUpdate, variant: "destructive" });
     }
   };
 
@@ -125,15 +126,15 @@ export default function Books() {
       
       if (wasUnavailable && becomingAvailable) {
         toast({ 
-          title: "Book updated",
-          description: "The first person on the waitlist will be notified.",
+          title: t.books.bookUpdated,
+          description: t.books.waitlistNotified,
         });
       } else {
-        toast({ title: "Book updated" });
+        toast({ title: t.books.bookUpdated });
       }
       setEditingBook(null);
     } catch {
-      toast({ title: "Failed to update book", variant: "destructive" });
+      toast({ title: t.books.failedToUpdate, variant: "destructive" });
     }
   };
 
@@ -142,10 +143,10 @@ export default function Books() {
 
     try {
       await deleteBook.mutateAsync(deleteConfirm.id);
-      toast({ title: "Book deleted" });
+      toast({ title: t.books.bookDeleted });
       setDeleteConfirm(null);
     } catch {
-      toast({ title: "Failed to delete book", variant: "destructive" });
+      toast({ title: t.books.failedToDelete, variant: "destructive" });
     }
   };
 
@@ -165,15 +166,15 @@ export default function Books() {
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Books</h1>
+            <h1 className="text-3xl font-bold text-foreground">{t.books.title}</h1>
             <p className="mt-1 text-muted-foreground">
-              Manage your book collection
+              {t.books.manageCollection}
             </p>
           </div>
           <Button asChild>
             <Link to="/app/books/new">
               <Plus className="mr-2 h-4 w-4" />
-              Add Book
+              {t.dashboard.addBook}
             </Link>
           </Button>
         </div>
@@ -184,7 +185,7 @@ export default function Books() {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
-                placeholder="Search by title or author..."
+                placeholder={t.books.searchPlaceholder}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="pl-9"
@@ -192,14 +193,14 @@ export default function Books() {
             </div>
             <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as BookStatus | "all")}>
               <SelectTrigger className="w-full sm:w-40">
-                <SelectValue placeholder="Status" />
+                <SelectValue placeholder={t.books.status} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Statuses</SelectItem>
-                <SelectItem value="available">Available</SelectItem>
-                <SelectItem value="lent_out">Lent Out</SelectItem>
-                <SelectItem value="reading">Reading</SelectItem>
-                <SelectItem value="unavailable">Unavailable</SelectItem>
+                <SelectItem value="all">{t.books.allStatuses}</SelectItem>
+                <SelectItem value="available">{t.books.available}</SelectItem>
+                <SelectItem value="lent_out">{t.books.lentOut}</SelectItem>
+                <SelectItem value="reading">{t.books.reading}</SelectItem>
+                <SelectItem value="unavailable">{t.books.unavailable}</SelectItem>
               </SelectContent>
             </Select>
             <Select value={shareableFilter} onValueChange={(v) => setShareableFilter(v as "all" | "shareable" | "private")}>
@@ -207,9 +208,9 @@ export default function Books() {
                 <SelectValue placeholder="Visibility" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Books</SelectItem>
-                <SelectItem value="shareable">Shareable</SelectItem>
-                <SelectItem value="private">Private</SelectItem>
+                <SelectItem value="all">{t.books.allBooks}</SelectItem>
+                <SelectItem value="shareable">{t.books.shareable}</SelectItem>
+                <SelectItem value="private">{t.books.private}</SelectItem>
               </SelectContent>
             </Select>
           </CardContent>
@@ -222,11 +223,11 @@ export default function Books() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Title</TableHead>
-                    <TableHead className="hidden sm:table-cell">Author</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-center">Shareable</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
+                    <TableHead>{t.books.titleColumn}</TableHead>
+                    <TableHead className="hidden sm:table-cell">{t.books.authorColumn}</TableHead>
+                    <TableHead>{t.books.status}</TableHead>
+                    <TableHead className="text-center">{t.books.shareableColumn}</TableHead>
+                    <TableHead className="text-right">{t.books.actions}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -296,18 +297,18 @@ export default function Books() {
           <Card className="border-dashed">
             <CardContent className="flex flex-col items-center justify-center py-12">
               <p className="text-lg font-medium text-foreground">
-                {books?.length === 0 ? "No books yet" : "No books match your filters"}
+                {books?.length === 0 ? t.books.noBooks : t.books.noBooksMatch}
               </p>
               <p className="mt-1 text-sm text-muted-foreground">
                 {books?.length === 0
-                  ? "Add your first book to get started."
-                  : "Try adjusting your search or filters."}
+                  ? t.dashboard.startBuilding
+                  : t.books.adjustFilters}
               </p>
               {books?.length === 0 && (
                 <Button asChild className="mt-4">
                   <Link to="/app/books/new">
                     <Plus className="mr-2 h-4 w-4" />
-                    Add Your First Book
+                    {t.books.addFirstBook}
                   </Link>
                 </Button>
               )}
@@ -320,12 +321,12 @@ export default function Books() {
       <Dialog open={!!editingBook} onOpenChange={(open) => !open && setEditingBook(null)}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Edit Book</DialogTitle>
-            <DialogDescription>Update the book details</DialogDescription>
+            <DialogTitle>{t.common.editBook}</DialogTitle>
+            <DialogDescription>{t.common.updateBookDetails}</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="edit-title">Title</Label>
+              <Label htmlFor="edit-title">{t.common.title}</Label>
               <Input
                 id="edit-title"
                 value={editTitle}
@@ -334,7 +335,7 @@ export default function Books() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="edit-author">Author</Label>
+              <Label htmlFor="edit-author">{t.common.author}</Label>
               <Input
                 id="edit-author"
                 value={editAuthor}
@@ -342,7 +343,7 @@ export default function Books() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="edit-isbn">ISBN</Label>
+              <Label htmlFor="edit-isbn">{t.common.isbn}</Label>
               <Input
                 id="edit-isbn"
                 value={editIsbn}
@@ -350,7 +351,7 @@ export default function Books() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="edit-notes">Notes</Label>
+              <Label htmlFor="edit-notes">{t.common.notes}</Label>
               <Textarea
                 id="edit-notes"
                 value={editNotes}
@@ -359,7 +360,7 @@ export default function Books() {
               />
             </div>
             <div className="space-y-2">
-              <Label>Status</Label>
+              <Label>{t.common.status}</Label>
               <Select value={editStatus} onValueChange={(v) => setEditStatus(v as BookStatus)}>
                 <SelectTrigger>
                   <SelectValue />
@@ -379,15 +380,15 @@ export default function Books() {
                 checked={editShareable}
                 onCheckedChange={setEditShareable}
               />
-              <Label htmlFor="edit-shareable">Shareable with friends</Label>
+              <Label htmlFor="edit-shareable">{t.common.shareableWithFriends}</Label>
             </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditingBook(null)}>
-              Cancel
+              {t.common.cancel}
             </Button>
             <Button onClick={handleEditSubmit} disabled={updateBook.isPending}>
-              Save Changes
+              {t.common.saveChanges}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -397,17 +398,17 @@ export default function Books() {
       <Dialog open={!!deleteConfirm} onOpenChange={(open) => !open && setDeleteConfirm(null)}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
-            <DialogTitle>Delete Book</DialogTitle>
+            <DialogTitle>{t.common.deleteBook}</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete "{deleteConfirm?.title}"? This action cannot be undone.
+              {t.common.deleteBookConfirm} "{deleteConfirm?.title}"? {t.common.cannotBeUndone}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDeleteConfirm(null)}>
-              Cancel
+              {t.common.cancel}
             </Button>
             <Button variant="destructive" onClick={handleDelete} disabled={deleteBook.isPending}>
-              Delete
+              {t.common.delete}
             </Button>
           </DialogFooter>
         </DialogContent>

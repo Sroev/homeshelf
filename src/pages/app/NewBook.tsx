@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCreateBook } from "@/hooks/useBooks";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,17 +15,18 @@ import { Database } from "@/integrations/supabase/types";
 
 type BookStatus = Database["public"]["Enums"]["book_status"];
 
-const statusLabels: Record<BookStatus, string> = {
-  available: "Available",
-  lent_out: "Lent Out",
-  reading: "Reading",
-  unavailable: "Unavailable",
-};
-
 export default function NewBook() {
   const navigate = useNavigate();
   const createBook = useCreateBook();
   const { toast } = useToast();
+  const { t } = useLanguage();
+
+  const statusLabels: Record<BookStatus, string> = {
+    available: t.books.available,
+    lent_out: t.books.lentOut,
+    reading: t.books.reading,
+    unavailable: t.books.unavailable,
+  };
 
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
@@ -38,8 +40,8 @@ export default function NewBook() {
 
     if (!title.trim()) {
       toast({
-        title: "Validation Error",
-        description: "Title is required.",
+        title: t.newBook.validationError,
+        description: t.newBook.titleRequired,
         variant: "destructive",
       });
       return;
@@ -55,14 +57,14 @@ export default function NewBook() {
         shareable,
       });
       toast({
-        title: "Book added",
-        description: `"${title}" has been added to your library.`,
+        title: t.newBook.bookAdded,
+        description: `"${title}" ${t.newBook.bookAddedTo}`,
       });
       navigate("/app/books");
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to add book. Please try again.",
+        title: t.newBook.error,
+        description: t.newBook.failedToAdd,
         variant: "destructive",
       });
     }
@@ -72,69 +74,69 @@ export default function NewBook() {
     <AppLayout>
       <div className="mx-auto max-w-2xl space-y-6">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Add New Book</h1>
+          <h1 className="text-3xl font-bold text-foreground">{t.newBook.title}</h1>
           <p className="mt-1 text-muted-foreground">
-            Add a book to your library collection
+            {t.newBook.addToCollection}
           </p>
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle>Book Details</CardTitle>
+            <CardTitle>{t.newBook.bookDetails}</CardTitle>
             <CardDescription>
-              Enter the information about your book
+              {t.newBook.enterInfo}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="title">Title *</Label>
+                <Label htmlFor="title">{t.newBook.bookTitle}</Label>
                 <Input
                   id="title"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  placeholder="Enter book title"
+                  placeholder={t.newBook.titlePlaceholder}
                   required
                   maxLength={255}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="author">Author</Label>
+                <Label htmlFor="author">{t.newBook.author}</Label>
                 <Input
                   id="author"
                   value={author}
                   onChange={(e) => setAuthor(e.target.value)}
-                  placeholder="Enter author name"
+                  placeholder={t.newBook.authorPlaceholder}
                   maxLength={255}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="isbn">ISBN</Label>
+                <Label htmlFor="isbn">{t.newBook.isbn}</Label>
                 <Input
                   id="isbn"
                   value={isbn}
                   onChange={(e) => setIsbn(e.target.value)}
-                  placeholder="Enter ISBN (optional)"
+                  placeholder={t.newBook.isbnPlaceholder}
                   maxLength={20}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="notes">Notes</Label>
+                <Label htmlFor="notes">{t.newBook.notes}</Label>
                 <Textarea
                   id="notes"
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  placeholder="Any notes about this book (condition, edition, etc.)"
+                  placeholder={t.newBook.notesPlaceholder}
                   rows={3}
                   maxLength={1000}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label>Status</Label>
+                <Label>{t.newBook.status}</Label>
                 <Select value={status} onValueChange={(v) => setStatus(v as BookStatus)}>
                   <SelectTrigger>
                     <SelectValue />
@@ -148,7 +150,7 @@ export default function NewBook() {
                   </SelectContent>
                 </Select>
                 <p className="text-xs text-muted-foreground">
-                  Set the current availability status of this book
+                  {t.newBook.statusHelp}
                 </p>
               </div>
 
@@ -159,23 +161,23 @@ export default function NewBook() {
                   onCheckedChange={setShareable}
                 />
                 <Label htmlFor="shareable" className="font-normal">
-                  Shareable with friends
+                  {t.newBook.shareableWithFriends}
                 </Label>
               </div>
               <p className="text-xs text-muted-foreground">
-                When enabled, this book will be visible on your shared library page
+                {t.newBook.shareableHelp}
               </p>
 
               <div className="flex gap-3 pt-4">
                 <Button type="submit" disabled={createBook.isPending}>
-                  {createBook.isPending ? "Adding..." : "Add Book"}
+                  {createBook.isPending ? t.newBook.adding : t.newBook.addBook}
                 </Button>
                 <Button
                   type="button"
                   variant="outline"
                   onClick={() => navigate("/app/books")}
                 >
-                  Cancel
+                  {t.newBook.cancel}
                 </Button>
               </div>
             </form>

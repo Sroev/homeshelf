@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { MessageSquare, Check, X, Users } from "lucide-react";
 import { useRequests, useUpdateRequest, RequestWithBook } from "@/hooks/useRequests";
 import { useUpdateBook } from "@/hooks/useBooks";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -21,12 +22,6 @@ const statusColors: Record<RequestStatus, string> = {
   declined: "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200",
 };
 
-const statusLabels: Record<RequestStatus, string> = {
-  pending: "Pending",
-  approved: "Approved",
-  declined: "Declined",
-};
-
 interface WaitlistGroup {
   bookId: string;
   bookTitle: string;
@@ -39,6 +34,13 @@ export default function Requests() {
   const updateRequest = useUpdateRequest();
   const updateBook = useUpdateBook();
   const { toast } = useToast();
+  const { t, language } = useLanguage();
+
+  const statusLabels: Record<RequestStatus, string> = {
+    pending: t.requests.pending,
+    approved: t.requests.approved,
+    declined: t.requests.declined,
+  };
 
   const [statusFilter, setStatusFilter] = useState<RequestStatus | "all">("all");
   const [approveDialog, setApproveDialog] = useState<RequestWithBook | null>(null);
@@ -104,14 +106,14 @@ export default function Requests() {
       }
 
       toast({
-        title: "Request approved",
-        description: `"${approveDialog.books.title}" approved. The requester will be notified by email.`,
+        title: t.requests.requestApproved,
+        description: `"${approveDialog.books.title}" ${t.requests.requesterNotified}`,
       });
       setApproveDialog(null);
     } catch {
       toast({
-        title: "Failed to approve",
-        description: "Please try again.",
+        title: t.requests.failedToApprove,
+        description: t.share.tryAgain,
         variant: "destructive",
       });
     }
@@ -121,20 +123,20 @@ export default function Requests() {
     try {
       await updateRequest.mutateAsync({ id: request.id, status: "declined" });
       toast({
-        title: "Request declined",
-        description: "The request has been declined.",
+        title: t.requests.requestDeclined,
+        description: t.requests.declinedDesc,
       });
     } catch {
       toast({
-        title: "Failed to decline",
-        description: "Please try again.",
+        title: t.requests.failedToDecline,
+        description: t.share.tryAgain,
         variant: "destructive",
       });
     }
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
+    return new Date(dateString).toLocaleDateString(language === "bg" ? "bg-BG" : "en-US", {
       month: "short",
       day: "numeric",
       year: "numeric",
@@ -159,9 +161,9 @@ export default function Requests() {
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Requests</h1>
+            <h1 className="text-3xl font-bold text-foreground">{t.requests.title}</h1>
             <p className="mt-1 text-muted-foreground">
-              Manage book requests from your friends
+              {t.requests.manageRequests}
             </p>
           </div>
         </div>
@@ -170,10 +172,10 @@ export default function Requests() {
         <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "all" | "waitlist")}>
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <TabsList>
-              <TabsTrigger value="all">All Requests</TabsTrigger>
+              <TabsTrigger value="all">{t.requests.allRequests}</TabsTrigger>
               <TabsTrigger value="waitlist" className="gap-2">
                 <Users className="h-4 w-4" />
-                Waitlist
+                {t.requests.waitlist}
                 {waitlistCount > 0 && (
                   <Badge variant="secondary" className="ml-1 h-5 min-w-5 px-1">
                     {waitlistCount}
@@ -185,13 +187,13 @@ export default function Requests() {
             {activeTab === "all" && (
               <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as RequestStatus | "all")}>
                 <SelectTrigger className="w-40">
-                  <SelectValue placeholder="Filter" />
+                  <SelectValue placeholder={t.requests.filter} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Requests</SelectItem>
-                  <SelectItem value="pending">Pending</SelectItem>
-                  <SelectItem value="approved">Approved</SelectItem>
-                  <SelectItem value="declined">Declined</SelectItem>
+                  <SelectItem value="all">{t.requests.allRequests}</SelectItem>
+                  <SelectItem value="pending">{t.requests.pending}</SelectItem>
+                  <SelectItem value="approved">{t.requests.approved}</SelectItem>
+                  <SelectItem value="declined">{t.requests.declined}</SelectItem>
                 </SelectContent>
               </Select>
             )}
@@ -210,7 +212,7 @@ export default function Requests() {
                         {request.books.title}
                       </CardTitle>
                       {request.books.author && (
-                        <CardDescription>by {request.books.author}</CardDescription>
+                        <CardDescription>{t.common.by} {request.books.author}</CardDescription>
                       )}
                     </div>
                     <Badge className={statusColors[request.status]}>
@@ -221,11 +223,11 @@ export default function Requests() {
                 <CardContent className="space-y-4">
                   <div className="grid gap-2 text-sm sm:grid-cols-2">
                     <div>
-                      <span className="font-medium text-muted-foreground">Requester:</span>{" "}
+                      <span className="font-medium text-muted-foreground">{t.requests.requester}</span>{" "}
                       <span className="text-foreground">{request.requester_name}</span>
                     </div>
                     <div>
-                      <span className="font-medium text-muted-foreground">Email:</span>{" "}
+                      <span className="font-medium text-muted-foreground">{t.requests.email}</span>{" "}
                       <a
                         href={`mailto:${request.requester_email}`}
                         className="text-primary hover:underline"
@@ -234,14 +236,14 @@ export default function Requests() {
                       </a>
                     </div>
                     <div>
-                      <span className="font-medium text-muted-foreground">Date:</span>{" "}
+                      <span className="font-medium text-muted-foreground">{t.requests.date}</span>{" "}
                       <span className="text-foreground">{formatDate(request.created_at)}</span>
                     </div>
                   </div>
 
                   {request.message && (
                     <div className="rounded-lg bg-muted p-3">
-                      <p className="text-sm font-medium text-muted-foreground">Message:</p>
+                      <p className="text-sm font-medium text-muted-foreground">{t.requests.message}</p>
                       <p className="mt-1 text-sm text-foreground">{request.message}</p>
                     </div>
                   )}
@@ -256,7 +258,7 @@ export default function Requests() {
                         }}
                       >
                         <Check className="mr-2 h-4 w-4" />
-                        Approve
+                        {t.requests.approve}
                       </Button>
                       <Button
                         size="sm"
@@ -265,7 +267,7 @@ export default function Requests() {
                         disabled={updateRequest.isPending}
                       >
                         <X className="mr-2 h-4 w-4" />
-                        Decline
+                        {t.requests.decline}
                       </Button>
                     </div>
                   )}
@@ -277,11 +279,11 @@ export default function Requests() {
           <Card className="border-dashed">
             <CardContent className="flex flex-col items-center justify-center py-12">
               <MessageSquare className="h-12 w-12 text-muted-foreground" />
-              <h3 className="mt-4 text-lg font-semibold">No requests yet</h3>
+              <h3 className="mt-4 text-lg font-semibold">{t.requests.noRequestsYet}</h3>
               <p className="mt-1 text-center text-sm text-muted-foreground">
                 {requests?.length === 0
-                  ? "When friends request books from your shared library, they'll appear here."
-                  : "No requests match your filter."}
+                  ? t.requests.noRequestsDesc
+                  : t.requests.noRequestsMatch}
               </p>
             </CardContent>
             </Card>
@@ -297,10 +299,10 @@ export default function Requests() {
                     <CardHeader className="pb-3">
                       <CardTitle className="text-lg">{group.bookTitle}</CardTitle>
                       {group.bookAuthor && (
-                        <CardDescription>by {group.bookAuthor}</CardDescription>
+                        <CardDescription>{t.common.by} {group.bookAuthor}</CardDescription>
                       )}
                       <p className="text-sm text-muted-foreground">
-                        {group.requests.length} {group.requests.length === 1 ? "person" : "people"} waiting
+                        {group.requests.length} {group.requests.length === 1 ? t.requests.peopleWaiting : t.requests.peopleWaitingPlural}
                       </p>
                     </CardHeader>
                     <CardContent>
@@ -323,7 +325,7 @@ export default function Requests() {
                                   {request.requester_email}
                                 </a>
                                 <p className="text-xs text-muted-foreground">
-                                  Requested {formatDate(request.created_at)}
+                                  {t.requests.requested} {formatDate(request.created_at)}
                                 </p>
                               </div>
                             </div>
@@ -336,7 +338,7 @@ export default function Requests() {
                                 }}
                               >
                                 <Check className="mr-1 h-3 w-3" />
-                                Approve
+                                {t.requests.approve}
                               </Button>
                               <Button
                                 size="sm"
@@ -358,9 +360,9 @@ export default function Requests() {
               <Card className="border-dashed">
                 <CardContent className="flex flex-col items-center justify-center py-12">
                   <Users className="h-12 w-12 text-muted-foreground" />
-                  <h3 className="mt-4 text-lg font-semibold">No waitlists</h3>
+                  <h3 className="mt-4 text-lg font-semibold">{t.requests.noWaitlists}</h3>
                   <p className="mt-1 text-center text-sm text-muted-foreground">
-                    When multiple people request the same book, you'll see the queue here.
+                    {t.requests.noWaitlistsDesc}
                   </p>
                 </CardContent>
               </Card>
@@ -373,9 +375,9 @@ export default function Requests() {
       <Dialog open={!!approveDialog} onOpenChange={(open) => !open && setApproveDialog(null)}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
-            <DialogTitle>Approve Request</DialogTitle>
+            <DialogTitle>{t.requests.approveRequest}</DialogTitle>
             <DialogDescription>
-              Approve {approveDialog?.requester_name}'s request for "{approveDialog?.books.title}"?
+              {t.requests.approveRequestDesc} {approveDialog?.requester_name} {t.requests.for} "{approveDialog?.books.title}"?
             </DialogDescription>
           </DialogHeader>
           <div className="flex items-center gap-2 py-2">
@@ -385,15 +387,15 @@ export default function Requests() {
               onCheckedChange={(checked) => setMarkAsLentOut(checked === true)}
             />
             <label htmlFor="lent-out" className="text-sm">
-              Mark book as "Lent Out"
+              {t.requests.markAsLentOut}
             </label>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setApproveDialog(null)}>
-              Cancel
+              {t.common.cancel}
             </Button>
             <Button onClick={handleApprove} disabled={updateRequest.isPending}>
-              Approve
+              {t.requests.approve}
             </Button>
           </DialogFooter>
         </DialogContent>

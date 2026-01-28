@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useProfile, useUpdateProfile } from "@/hooks/useProfile";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,6 +12,7 @@ export default function Profile() {
   const { data: profile, isLoading } = useProfile();
   const updateProfile = useUpdateProfile();
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const [displayName, setDisplayName] = useState("");
   const [city, setCity] = useState("");
@@ -27,8 +29,8 @@ export default function Profile() {
 
     if (!displayName.trim()) {
       toast({
-        title: "Validation Error",
-        description: "Display name is required.",
+        title: t.profile.validationError,
+        description: t.profile.displayNameRequired,
         variant: "destructive",
       });
       return;
@@ -40,13 +42,13 @@ export default function Profile() {
         city: city.trim() || null,
       });
       toast({
-        title: "Profile updated",
-        description: "Your changes have been saved.",
+        title: t.profile.profileUpdated,
+        description: t.profile.changesSaved,
       });
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to update profile. Please try again.",
+        title: t.profile.error,
+        description: t.profile.failedToUpdate,
         variant: "destructive",
       });
     }
@@ -66,52 +68,52 @@ export default function Profile() {
     <AppLayout>
       <div className="mx-auto max-w-2xl space-y-6">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Profile</h1>
+          <h1 className="text-3xl font-bold text-foreground">{t.profile.title}</h1>
           <p className="mt-1 text-muted-foreground">
-            Manage your personal information
+            {t.profile.manageInfo}
           </p>
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle>Personal Information</CardTitle>
+            <CardTitle>{t.profile.personalInfo}</CardTitle>
             <CardDescription>
-              This information will be visible to friends who view your shared library.
+              {t.profile.infoVisible}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="displayName">Display Name</Label>
+                <Label htmlFor="displayName">{t.profile.displayName}</Label>
                 <Input
                   id="displayName"
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
-                  placeholder="Your name"
+                  placeholder={t.profile.displayNamePlaceholder}
                   required
                   maxLength={100}
                 />
                 <p className="text-xs text-muted-foreground">
-                  This is how you'll appear to friends viewing your library.
+                  {t.profile.displayNameHelp}
                 </p>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="city">City (optional)</Label>
+                <Label htmlFor="city">{t.profile.city}</Label>
                 <Input
                   id="city"
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
-                  placeholder="Your city"
+                  placeholder={t.profile.cityPlaceholder}
                   maxLength={100}
                 />
                 <p className="text-xs text-muted-foreground">
-                  Helps friends know where you're located for book pickup.
+                  {t.profile.cityHelp}
                 </p>
               </div>
 
               <Button type="submit" disabled={updateProfile.isPending}>
-                {updateProfile.isPending ? "Saving..." : "Save Changes"}
+                {updateProfile.isPending ? t.profile.saving : t.profile.saveChanges}
               </Button>
             </form>
           </CardContent>

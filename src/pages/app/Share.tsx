@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Copy, ExternalLink, RefreshCw } from "lucide-react";
 import { useLibrary, useRegenerateShareToken } from "@/hooks/useLibrary";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,6 +13,7 @@ export default function Share() {
   const { data: library, isLoading } = useLibrary();
   const regenerateToken = useRegenerateShareToken();
   const { toast } = useToast();
+  const { t } = useLanguage();
   const [showConfirm, setShowConfirm] = useState(false);
 
   const shareUrl = library
@@ -22,13 +24,13 @@ export default function Share() {
     try {
       await navigator.clipboard.writeText(shareUrl);
       toast({
-        title: "Link copied!",
-        description: "Share this link with friends so they can browse your books.",
+        title: t.share.linkCopied,
+        description: t.share.linkCopiedDesc,
       });
     } catch {
       toast({
-        title: "Failed to copy",
-        description: "Please copy the link manually.",
+        title: t.share.failedToCopy,
+        description: t.share.copyManually,
         variant: "destructive",
       });
     }
@@ -40,14 +42,14 @@ export default function Share() {
     try {
       await regenerateToken.mutateAsync(library.id);
       toast({
-        title: "New link generated",
-        description: "The old link will no longer work.",
+        title: t.share.newLinkGenerated,
+        description: t.share.oldLinkInvalid,
       });
       setShowConfirm(false);
     } catch {
       toast({
-        title: "Failed to regenerate link",
-        description: "Please try again.",
+        title: t.share.failedToRegenerate,
+        description: t.share.tryAgain,
         variant: "destructive",
       });
     }
@@ -71,17 +73,17 @@ export default function Share() {
     <AppLayout>
       <div className="mx-auto max-w-2xl space-y-6">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Share Your Library</h1>
+          <h1 className="text-3xl font-bold text-foreground">{t.share.title}</h1>
           <p className="mt-1 text-muted-foreground">
-            Share an unlisted link with friends so they can browse and request books
+            {t.share.description}
           </p>
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle>Your Share Link</CardTitle>
+            <CardTitle>{t.share.yourShareLink}</CardTitle>
             <CardDescription>
-              Anyone with this link can view your shareable books and request to borrow them
+              {t.share.linkDescription}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -99,18 +101,18 @@ export default function Share() {
             <div className="flex flex-wrap gap-3">
               <Button onClick={handleCopy}>
                 <Copy className="mr-2 h-4 w-4" />
-                Copy Link
+                {t.share.copyLink}
               </Button>
               <Button variant="outline" onClick={handlePreview}>
                 <ExternalLink className="mr-2 h-4 w-4" />
-                Preview
+                {t.share.preview}
               </Button>
               <Button
                 variant="outline"
                 onClick={() => setShowConfirm(true)}
               >
                 <RefreshCw className="mr-2 h-4 w-4" />
-                Regenerate Link
+                {t.share.regenerateLink}
               </Button>
             </div>
           </CardContent>
@@ -118,20 +120,20 @@ export default function Share() {
 
         <Card>
           <CardHeader>
-            <CardTitle>How It Works</CardTitle>
+            <CardTitle>{t.share.howItWorks}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-sm text-muted-foreground">
             <p>
-              <strong className="text-foreground">1. Share your link:</strong> Send your unique link to friends via email, text, or any messaging app.
+              <strong className="text-foreground">1. {t.share.step1Title}</strong> {t.share.step1Desc}
             </p>
             <p>
-              <strong className="text-foreground">2. Friends browse:</strong> They can see all your shareable books (excluding any marked as private or unavailable).
+              <strong className="text-foreground">2. {t.share.step2Title}</strong> {t.share.step2Desc}
             </p>
             <p>
-              <strong className="text-foreground">3. Request a book:</strong> Friends can request any book by providing their name, email, and an optional message.
+              <strong className="text-foreground">3. {t.share.step3Title}</strong> {t.share.step3Desc}
             </p>
             <p>
-              <strong className="text-foreground">4. You decide:</strong> You'll receive an email notification and can approve or decline requests from the Requests page.
+              <strong className="text-foreground">4. {t.share.step4Title}</strong> {t.share.step4Desc}
             </p>
           </CardContent>
         </Card>
@@ -139,10 +141,10 @@ export default function Share() {
         <Card className="border-warning/30 bg-warning/10">
           <CardContent className="p-4 text-sm">
             <p className="font-medium text-foreground">
-              🔒 Privacy Note
+              {t.share.privacyNote}
             </p>
             <p className="mt-1 text-muted-foreground">
-              Your email address is never shown on the shared page. Friends can only see your display name and city (if set).
+              {t.share.privacyDesc}
             </p>
           </CardContent>
         </Card>
@@ -152,17 +154,17 @@ export default function Share() {
       <Dialog open={showConfirm} onOpenChange={setShowConfirm}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
-            <DialogTitle>Regenerate Share Link?</DialogTitle>
+            <DialogTitle>{t.share.regenerateTitle}</DialogTitle>
             <DialogDescription>
-              The current link will immediately stop working. Anyone with the old link will no longer be able to view your library.
+              {t.share.regenerateDesc}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowConfirm(false)}>
-              Cancel
+              {t.common.cancel}
             </Button>
             <Button onClick={handleRegenerate} disabled={regenerateToken.isPending}>
-              {regenerateToken.isPending ? "Generating..." : "Regenerate"}
+              {regenerateToken.isPending ? t.share.generating : t.share.regenerate}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -1,12 +1,14 @@
 import { useState } from "react";
-import { useNavigate, Link, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { Book } from "lucide-react";
+import { LanguageToggle } from "@/components/LanguageToggle";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -18,6 +20,7 @@ export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const from = (location.state as { from?: { pathname: string } })?.from?.pathname || "/app";
 
@@ -30,21 +33,21 @@ export default function Login() {
         const { error } = await signUp(email, password, displayName);
         if (error) {
           toast({
-            title: "Sign up failed",
+            title: t.login.signUpFailed,
             description: error.message,
             variant: "destructive",
           });
           return;
         }
         toast({
-          title: "Welcome to HomeShelf!",
-          description: "Your account has been created.",
+          title: t.login.welcomeToHomeShelf,
+          description: t.login.accountCreated,
         });
       } else {
         const { error } = await signIn(email, password);
         if (error) {
           toast({
-            title: "Sign in failed",
+            title: t.login.signInFailed,
             description: error.message,
             variant: "destructive",
           });
@@ -59,28 +62,31 @@ export default function Login() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
+      <div className="absolute right-4 top-4">
+        <LanguageToggle />
+      </div>
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1 text-center">
           <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary">
             <Book className="h-6 w-6 text-primary-foreground" />
           </div>
           <CardTitle className="text-2xl">
-            {isSignUp ? "Create an account" : "Welcome back"}
+            {isSignUp ? t.login.createAccount : t.login.welcomeBack}
           </CardTitle>
           <CardDescription>
             {isSignUp
-              ? "Enter your details to get started with HomeShelf"
-              : "Sign in to manage your library"}
+              ? t.login.getStarted
+              : t.login.signInToManage}
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
             {isSignUp && (
               <div className="space-y-2">
-                <Label htmlFor="displayName">Display Name</Label>
+                <Label htmlFor="displayName">{t.login.displayName}</Label>
                 <Input
                   id="displayName"
-                  placeholder="Your name"
+                  placeholder={t.login.displayNamePlaceholder}
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
                   required={isSignUp}
@@ -88,18 +94,18 @@ export default function Login() {
               </div>
             )}
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t.login.email}</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="you@example.com"
+                placeholder={t.login.emailPlaceholder}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{t.login.password}</Label>
               <Input
                 id="password"
                 type="password"
@@ -113,16 +119,16 @@ export default function Login() {
           </CardContent>
           <CardFooter className="flex flex-col gap-4">
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Please wait..." : isSignUp ? "Create Account" : "Sign In"}
+              {loading ? t.login.pleaseWait : isSignUp ? t.login.createAccountBtn : t.login.signIn}
             </Button>
             <p className="text-center text-sm text-muted-foreground">
-              {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
+              {isSignUp ? t.login.alreadyHaveAccount : t.login.dontHaveAccount}{" "}
               <button
                 type="button"
                 onClick={() => setIsSignUp(!isSignUp)}
                 className="font-medium text-primary underline-offset-4 hover:underline"
               >
-                {isSignUp ? "Sign in" : "Sign up"}
+                {isSignUp ? t.login.signIn : t.login.signUp}
               </button>
             </p>
           </CardFooter>

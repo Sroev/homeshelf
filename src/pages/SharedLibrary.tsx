@@ -10,6 +10,8 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { LanguageToggle } from "@/components/LanguageToggle";
 import { supabase } from "@/integrations/supabase/client";
 import { z } from "zod";
 
@@ -28,27 +30,28 @@ interface SharedLibraryData {
   books: SharedBook[];
 }
 
-const requestSchema = z.object({
-  name: z.string().trim().min(1, "Name is required").max(100, "Name must be less than 100 characters"),
-  email: z.string().trim().email("Invalid email address").max(255, "Email must be less than 255 characters"),
-  message: z.string().trim().max(500, "Message must be less than 500 characters").optional(),
-});
-
 const statusColors: Record<string, string> = {
   available: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
   lent_out: "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200",
   reading: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
 };
 
-const statusLabels: Record<string, string> = {
-  available: "Available",
-  lent_out: "Lent Out",
-  reading: "Currently Reading",
-};
-
 export default function SharedLibrary() {
   const { token } = useParams<{ token: string }>();
   const { toast } = useToast();
+  const { t } = useLanguage();
+
+  const statusLabels: Record<string, string> = {
+    available: t.sharedLibrary.available,
+    lent_out: t.sharedLibrary.lentOut,
+    reading: t.sharedLibrary.reading,
+  };
+
+  const requestSchema = z.object({
+    name: z.string().trim().min(1, t.profile.displayNameRequired).max(100),
+    email: z.string().trim().email().max(255),
+    message: z.string().trim().max(500).optional(),
+  });
 
   const [requestingBook, setRequestingBook] = useState<SharedBook | null>(null);
   const [name, setName] = useState("");
@@ -124,8 +127,8 @@ export default function SharedLibrary() {
       setMessage("");
     } catch (err) {
       toast({
-        title: "Request failed",
-        description: err instanceof Error ? err.message : "Please try again later.",
+        title: t.sharedLibrary.requestFailed,
+        description: err instanceof Error ? err.message : t.sharedLibrary.tryAgainLater,
         variant: "destructive",
       });
     } finally {
@@ -137,9 +140,12 @@ export default function SharedLibrary() {
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="absolute right-4 top-4">
+          <LanguageToggle />
+        </div>
         <div className="flex flex-col items-center gap-4">
           <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-          <p className="text-muted-foreground">Loading library...</p>
+          <p className="text-muted-foreground">{t.sharedLibrary.loading}</p>
         </div>
       </div>
     );
@@ -149,12 +155,15 @@ export default function SharedLibrary() {
   if (error || !data) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background p-4">
+        <div className="absolute right-4 top-4">
+          <LanguageToggle />
+        </div>
         <Card className="max-w-md text-center">
           <CardContent className="py-12">
             <Book className="mx-auto h-12 w-12 text-muted-foreground" />
-            <h1 className="mt-4 text-2xl font-bold text-foreground">Library Not Found</h1>
+            <h1 className="mt-4 text-2xl font-bold text-foreground">{t.sharedLibrary.notFound}</h1>
             <p className="mt-2 text-muted-foreground">
-              This library doesn't exist or the link has expired.
+              {t.sharedLibrary.notFoundDesc}
             </p>
           </CardContent>
         </Card>
@@ -167,25 +176,28 @@ export default function SharedLibrary() {
       {/* Header */}
       <header className="border-b border-border bg-card">
         <div className="container mx-auto px-4 py-8">
-          <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary">
-              <Book className="h-6 w-6 text-primary-foreground" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">{data.library_name}</h1>
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <span>{data.owner_name}'s Library</span>
-                {data.owner_city && (
-                  <>
-                    <span>•</span>
-                    <span className="flex items-center gap-1">
-                      <MapPin className="h-3 w-3" />
-                      {data.owner_city}
-                    </span>
-                  </>
-                )}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary">
+                <Book className="h-6 w-6 text-primary-foreground" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-foreground">{data.library_name}</h1>
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <span>{data.owner_name} {t.sharedLibrary.library}</span>
+                  {data.owner_city && (
+                    <>
+                      <span>•</span>
+                      <span className="flex items-center gap-1">
+                        <MapPin className="h-3 w-3" />
+                        {data.owner_city}
+                      </span>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
+            <LanguageToggle />
           </div>
         </div>
       </header>
@@ -195,7 +207,7 @@ export default function SharedLibrary() {
         {data.books.length > 0 ? (
           <>
             <p className="mb-6 text-muted-foreground">
-              {data.books.length} book{data.books.length !== 1 ? "s" : ""} available to browse
+              {data.books.length} {data.books.length !== 1 ? t.sharedLibrary.booksAvailablePlural : t.sharedLibrary.booksAvailable}
             </p>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {data.books.map((book) => (
@@ -204,7 +216,7 @@ export default function SharedLibrary() {
                     <CardTitle className="line-clamp-2 text-lg">{book.title}</CardTitle>
                     {book.author && (
                       <CardDescription className="line-clamp-1">
-                        by {book.author}
+                        {t.common.by} {book.author}
                       </CardDescription>
                     )}
                   </CardHeader>
@@ -218,7 +230,7 @@ export default function SharedLibrary() {
                       onClick={() => setRequestingBook(book)}
                     >
                       <Send className="mr-2 h-4 w-4" />
-                      Request This Book
+                      {t.sharedLibrary.requestThisBook}
                     </Button>
                   </CardContent>
                 </Card>
@@ -229,9 +241,9 @@ export default function SharedLibrary() {
           <Card className="border-dashed">
             <CardContent className="flex flex-col items-center justify-center py-12">
               <Book className="h-12 w-12 text-muted-foreground" />
-              <h3 className="mt-4 text-lg font-semibold">No books available</h3>
+              <h3 className="mt-4 text-lg font-semibold">{t.sharedLibrary.noBooks}</h3>
               <p className="mt-1 text-center text-sm text-muted-foreground">
-                This library doesn't have any shareable books at the moment.
+                {t.sharedLibrary.noBooksDesc}
               </p>
             </CardContent>
           </Card>
@@ -242,42 +254,42 @@ export default function SharedLibrary() {
       <Dialog open={!!requestingBook} onOpenChange={(open) => !open && setRequestingBook(null)}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Request Book</DialogTitle>
+            <DialogTitle>{t.sharedLibrary.requestBook}</DialogTitle>
             <DialogDescription>
-              Request to borrow "{requestingBook?.title}" from {data?.owner_name}
+              {t.sharedLibrary.requestToBorrow} "{requestingBook?.title}" {t.sharedLibrary.from} {data?.owner_name}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="req-name">Your Name *</Label>
+              <Label htmlFor="req-name">{t.sharedLibrary.yourName}</Label>
               <Input
                 id="req-name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Enter your name"
+                placeholder={t.sharedLibrary.namePlaceholder}
                 maxLength={100}
               />
               {errors.name && <p className="text-xs text-destructive">{errors.name}</p>}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="req-email">Your Email *</Label>
+              <Label htmlFor="req-email">{t.sharedLibrary.yourEmail}</Label>
               <Input
                 id="req-email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
+                placeholder={t.sharedLibrary.emailPlaceholder}
                 maxLength={255}
               />
               {errors.email && <p className="text-xs text-destructive">{errors.email}</p>}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="req-message">Message (optional)</Label>
+              <Label htmlFor="req-message">{t.sharedLibrary.messageOptional}</Label>
               <Textarea
                 id="req-message"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                placeholder="Add a personal note..."
+                placeholder={t.sharedLibrary.messagePlaceholder}
                 rows={3}
                 maxLength={500}
               />
@@ -286,10 +298,10 @@ export default function SharedLibrary() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setRequestingBook(null)}>
-              Cancel
+              {t.sharedLibrary.cancel}
             </Button>
             <Button onClick={handleSubmitRequest} disabled={submitting}>
-              {submitting ? "Sending..." : "Send Request"}
+              {submitting ? t.sharedLibrary.sending : t.sharedLibrary.sendRequest}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -309,7 +321,7 @@ export default function SharedLibrary() {
               </div>
             )}
             <DialogTitle>
-              {successInfo?.waitlistPosition ? "You're on the Waitlist!" : "Request Sent!"}
+              {successInfo?.waitlistPosition ? t.sharedLibrary.youreOnWaitlist : t.sharedLibrary.requestSent}
             </DialogTitle>
             <DialogDescription className="text-center">
               {successInfo?.waitlistPosition ? (
@@ -318,20 +330,20 @@ export default function SharedLibrary() {
                       #{successInfo.waitlistPosition}
                     </span>
                     <span>
-                      "{successInfo?.bookTitle}" is currently unavailable. You're #{successInfo.waitlistPosition} in the waitlist. {successInfo?.ownerName} will notify you when it becomes available.
+                      "{successInfo?.bookTitle}" {t.sharedLibrary.currentlyUnavailable}{successInfo.waitlistPosition}{t.sharedLibrary.inWaitlist} {successInfo?.ownerName} {t.sharedLibrary.willNotify}
                     </span>
                   </>
               ) : (
                 <>
-                  Your request for "{successInfo?.bookTitle}" has been sent to {successInfo?.ownerName}.
-                  They'll contact you soon!
+                  {t.sharedLibrary.requestSentTo} "{successInfo?.bookTitle}" {t.sharedLibrary.wasSentTo} {successInfo?.ownerName}.
+                  {" "}{t.sharedLibrary.theyWillContact}
                 </>
               )}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="sm:justify-center">
             <Button onClick={() => setSuccessInfo(null)}>
-              Got it!
+              {t.sharedLibrary.gotIt}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -340,7 +352,7 @@ export default function SharedLibrary() {
       {/* Footer */}
       <footer className="border-t border-border bg-card py-6">
         <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-          Powered by <span className="font-semibold text-primary">HomeShelf</span>
+          {t.sharedLibrary.poweredBy} <span className="font-semibold text-primary">{t.appName}</span>
         </div>
       </footer>
     </div>
