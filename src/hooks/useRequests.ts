@@ -22,6 +22,7 @@ export interface RequestWithBook extends Request {
     id: string;
     title: string;
     author: string | null;
+    status: Database["public"]["Enums"]["book_status"];
   };
 }
 
@@ -40,7 +41,8 @@ export function useRequests() {
           books (
             id,
             title,
-            author
+            author,
+            status
           )
         `)
         .eq("library_id", library.id)

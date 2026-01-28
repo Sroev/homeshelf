@@ -45,21 +45,32 @@ export default function Requests() {
   const [markAsLentOut, setMarkAsLentOut] = useState(true);
   const [activeTab, setActiveTab] = useState<"all" | "waitlist">("all");
 
-  const filteredRequests = requests?.filter(
-    (req) => statusFilter === "all" || req.status === statusFilter
-  );
+  // Filter requests for "All" tab - exclude pending requests for unavailable books (those go to waitlist)
+  const filteredRequests = requests?.filter((req) => {
+    const matchesStatus = statusFilter === "all" || req.status === statusFilter;
+    
+    // Hide pending requests for unavailable books - they belong in waitlist
+    const isWaitlistItem = 
+      req.status === "pending" && 
+      (req.books.status === "lent_out" || req.books.status === "reading" || req.books.status === "unavailable");
+    
+    return matchesStatus && !isWaitlistItem;
+  });
 
-  // Group pending requests by book for waitlist view
+  // Group pending requests by book for waitlist view (only for unavailable books)
   const waitlistGroups = useMemo<WaitlistGroup[]>(() => {
     if (!requests) return [];
     
-    const pendingRequests = requests
-      .filter((req) => req.status === "pending")
+    const waitlistRequests = requests
+      .filter((req) => 
+        req.status === "pending" && 
+        (req.books.status === "lent_out" || req.books.status === "reading" || req.books.status === "unavailable")
+      )
       .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
     
     const groupsMap = new Map<string, WaitlistGroup>();
     
-    pendingRequests.forEach((req) => {
+    waitlistRequests.forEach((req) => {
       if (!groupsMap.has(req.book_id)) {
         groupsMap.set(req.book_id, {
           bookId: req.book_id,
@@ -140,7 +151,7 @@ export default function Requests() {
     );
   }
 
-  const pendingCount = requests?.filter((r) => r.status === "pending").length || 0;
+  const waitlistCount = waitlistGroups.reduce((sum, g) => sum + g.requests.length, 0);
 
   return (
     <AppLayout>
@@ -163,9 +174,9 @@ export default function Requests() {
               <TabsTrigger value="waitlist" className="gap-2">
                 <Users className="h-4 w-4" />
                 Waitlist
-                {pendingCount > 0 && (
+                {waitlistCount > 0 && (
                   <Badge variant="secondary" className="ml-1 h-5 min-w-5 px-1">
-                    {pendingCount}
+                    {waitlistCount}
                   </Badge>
                 )}
               </TabsTrigger>
