@@ -263,7 +263,9 @@ export const translations = {
       wasSentTo: "беше изпратена до",
       theyWillContact: "Ще се свържат с теб скоро!",
       gotIt: "Разбрах!",
-      poweredBy: "Работи с",
+      footerText: "Това е",
+      footerCta: "Искаш ли",
+      footerCtaLink: "ти",
     },
     
     // Common
@@ -560,7 +562,9 @@ export const translations = {
       wasSentTo: "has been sent to",
       theyWillContact: "They'll contact you soon!",
       gotIt: "Got it!",
-      poweredBy: "Powered by",
+      footerText: "This is",
+      footerCta: "Want one",
+      footerCtaLink: "too",
     },
     
     // Common
