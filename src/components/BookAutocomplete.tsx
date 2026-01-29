@@ -23,6 +23,7 @@ export function BookAutocomplete({
 }: BookAutocompleteProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const [hasSelected, setHasSelected] = useState(false);
   const { suggestions, isLoading } = useBookSearch(value);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -38,20 +39,23 @@ export function BookAutocomplete({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Open dropdown when we have suggestions
+  // Open dropdown when we have suggestions (but not after selection)
   useEffect(() => {
+    if (hasSelected) return;
+    
     if (suggestions.length > 0 && value.length >= 2) {
       setIsOpen(true);
       setHighlightedIndex(-1);
     } else {
       setIsOpen(false);
     }
-  }, [suggestions, value]);
+  }, [suggestions, value, hasSelected]);
 
   const handleSelect = (suggestion: BookSuggestion) => {
+    setHasSelected(true);
+    setIsOpen(false);
     onChange(suggestion.title);
     onSelect?.(suggestion);
-    setIsOpen(false);
     inputRef.current?.focus();
   };
 
@@ -90,7 +94,10 @@ export function BookAutocomplete({
           ref={inputRef}
           id={id}
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => {
+            setHasSelected(false);
+            onChange(e.target.value);
+          }}
           onKeyDown={handleKeyDown}
           onFocus={() => {
             if (suggestions.length > 0 && value.length >= 2) {
