@@ -20,6 +20,7 @@ export type Database = {
           created_at: string
           id: string
           isbn: string | null
+          lent_to: string | null
           library_id: string
           notes: string | null
           shareable: boolean
@@ -32,6 +33,7 @@ export type Database = {
           created_at?: string
           id?: string
           isbn?: string | null
+          lent_to?: string | null
           library_id: string
           notes?: string | null
           shareable?: boolean
@@ -44,6 +46,7 @@ export type Database = {
           created_at?: string
           id?: string
           isbn?: string | null
+          lent_to?: string | null
           library_id?: string
           notes?: string | null
           shareable?: boolean
