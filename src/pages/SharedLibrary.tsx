@@ -344,8 +344,7 @@ export default function SharedLibrary() {
                   </>
               ) : (
                 <>
-                  {t.sharedLibrary.requestSentTo} "{successInfo?.bookTitle}" {t.sharedLibrary.wasSentTo} {successInfo?.ownerName}.
-                  {" "}{t.sharedLibrary.theyWillContact}
+                  {t.sharedLibrary.requestSentTo} "{successInfo?.bookTitle}" {t.sharedLibrary.wasSentTo} {successInfo?.ownerName}. 📬
                 </>
               )}
             </DialogDescription>
