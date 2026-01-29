@@ -263,7 +263,7 @@ export const translations = {
       willNotify: "ще те уведоми, когато стане налична.",
       requestSentTo: "Заявката ти за",
       wasSentTo: "беше изпратена до",
-      theyWillContact: "Очаквай известие от тях! 📬",
+      // theyWillContact is no longer used - message simplified
       gotIt: "Разбрах!",
       footerText: "Това е",
       footerCta: "Искаш ли",
@@ -565,7 +565,7 @@ export const translations = {
       willNotify: "will notify you when it becomes available.",
       requestSentTo: "Your request for",
       wasSentTo: "has been sent to",
-      theyWillContact: "They'll contact you soon!",
+      // theyWillContact is no longer used - message simplified
       gotIt: "Got it!",
       footerText: "This is",
       footerCta: "Want one",
