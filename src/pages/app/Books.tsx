@@ -326,12 +326,12 @@ export default function Books() {
 
       {/* Edit Dialog */}
       <Dialog open={!!editingBook} onOpenChange={(open) => !open && setEditingBook(null)}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md max-h-[90vh] flex flex-col">
           <DialogHeader>
             <DialogTitle>{t.common.editBook}</DialogTitle>
             <DialogDescription>{t.common.updateBookDetails}</DialogDescription>
           </DialogHeader>
-          <div className="space-y-4">
+          <div className="flex-1 overflow-y-auto space-y-4 pr-2">
             <div className="space-y-2">
               <Label htmlFor="edit-title">{t.common.title}</Label>
               <Input
@@ -401,7 +401,7 @@ export default function Books() {
               <Label htmlFor="edit-shareable">{t.common.shareableWithFriends}</Label>
             </div>
           </div>
-          <DialogFooter>
+          <DialogFooter className="mt-4">
             <Button variant="outline" onClick={() => setEditingBook(null)}>
               {t.common.cancel}
             </Button>
