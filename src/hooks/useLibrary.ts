@@ -32,6 +32,28 @@ export function useLibrary() {
   });
 }
 
+export function useUpdateLibrary() {
+  const queryClient = useQueryClient();
+  const { user } = useAuth();
+
+  return useMutation({
+    mutationFn: async ({ libraryId, name }: { libraryId: string; name: string }) => {
+      const { data, error } = await supabase
+        .from("libraries")
+        .update({ name })
+        .eq("id", libraryId)
+        .select()
+        .single();
+      
+      if (error) throw error;
+      return data as Library;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["library", user?.id] });
+    },
+  });
+}
+
 export function useRegenerateShareToken() {
   const queryClient = useQueryClient();
   const { user } = useAuth();
