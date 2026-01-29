@@ -33,7 +33,7 @@ export const translations = {
       noBooks: "Няма книги все още",
       startBuilding: "Започни да изграждаш библиотеката си, като добавиш първата си книга.",
       addFirstBook: "Добави първата си книга",
-      waitlistTitle: "Списък за чакане",
+      waitlistTitle: "Списък с чакащи",
       waitlistDesc: "Чакащи за недостъпни книги",
     },
     
@@ -166,7 +166,7 @@ export const translations = {
       title: "Заявки",
       manageRequests: "Управлявай заявки за книги от приятелите си",
       allRequests: "Всички заявки",
-      waitlist: "Списък за чакане",
+      waitlist: "Списък с чакащи",
       filter: "Филтър",
       pending: "Чакащи",
       approved: "Одобрени",
