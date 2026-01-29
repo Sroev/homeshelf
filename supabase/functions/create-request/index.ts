@@ -22,30 +22,41 @@ function escapeHtml(text: string | null | undefined): string {
   return text.replace(/[&<>"']/g, (m) => map[m]);
 }
 
-// Simple in-memory rate limiting (per IP)
-const rateLimitMap = new Map<string, number>();
+// In-memory rate limiting (per IP) - stores array of request timestamps
+const rateLimitMap = new Map<string, number[]>();
 const RATE_LIMIT_WINDOW = 60000; // 1 minute
 const MAX_REQUESTS_PER_WINDOW = 5;
 
+// Periodic cleanup to prevent memory leaks (runs every 5 minutes)
+setInterval(() => {
+  const now = Date.now();
+  for (const [ip, times] of rateLimitMap.entries()) {
+    const recent = times.filter(t => now - t < RATE_LIMIT_WINDOW);
+    if (recent.length === 0) {
+      rateLimitMap.delete(ip);
+    } else {
+      rateLimitMap.set(ip, recent);
+    }
+  }
+}, 300000);
+
 function isRateLimited(ip: string): boolean {
   const now = Date.now();
-  const lastRequest = rateLimitMap.get(ip);
+  const requests = rateLimitMap.get(ip) || [];
   
-  if (!lastRequest || now - lastRequest > RATE_LIMIT_WINDOW) {
-    rateLimitMap.set(ip, now);
-    return false;
-  }
+  // Filter to only keep requests within the time window
+  const recentRequests = requests.filter(time => now - time < RATE_LIMIT_WINDOW);
   
-  // Simple count check - in production, use proper rate limiting
-  const recentRequests = Array.from(rateLimitMap.entries())
-    .filter(([_, time]) => now - time < RATE_LIMIT_WINDOW)
-    .filter(([key]) => key === ip);
-  
+  // Check if limit exceeded
   if (recentRequests.length >= MAX_REQUESTS_PER_WINDOW) {
+    // Update map with cleaned entries
+    rateLimitMap.set(ip, recentRequests);
     return true;
   }
   
-  rateLimitMap.set(`${ip}-${now}`, now);
+  // Add current request timestamp and update map
+  recentRequests.push(now);
+  rateLimitMap.set(ip, recentRequests);
   return false;
 }
 
