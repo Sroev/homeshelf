@@ -263,7 +263,7 @@ export const translations = {
       willNotify: "ще те уведоми, когато стане налична.",
       requestSentTo: "Заявката ти за",
       wasSentTo: "беше изпратена до",
-      theyWillContact: "Ще се свържат с теб скоро!",
+      theyWillContact: "Очаквай известие от тях! 📬",
       gotIt: "Разбрах!",
       footerText: "Това е",
       footerCta: "Искаш ли",
