@@ -63,14 +63,55 @@ export function usePendingRequestsCount() {
     queryFn: async () => {
       if (!library) return 0;
       
-      const { count, error } = await supabase
+      // Get pending requests for books that are available (not on waitlist)
+      const { data, error } = await supabase
         .from("requests")
-        .select("*", { count: "exact", head: true })
+        .select(`
+          id,
+          books!inner (
+            status
+          )
+        `)
         .eq("library_id", library.id)
         .eq("status", "pending");
       
       if (error) throw error;
-      return count || 0;
+      
+      // Filter to only count requests for available books
+      const availableRequests = data?.filter(r => r.books?.status === "available") || [];
+      return availableRequests.length;
+    },
+    enabled: !!library,
+  });
+}
+
+export function useWaitlistCount() {
+  const { data: library } = useLibrary();
+
+  return useQuery({
+    queryKey: ["waitlist-count", library?.id],
+    queryFn: async () => {
+      if (!library) return 0;
+      
+      // Get pending requests for books that are NOT available (waitlist items)
+      const { data, error } = await supabase
+        .from("requests")
+        .select(`
+          id,
+          books!inner (
+            status
+          )
+        `)
+        .eq("library_id", library.id)
+        .eq("status", "pending");
+      
+      if (error) throw error;
+      
+      // Filter to only count requests for unavailable books (waitlist)
+      const waitlistRequests = data?.filter(r => 
+        r.books?.status === "lent_out" || r.books?.status === "reading"
+      ) || [];
+      return waitlistRequests.length;
     },
     enabled: !!library,
   });

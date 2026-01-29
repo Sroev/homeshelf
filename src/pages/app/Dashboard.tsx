@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
-import { Book, Link2, MessageSquare, Plus } from "lucide-react";
+import { Book, Link2, MessageSquare, Plus, Clock } from "lucide-react";
 import { useProfile } from "@/hooks/useProfile";
 import { useBooks } from "@/hooks/useBooks";
-import { usePendingRequestsCount } from "@/hooks/useRequests";
+import { usePendingRequestsCount, useWaitlistCount } from "@/hooks/useRequests";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,6 +12,7 @@ export default function Dashboard() {
   const { data: profile } = useProfile();
   const { data: books } = useBooks();
   const { data: pendingCount } = usePendingRequestsCount();
+  const { data: waitlistCount } = useWaitlistCount();
   const { t } = useLanguage();
 
   const bookCount = books?.length || 0;
@@ -31,7 +32,7 @@ export default function Dashboard() {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">{t.dashboard.totalBooks}</CardTitle>
@@ -58,7 +59,20 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          <Card className="sm:col-span-2 lg:col-span-1">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">{t.dashboard.waitlistTitle}</CardTitle>
+              <Clock className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{waitlistCount || 0}</div>
+              <p className="text-xs text-muted-foreground">
+                {t.dashboard.waitlistDesc}
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">{t.dashboard.shareStatus}</CardTitle>
               <Link2 className="h-4 w-4 text-muted-foreground" />
