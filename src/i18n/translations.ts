@@ -169,7 +169,7 @@ export const translations = {
       waitlist: "Списък с чакащи",
       filter: "Филтър",
       pending: "Чакащи",
-      approved: "Одобрени",
+      approved: "Одобрена",
       declined: "Отказани",
       requester: "Заявител:",
       email: "Имейл:",
