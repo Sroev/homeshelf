@@ -12,6 +12,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { AppLayout } from "@/components/layout/AppLayout";
 import { useToast } from "@/hooks/use-toast";
 import { Database } from "@/integrations/supabase/types";
+import { BookAutocomplete } from "@/components/BookAutocomplete";
+import { BookSuggestion } from "@/hooks/useBookSearch";
 
 type BookStatus = Database["public"]["Enums"]["book_status"];
 
@@ -91,14 +93,25 @@ export default function NewBook() {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="title">{t.newBook.bookTitle}</Label>
-                <Input
+                <BookAutocomplete
                   id="title"
                   value={title}
-                  onChange={(e) => setTitle(e.target.value)}
+                  onChange={setTitle}
+                  onSelect={(suggestion: BookSuggestion) => {
+                    setTitle(suggestion.title);
+                    if (suggestion.author && !author) {
+                      setAuthor(suggestion.author);
+                    }
+                    if (suggestion.isbn && !isbn) {
+                      setIsbn(suggestion.isbn);
+                    }
+                  }}
                   placeholder={t.newBook.titlePlaceholder}
-                  required
                   maxLength={255}
                 />
+                <p className="text-xs text-muted-foreground">
+                  {t.newBook.autocompleteHint}
+                </p>
               </div>
 
               <div className="space-y-2">
