@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useProfile, useUpdateProfile } from "@/hooks/useProfile";
+import { useLibrary, useUpdateLibrary } from "@/hooks/useLibrary";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,13 +10,16 @@ import { AppLayout } from "@/components/layout/AppLayout";
 import { useToast } from "@/hooks/use-toast";
 
 export default function Profile() {
-  const { data: profile, isLoading } = useProfile();
+  const { data: profile, isLoading: profileLoading } = useProfile();
+  const { data: library, isLoading: libraryLoading } = useLibrary();
   const updateProfile = useUpdateProfile();
+  const updateLibrary = useUpdateLibrary();
   const { toast } = useToast();
   const { t } = useLanguage();
 
   const [displayName, setDisplayName] = useState("");
   const [city, setCity] = useState("");
+  const [libraryName, setLibraryName] = useState("");
 
   useEffect(() => {
     if (profile) {
@@ -23,6 +27,14 @@ export default function Profile() {
       setCity(profile.city || "");
     }
   }, [profile]);
+
+  useEffect(() => {
+    if (library) {
+      setLibraryName(library.name);
+    }
+  }, [library]);
+
+  const isLoading = profileLoading || libraryLoading;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,11 +48,28 @@ export default function Profile() {
       return;
     }
 
+    if (!libraryName.trim()) {
+      toast({
+        title: t.profile.validationError,
+        description: t.profile.libraryNameRequired,
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
       await updateProfile.mutateAsync({
         display_name: displayName.trim(),
         city: city.trim() || null,
       });
+
+      if (library) {
+        await updateLibrary.mutateAsync({
+          libraryId: library.id,
+          name: libraryName.trim(),
+        });
+      }
+
       toast({
         title: t.profile.profileUpdated,
         description: t.profile.changesSaved,
@@ -53,6 +82,8 @@ export default function Profile() {
       });
     }
   };
+
+  const isPending = updateProfile.isPending || updateLibrary.isPending;
 
   if (isLoading) {
     return (
@@ -112,8 +143,23 @@ export default function Profile() {
                 </p>
               </div>
 
-              <Button type="submit" disabled={updateProfile.isPending}>
-                {updateProfile.isPending ? t.profile.saving : t.profile.saveChanges}
+              <div className="space-y-2">
+                <Label htmlFor="libraryName">{t.profile.libraryName}</Label>
+                <Input
+                  id="libraryName"
+                  value={libraryName}
+                  onChange={(e) => setLibraryName(e.target.value)}
+                  placeholder={t.profile.libraryNamePlaceholder}
+                  required
+                  maxLength={100}
+                />
+                <p className="text-xs text-muted-foreground">
+                  {t.profile.libraryNameHelp}
+                </p>
+              </div>
+
+              <Button type="submit" disabled={isPending}>
+                {isPending ? t.profile.saving : t.profile.saveChanges}
               </Button>
             </form>
           </CardContent>
