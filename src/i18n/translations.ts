@@ -16,7 +16,7 @@ export const translations = {
     
     // Dashboard
     dashboard: {
-      welcomeBack: "Добре дошъл отново",
+      welcomeBack: "Добре дошъл",
       manageLibrary: "Управлявай личната си библиотека и я сподели с приятели.",
       totalBooks: "Общо книги",
       available: "налични",
