@@ -18,13 +18,11 @@ export default function Profile() {
   const { t } = useLanguage();
 
   const [displayName, setDisplayName] = useState("");
-  const [city, setCity] = useState("");
   const [libraryName, setLibraryName] = useState("");
 
   useEffect(() => {
     if (profile) {
       setDisplayName(profile.display_name);
-      setCity(profile.city || "");
     }
   }, [profile]);
 
@@ -60,7 +58,6 @@ export default function Profile() {
     try {
       await updateProfile.mutateAsync({
         display_name: displayName.trim(),
-        city: city.trim() || null,
       });
 
       if (library) {
@@ -126,20 +123,6 @@ export default function Profile() {
                 />
                 <p className="text-xs text-muted-foreground">
                   {t.profile.displayNameHelp}
-                </p>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="city">{t.profile.city}</Label>
-                <Input
-                  id="city"
-                  value={city}
-                  onChange={(e) => setCity(e.target.value)}
-                  placeholder={t.profile.cityPlaceholder}
-                  maxLength={100}
-                />
-                <p className="text-xs text-muted-foreground">
-                  {t.profile.cityHelp}
                 </p>
               </div>
 
