@@ -361,7 +361,12 @@ export default function SharedLibrary() {
       {/* Footer */}
       <footer className="border-t border-border bg-card py-6">
         <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-          {t.sharedLibrary.poweredBy} <span className="font-semibold text-primary">{t.appName}</span>
+          {t.sharedLibrary.footerText} <span className="font-semibold text-primary">{t.appName}</span>.{" "}
+          {t.sharedLibrary.footerCta}{" "}
+          <a href="/login" className="font-semibold text-primary underline hover:text-primary/80">
+            {t.sharedLibrary.footerCtaLink}
+          </a>
+          ?
         </div>
       </footer>
     </div>
