@@ -27,6 +27,10 @@ export function BookAutocomplete({
   const { suggestions, isLoading } = useBookSearch(value);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const ignoreNextFocusRef = useRef(false);
+
+  // After a user picks a suggestion, hide suggestions until they type again.
+  const visibleSuggestions = hasSelected ? [] : suggestions;
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -43,42 +47,45 @@ export function BookAutocomplete({
   useEffect(() => {
     if (hasSelected) return;
     
-    if (suggestions.length > 0 && value.length >= 2) {
+    if (visibleSuggestions.length > 0 && value.length >= 2) {
       setIsOpen(true);
       setHighlightedIndex(-1);
     } else {
       setIsOpen(false);
     }
-  }, [suggestions, value, hasSelected]);
+  }, [visibleSuggestions.length, value, hasSelected]);
 
   const handleSelect = (suggestion: BookSuggestion) => {
+    // We're about to focus the input programmatically; prevent onFocus from re-opening the dropdown.
+    ignoreNextFocusRef.current = true;
     setHasSelected(true);
     setIsOpen(false);
+    setHighlightedIndex(-1);
     onChange(suggestion.title);
     onSelect?.(suggestion);
     inputRef.current?.focus();
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (!isOpen || suggestions.length === 0) return;
+    if (!isOpen || visibleSuggestions.length === 0) return;
 
     switch (e.key) {
       case "ArrowDown":
         e.preventDefault();
         setHighlightedIndex((prev) => 
-          prev < suggestions.length - 1 ? prev + 1 : 0
+          prev < visibleSuggestions.length - 1 ? prev + 1 : 0
         );
         break;
       case "ArrowUp":
         e.preventDefault();
         setHighlightedIndex((prev) => 
-          prev > 0 ? prev - 1 : suggestions.length - 1
+          prev > 0 ? prev - 1 : visibleSuggestions.length - 1
         );
         break;
       case "Enter":
         e.preventDefault();
         if (highlightedIndex >= 0) {
-          handleSelect(suggestions[highlightedIndex]);
+          handleSelect(visibleSuggestions[highlightedIndex]);
         }
         break;
       case "Escape":
@@ -100,7 +107,12 @@ export function BookAutocomplete({
           }}
           onKeyDown={handleKeyDown}
           onFocus={() => {
-            if (suggestions.length > 0 && value.length >= 2) {
+            if (ignoreNextFocusRef.current) {
+              ignoreNextFocusRef.current = false;
+              return;
+            }
+
+            if (!hasSelected && visibleSuggestions.length > 0 && value.length >= 2) {
               setIsOpen(true);
             }
           }}
@@ -114,10 +126,10 @@ export function BookAutocomplete({
         )}
       </div>
 
-      {isOpen && suggestions.length > 0 && (
+      {isOpen && visibleSuggestions.length > 0 && (
         <div className="absolute z-50 mt-1 w-full rounded-md border border-border bg-popover shadow-lg">
           <ul className="max-h-60 overflow-auto py-1">
-            {suggestions.map((suggestion, index) => (
+            {visibleSuggestions.map((suggestion, index) => (
               <li
                 key={suggestion.key}
                 onClick={() => handleSelect(suggestion)}
