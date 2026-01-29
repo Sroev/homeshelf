@@ -127,6 +127,16 @@ export function useUpdateRequest() {
       status: RequestStatus;
       sendNotification?: boolean;
     }) => {
+      // First get the request to know the book_id and requester_name
+      const { data: requestData, error: requestError } = await supabase
+        .from("requests")
+        .select("book_id, requester_name")
+        .eq("id", id)
+        .single();
+      
+      if (requestError) throw requestError;
+
+      // Update the request status
       const { data, error } = await supabase
         .from("requests")
         .update({ status })
@@ -135,6 +145,22 @@ export function useUpdateRequest() {
         .single();
       
       if (error) throw error;
+
+      // If approved, automatically update the book's status and lent_to field
+      if (status === "approved" && requestData) {
+        const { error: bookError } = await supabase
+          .from("books")
+          .update({ 
+            status: "lent_out",
+            lent_to: requestData.requester_name 
+          })
+          .eq("id", requestData.book_id);
+        
+        if (bookError) {
+          console.error("Failed to update book status:", bookError);
+          // Don't throw - the request was updated successfully
+        }
+      }
 
       // Send notification email if requested
       if (sendNotification && (status === "approved" || status === "declined")) {
@@ -153,6 +179,8 @@ export function useUpdateRequest() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["requests", library?.id] });
       queryClient.invalidateQueries({ queryKey: ["requests-count", library?.id] });
+      queryClient.invalidateQueries({ queryKey: ["books", library?.id] });
+      queryClient.invalidateQueries({ queryKey: ["waitlist-count", library?.id] });
     },
   });
 }
