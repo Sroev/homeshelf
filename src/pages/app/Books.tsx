@@ -53,6 +53,7 @@ export default function Books() {
   const [editNotes, setEditNotes] = useState("");
   const [editStatus, setEditStatus] = useState<BookStatus>("available");
   const [editShareable, setEditShareable] = useState(true);
+  const [editLentTo, setEditLentTo] = useState("");
 
   const filteredBooks = books?.filter((book) => {
     const matchesSearch =
@@ -104,6 +105,7 @@ export default function Books() {
     setEditNotes(book.notes || "");
     setEditStatus(book.status);
     setEditShareable(book.shareable);
+    setEditLentTo(book.lent_to || "");
   };
 
   const handleEditSubmit = async () => {
@@ -121,6 +123,7 @@ export default function Books() {
         notes: editNotes.trim() || null,
         status: editStatus,
         shareable: editShareable,
+        lent_to: editStatus === "lent_out" ? (editLentTo.trim() || null) : null,
         notifyWaitlist: wasUnavailable && becomingAvailable,
       });
       
@@ -226,6 +229,7 @@ export default function Books() {
                     <TableHead>{t.books.titleColumn}</TableHead>
                     <TableHead className="hidden sm:table-cell">{t.books.authorColumn}</TableHead>
                     <TableHead>{t.books.status}</TableHead>
+                    <TableHead className="hidden md:table-cell">{t.books.lentToColumn}</TableHead>
                     <TableHead className="text-center">{t.books.shareableColumn}</TableHead>
                     <TableHead className="text-right">{t.books.actions}</TableHead>
                   </TableRow>
@@ -262,6 +266,9 @@ export default function Books() {
                             ))}
                           </SelectContent>
                         </Select>
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell text-muted-foreground">
+                        {book.status === "lent_out" && book.lent_to ? book.lent_to : "—"}
                       </TableCell>
                       <TableCell className="text-center">
                         <Switch
@@ -374,6 +381,17 @@ export default function Books() {
                 </SelectContent>
               </Select>
             </div>
+            {editStatus === "lent_out" && (
+              <div className="space-y-2">
+                <Label htmlFor="edit-lent-to">{t.books.lentToColumn}</Label>
+                <Input
+                  id="edit-lent-to"
+                  value={editLentTo}
+                  onChange={(e) => setEditLentTo(e.target.value)}
+                  placeholder={t.common.lentToPlaceholder}
+                />
+              </div>
+            )}
             <div className="flex items-center gap-2">
               <Switch
                 id="edit-shareable"

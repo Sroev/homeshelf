@@ -14,6 +14,7 @@ export interface Book {
   notes: string | null;
   status: BookStatus;
   shareable: boolean;
+  lent_to: string | null;
   created_at: string;
   updated_at: string;
 }
