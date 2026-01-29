@@ -170,7 +170,7 @@ export const translations = {
       filter: "Филтър",
       pending: "Чакаща",
       approved: "Одобрена",
-      declined: "Отказани",
+      declined: "Отказана",
       requester: "Заявител:",
       email: "Имейл:",
       date: "Дата:",
