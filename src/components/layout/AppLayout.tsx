@@ -75,7 +75,7 @@ export function AppLayout({ children }: AppLayoutProps) {
       <aside className="hidden w-64 flex-col border-r border-border bg-sidebar pt-8 pb-4 pl-8 pr-4 md:flex">
         <div className="mb-6">
           <Link to="/app">
-            <span className="text-3xl font-bold text-foreground" style={{ fontFamily: "'Source Serif 4', serif" }}>Runo</span>
+            <span className="text-[40px] font-bold text-foreground" style={{ fontFamily: "'Source Serif 4', serif" }}>Runo</span>
           </Link>
         </div>
         
