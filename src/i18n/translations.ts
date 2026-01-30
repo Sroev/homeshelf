@@ -1,7 +1,7 @@
 export const translations = {
   bg: {
     // App name
-    appName: "HomeShelf",
+    appName: "Runo",
     
     // Navigation
     nav: {
@@ -212,7 +212,7 @@ export const translations = {
     login: {
       createAccount: "Създай акаунт",
       welcomeBack: "Добре дошъл отново",
-      getStarted: "Въведи данните си, за да започнеш с HomeShelf",
+      getStarted: "Въведи данните си, за да започнеш с Runo",
       signInToManage: "Влез, за да управляваш библиотеката си",
       displayName: "Име за показване",
       displayNamePlaceholder: "Твоето име",
@@ -227,7 +227,7 @@ export const translations = {
       signUp: "Регистрирай се",
       signUpFailed: "Неуспешна регистрация",
       signInFailed: "Неуспешен вход",
-      welcomeToHomeShelf: "Добре дошъл в HomeShelf!",
+      welcomeToHomeShelf: "Добре дошъл в Runo!",
       accountCreated: "Акаунтът ти беше създаден.",
     },
     
@@ -314,7 +314,7 @@ export const translations = {
   
   en: {
     // App name
-    appName: "HomeShelf",
+    appName: "Runo",
     
     // Navigation
     nav: {
@@ -525,7 +525,7 @@ export const translations = {
     login: {
       createAccount: "Create an account",
       welcomeBack: "Welcome back",
-      getStarted: "Enter your details to get started with HomeShelf",
+      getStarted: "Enter your details to get started with Runo",
       signInToManage: "Sign in to manage your library",
       displayName: "Display Name",
       displayNamePlaceholder: "Your name",
@@ -540,7 +540,7 @@ export const translations = {
       signUp: "Sign up",
       signUpFailed: "Sign up failed",
       signInFailed: "Sign in failed",
-      welcomeToHomeShelf: "Welcome to HomeShelf!",
+      welcomeToHomeShelf: "Welcome to Runo!",
       accountCreated: "Your account has been created.",
     },
     

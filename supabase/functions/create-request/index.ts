@@ -226,7 +226,7 @@ serve(async (req) => {
         // Send notification to owner (escape user-controlled data to prevent XSS)
         try {
           await resend.emails.send({
-            from: "HomeShelf <noreply@resend.dev>",
+            from: "Runo <noreply@resend.dev>",
             to: [ownerEmail],
             subject: `New book request: ${escapeHtml(book.title)}`,
             html: `
@@ -251,14 +251,14 @@ serve(async (req) => {
       // Send confirmation to requester (escape user-controlled data to prevent XSS)
       try {
         await resend.emails.send({
-          from: "HomeShelf <noreply@resend.dev>",
+          from: "Runo <noreply@resend.dev>",
           to: [requester_email],
           subject: `Request received: ${escapeHtml(book.title)}`,
           html: `
             <h1>Request Received</h1>
             <p>Your request for <strong>${escapeHtml(book.title)}</strong> has been sent to ${escapeHtml(ownerName)}.</p>
             <p>They will contact you at this email address if they approve your request.</p>
-            <p>Thank you for using HomeShelf!</p>
+            <p>Thank you for using Runo!</p>
           `,
         });
       } catch (emailError) {

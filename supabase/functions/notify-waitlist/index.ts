@@ -48,7 +48,7 @@ serve(async (req) => {
     const resendFromEnv = Deno.env.get("RESEND_FROM_EMAIL") || "noreply@resend.dev";
     const resendFrom = resendFromEnv.includes("<")
       ? resendFromEnv
-      : `HomeShelf <${resendFromEnv}>`;
+      : `Runo <${resendFromEnv}>`;
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -139,7 +139,7 @@ serve(async (req) => {
           ${book.author ? `<p>by ${escapeHtml(book.author)}</p>` : ""}
           <p>You were first on the waitlist, so ${escapeHtml(ownerName)} has been notified of your interest.</p>
           <p>They should be in touch soon!</p>
-          <p>Thank you for using HomeShelf!</p>
+          <p>Thank you for using Runo!</p>
         `,
       });
 
