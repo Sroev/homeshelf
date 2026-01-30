@@ -68,6 +68,7 @@ serve(async (req) => {
         books (title, author),
         libraries (
           name,
+          owner_id,
           profiles (display_name)
         )
       `)
@@ -81,6 +82,14 @@ serve(async (req) => {
       );
     }
 
+    // Get owner's email from auth.users
+    const ownerId = request.libraries?.owner_id;
+    let ownerEmail: string | null = null;
+    if (ownerId) {
+      const { data: authUser } = await supabase.auth.admin.getUserById(ownerId);
+      ownerEmail = authUser?.user?.email || null;
+    }
+
     const resend = new Resend(resendApiKey);
     const bookTitle = request.books?.title || "the book";
     const bookAuthor = request.books?.author;
@@ -89,42 +98,54 @@ serve(async (req) => {
       : request.libraries?.profiles;
     const ownerName = profile?.display_name || "the library owner";
 
-    let subject: string;
-    let htmlContent: string;
+    let requesterSubject: string;
+    let requesterHtml: string;
+    let ownerSubject: string | null = null;
+    let ownerHtml: string | null = null;
 
     if (status === "approved") {
-      subject = `Good news! Your request for "${escapeHtml(bookTitle)}" was approved`;
-      htmlContent = `
-        <h1>Request Approved! 🎉</h1>
-        <p>Great news, <strong>${escapeHtml(request.requester_name)}</strong>!</p>
-        <p>${escapeHtml(ownerName)} has approved your request to borrow:</p>
-        <h2>${escapeHtml(bookTitle)}</h2>
-        ${bookAuthor ? `<p>by ${escapeHtml(bookAuthor)}</p>` : ""}
-        <p>They will contact you at <strong>${escapeHtml(request.requester_email)}</strong> to arrange the pickup or delivery.</p>
-        <p>Thank you for using Runo!</p>
+      // Email to requester
+      requesterSubject = `Одобрена заявка за „${escapeHtml(bookTitle)}"`;
+      requesterHtml = `
+        <p>Здравей,</p>
+        <p>Страхотни новини! ${escapeHtml(ownerName)} одобри заявката ти за:</p>
+        <p><strong>${escapeHtml(bookTitle)}</strong>${bookAuthor ? `<br/>от ${escapeHtml(bookAuthor)}` : ""}</p>
+        <p>Ще се свържат с теб на <strong>${escapeHtml(request.requester_email)}</strong>, за да уговорите предаването.</p>
+        <p>Runo</p>
+      `;
+      
+      // Email to owner (admin)
+      ownerSubject = `Одобрена заявка за „${escapeHtml(bookTitle)}"`;
+      ownerHtml = `
+        <p>Здравей,</p>
+        <p>Ти одобри заявката за книгата „${escapeHtml(bookTitle)}".</p>
+        <p>Статусът на книгата вече е отбелязан като „дадена".</p>
+        <p>Ако искаш, можеш по-късно да я върнеш обратно като „налична" в библиотеката си.</p>
+        <p>Runo</p>
       `;
     } else {
-      subject = `Update on your request for "${escapeHtml(bookTitle)}"`;
-      htmlContent = `
-        <h1>Request Update</h1>
-        <p>Hi <strong>${escapeHtml(request.requester_name)}</strong>,</p>
-        <p>Unfortunately, your request to borrow <strong>${escapeHtml(bookTitle)}</strong> was declined.</p>
-        <p>The book may not be available at this time. Feel free to check out other books in the library!</p>
-        <p>Thank you for using Runo.</p>
+      // Email to requester only for declined
+      requesterSubject = `Относно заявката ти за „${escapeHtml(bookTitle)}"`;
+      requesterHtml = `
+        <p>Здравей,</p>
+        <p>За съжаление, заявката ти за <strong>${escapeHtml(bookTitle)}</strong> беше отказана.</p>
+        <p>Книгата може да не е налична в момента. Разгледай другите книги в библиотеката!</p>
+        <p>Runo</p>
       `;
     }
 
     try {
       console.log(
         "Sending request notification email",
-        JSON.stringify({ request_id, status, to: request.requester_email, subject })
+        JSON.stringify({ request_id, status, to: request.requester_email, subject: requesterSubject })
       );
 
+      // Send email to requester
       const emailResponse: any = await resend.emails.send({
         from: resendFrom,
         to: [request.requester_email],
-        subject,
-        html: htmlContent,
+        subject: requesterSubject,
+        html: requesterHtml,
       });
 
       // Resend SDKs may return either { id } or { data: { id }, error }
@@ -132,22 +153,33 @@ serve(async (req) => {
       const resendError = emailResponse?.error;
 
       console.log(
-        "Resend send response",
+        "Resend send response (requester)",
         JSON.stringify({ resendId, hasError: !!resendError })
       );
 
       if (resendError) {
         console.error("Resend API error:", resendError);
-        return new Response(
-          JSON.stringify({
-            success: true,
-            email_sent: false,
-            error: "Resend API error",
-            resend_status: resendError?.statusCode,
-            resend_message: resendError?.message,
-          }),
-          { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
+      }
+
+      // Send email to owner if approved
+      let ownerEmailSent = false;
+      if (status === "approved" && ownerEmail && ownerSubject && ownerHtml) {
+        try {
+          const ownerEmailResponse: any = await resend.emails.send({
+            from: resendFrom,
+            to: [ownerEmail],
+            subject: ownerSubject,
+            html: ownerHtml,
+          });
+          
+          const ownerResendId = ownerEmailResponse?.id ?? ownerEmailResponse?.data?.id;
+          if (ownerResendId) {
+            ownerEmailSent = true;
+            console.log("Owner notification email sent:", ownerResendId);
+          }
+        } catch (ownerEmailError) {
+          console.error("Owner email send error:", ownerEmailError);
+        }
       }
 
       if (!resendId) {
@@ -156,6 +188,7 @@ serve(async (req) => {
           JSON.stringify({
             success: true,
             email_sent: false,
+            owner_email_sent: ownerEmailSent,
             error: "Resend response missing id",
           }),
           { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -163,7 +196,7 @@ serve(async (req) => {
       }
 
       return new Response(
-        JSON.stringify({ success: true, email_sent: true, resend_id: resendId }),
+        JSON.stringify({ success: true, email_sent: true, owner_email_sent: ownerEmailSent, resend_id: resendId }),
         { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     } catch (emailError) {
