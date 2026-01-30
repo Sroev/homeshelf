@@ -125,6 +125,16 @@ export const translations = {
       bookAddedTo: "е добавена към библиотеката ти.",
       error: "Грешка",
       failedToAdd: "Неуспешно добавяне на книга. Моля, опитай отново.",
+      // Cover upload
+      cover: "Корица",
+      addCover: "Добави корица",
+      coverHint: "Снимките се компресират автоматично",
+      invalidFileType: "Невалиден формат",
+      selectImage: "Моля, избери файл с изображение",
+      coverUploaded: "Корицата е качена",
+      coverUploadedDesc: "Корицата на книгата е качена успешно",
+      uploadError: "Грешка при качване",
+      uploadErrorDesc: "Неуспешно качване на корицата",
     },
     
     // Share
@@ -427,6 +437,16 @@ export const translations = {
       bookAddedTo: "has been added to your library.",
       error: "Error",
       failedToAdd: "Failed to add book. Please try again.",
+      // Cover upload
+      cover: "Cover",
+      addCover: "Add cover",
+      coverHint: "Images are automatically compressed",
+      invalidFileType: "Invalid file type",
+      selectImage: "Please select an image file",
+      coverUploaded: "Cover uploaded",
+      coverUploadedDesc: "Book cover has been uploaded successfully",
+      uploadError: "Upload failed",
+      uploadErrorDesc: "Failed to upload book cover",
     },
     
     // Share

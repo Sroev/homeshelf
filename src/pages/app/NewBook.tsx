@@ -14,6 +14,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Database } from "@/integrations/supabase/types";
 import { BookAutocomplete } from "@/components/BookAutocomplete";
 import { BookSuggestion } from "@/hooks/useBookSearch";
+import { BookCoverUpload } from "@/components/BookCoverUpload";
 
 type BookStatus = Database["public"]["Enums"]["book_status"];
 
@@ -36,6 +37,7 @@ export default function NewBook() {
   const [notes, setNotes] = useState("");
   const [status, setStatus] = useState<BookStatus>("available");
   const [shareable, setShareable] = useState(true);
+  const [coverUrl, setCoverUrl] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,6 +59,7 @@ export default function NewBook() {
         notes: notes.trim() || undefined,
         status,
         shareable,
+        cover_url: coverUrl || undefined,
       });
       toast({
         title: t.newBook.bookAdded,
@@ -91,6 +94,14 @@ export default function NewBook() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <Label>{t.newBook.cover}</Label>
+                <BookCoverUpload
+                  coverUrl={coverUrl}
+                  onCoverChange={setCoverUrl}
+                />
+              </div>
+
               <div className="space-y-2">
                 <Label htmlFor="title">{t.newBook.bookTitle}</Label>
                 <BookAutocomplete
