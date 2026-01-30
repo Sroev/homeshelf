@@ -73,9 +73,9 @@ export function AppLayout({ children }: AppLayoutProps) {
     <div className="flex min-h-screen bg-background">
       {/* Desktop Sidebar */}
       <aside className="hidden w-64 flex-col border-r border-border bg-sidebar p-4 md:flex">
-        <div className="mb-8">
-          <Link to="/app" className="flex items-center">
-            <span className="text-2xl font-semibold text-foreground" style={{ fontFamily: "'Source Serif 4', serif" }}>Runo</span>
+        <div className="mb-6 px-3">
+          <Link to="/app">
+            <span className="text-3xl font-semibold text-foreground" style={{ fontFamily: "'Source Serif 4', serif" }}>Runo</span>
           </Link>
         </div>
         
