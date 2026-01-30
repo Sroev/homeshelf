@@ -253,12 +253,13 @@ serve(async (req) => {
         await resend.emails.send({
           from: "Runo <noreply@resend.dev>",
           to: [requester_email],
-          subject: `Request received: ${escapeHtml(book.title)}`,
+          subject: `Заявка за „${escapeHtml(book.title)}"`,
           html: `
-            <h1>Request Received</h1>
-            <p>Your request for <strong>${escapeHtml(book.title)}</strong> has been sent to ${escapeHtml(ownerName)}.</p>
-            <p>They will contact you at this email address if they approve your request.</p>
-            <p>Thank you for using Runo!</p>
+            <p>Здравей,</p>
+            <p>Заявката ти за книгата „${escapeHtml(book.title)}" беше изпратена успешно.</p>
+            <p>${escapeHtml(ownerName)} ще я види и ще се свърже с теб, за да се разберете.</p>
+            <p>Нищо повече не е нужно от твоя страна.</p>
+            <p>Runo</p>
           `,
         });
       } catch (emailError) {
