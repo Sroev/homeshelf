@@ -81,19 +81,19 @@ export function AppLayout({ children }: AppLayoutProps) {
         
         <NavContent />
         
-        <div className="mt-auto space-y-4 pt-4 -ml-3">
+        <div className="mt-auto space-y-4 pt-4">
           {profile && (
-            <div className="rounded-lg bg-muted p-3 ml-3">
+            <div className="rounded-lg bg-muted p-3 -ml-3">
               <p className="text-sm font-medium text-foreground">{profile.display_name}</p>
               {profile.city && (
                 <p className="text-xs text-muted-foreground">{profile.city}</p>
               )}
             </div>
           )}
-          <LanguageToggle />
+          <LanguageToggle className="-ml-3" />
           <Button
             variant="ghost"
-            className="w-full justify-start gap-3"
+            className="w-full justify-start gap-3 px-3 -ml-3"
             onClick={handleSignOut}
           >
             <LogOut className="h-4 w-4" />
