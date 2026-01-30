@@ -211,9 +211,9 @@ export default function SharedLibrary() {
             <p className="mb-6 text-muted-foreground">
               {data.books.length} {data.books.length !== 1 ? t.sharedLibrary.booksAvailablePlural : t.sharedLibrary.booksAvailable}
             </p>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
             {data.books.map((book) => (
-                <Card key={book.id} className="flex flex-col overflow-hidden">
+                <Card key={book.id} className="flex flex-col overflow-hidden max-w-[180px]">
                   {book.cover_url ? (
                     <div className="aspect-[2/3] w-full overflow-hidden bg-muted">
                       <img
@@ -227,7 +227,7 @@ export default function SharedLibrary() {
                       <Book className="h-16 w-16 text-muted-foreground/50" />
                     </div>
                   )}
-                  <CardHeader className="flex-1">
+                  <CardHeader className="flex-1 p-3">
                     <CardTitle className="line-clamp-2 text-lg">{book.title}</CardTitle>
                     {book.author && (
                       <CardDescription className="line-clamp-1">
@@ -235,7 +235,7 @@ export default function SharedLibrary() {
                       </CardDescription>
                     )}
                   </CardHeader>
-                  <CardContent className="space-y-3">
+                  <CardContent className="space-y-3 p-3 pt-0">
                     <Badge className={statusColors[book.status]}>
                       {statusLabels[book.status]}
                     </Badge>
