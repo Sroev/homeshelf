@@ -72,7 +72,7 @@ export function AppLayout({ children }: AppLayoutProps) {
   return (
     <div className="flex min-h-screen bg-background">
       {/* Desktop Sidebar */}
-      <aside className="hidden w-64 flex-col border-r border-border bg-sidebar py-4 pl-8 pr-4 md:flex">
+      <aside className="hidden w-64 flex-col border-r border-border bg-sidebar pt-8 pb-4 pl-8 pr-4 md:flex">
         <div className="mb-6">
           <Link to="/app">
             <span className="text-3xl font-semibold text-foreground" style={{ fontFamily: "'Source Serif 4', serif" }}>Runo</span>
