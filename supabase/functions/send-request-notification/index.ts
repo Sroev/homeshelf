@@ -54,7 +54,7 @@ serve(async (req) => {
     const resendFromEnv = Deno.env.get("RESEND_FROM_EMAIL") || "noreply@resend.dev";
     const resendFrom = resendFromEnv.includes("<")
       ? resendFromEnv
-      : `HomeShelf <${resendFromEnv}>`;
+      : `Runo <${resendFromEnv}>`;
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -101,7 +101,7 @@ serve(async (req) => {
         <h2>${escapeHtml(bookTitle)}</h2>
         ${bookAuthor ? `<p>by ${escapeHtml(bookAuthor)}</p>` : ""}
         <p>They will contact you at <strong>${escapeHtml(request.requester_email)}</strong> to arrange the pickup or delivery.</p>
-        <p>Thank you for using HomeShelf!</p>
+        <p>Thank you for using Runo!</p>
       `;
     } else {
       subject = `Update on your request for "${escapeHtml(bookTitle)}"`;
@@ -110,7 +110,7 @@ serve(async (req) => {
         <p>Hi <strong>${escapeHtml(request.requester_name)}</strong>,</p>
         <p>Unfortunately, your request to borrow <strong>${escapeHtml(bookTitle)}</strong> was declined.</p>
         <p>The book may not be available at this time. Feel free to check out other books in the library!</p>
-        <p>Thank you for using HomeShelf.</p>
+        <p>Thank you for using Runo.</p>
       `;
     }
 
