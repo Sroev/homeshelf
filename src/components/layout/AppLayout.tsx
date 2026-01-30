@@ -50,7 +50,7 @@ export function AppLayout({ children }: AppLayoutProps) {
             to={item.href}
             onClick={() => setMobileOpen(false)}
             className={cn(
-              "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+              "flex items-center gap-3 rounded-lg py-2 text-sm font-medium transition-colors",
               isActive
                 ? "bg-primary text-primary-foreground"
                 : "text-foreground hover:bg-muted"
@@ -72,8 +72,8 @@ export function AppLayout({ children }: AppLayoutProps) {
   return (
     <div className="flex min-h-screen bg-background">
       {/* Desktop Sidebar */}
-      <aside className="hidden w-64 flex-col border-r border-border bg-sidebar p-4 md:flex">
-        <div className="mb-6 px-3">
+      <aside className="hidden w-64 flex-col border-r border-border bg-sidebar py-4 pl-8 pr-4 md:flex">
+        <div className="mb-6">
           <Link to="/app">
             <span className="text-3xl font-semibold text-foreground" style={{ fontFamily: "'Source Serif 4', serif" }}>Runo</span>
           </Link>
