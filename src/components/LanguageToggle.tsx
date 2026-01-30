@@ -12,12 +12,11 @@ export function LanguageToggle() {
   return (
     <Button
       variant="ghost"
-      size="sm"
       onClick={toggleLanguage}
-      className="gap-2"
+      className="w-full justify-start gap-3 px-3"
     >
       <Globe className="h-4 w-4" />
-      <span className="hidden sm:inline">{t.language.switchTo}</span>
+      {t.language.switchTo}
     </Button>
   );
 }
