@@ -143,7 +143,7 @@ export default function SharedLibrary() {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="absolute right-4 top-4">
-          <LanguageToggle />
+          <LanguageToggle variant="compact" />
         </div>
         <div className="flex flex-col items-center gap-4">
           <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
@@ -158,7 +158,7 @@ export default function SharedLibrary() {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background p-4">
         <div className="absolute right-4 top-4">
-          <LanguageToggle />
+          <LanguageToggle variant="compact" />
         </div>
         <Card className="max-w-md text-center">
           <CardContent className="py-12">
@@ -199,7 +199,7 @@ export default function SharedLibrary() {
                 </div>
               </div>
             </div>
-            <LanguageToggle />
+            <LanguageToggle variant="compact" />
           </div>
         </div>
       </header>
