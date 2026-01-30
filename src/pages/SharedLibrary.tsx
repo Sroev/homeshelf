@@ -21,6 +21,7 @@ interface SharedBook {
   title: string;
   author: string | null;
   status: "available" | "lent_out" | "reading";
+  cover_url: string | null;
 }
 
 interface SharedLibraryData {
@@ -211,8 +212,21 @@ export default function SharedLibrary() {
               {data.books.length} {data.books.length !== 1 ? t.sharedLibrary.booksAvailablePlural : t.sharedLibrary.booksAvailable}
             </p>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {data.books.map((book) => (
-                <Card key={book.id} className="flex flex-col">
+            {data.books.map((book) => (
+                <Card key={book.id} className="flex flex-col overflow-hidden">
+                  {book.cover_url ? (
+                    <div className="aspect-[2/3] w-full overflow-hidden bg-muted">
+                      <img
+                        src={book.cover_url}
+                        alt={book.title}
+                        className="h-full w-full object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <div className="aspect-[2/3] w-full bg-muted flex items-center justify-center">
+                      <Book className="h-16 w-16 text-muted-foreground/50" />
+                    </div>
+                  )}
                   <CardHeader className="flex-1">
                     <CardTitle className="line-clamp-2 text-lg">{book.title}</CardTitle>
                     {book.author && (
