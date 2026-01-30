@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Book, Home, Link2, MessageSquare, User, LogOut, Menu } from "lucide-react";
+import { Home, Link2, MessageSquare, User, LogOut, Menu, Book } from "lucide-react";
+import runoLogo from "@/assets/runo-logo.png";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useProfile } from "@/hooks/useProfile";
@@ -74,9 +75,8 @@ export function AppLayout({ children }: AppLayoutProps) {
       {/* Desktop Sidebar */}
       <aside className="hidden w-64 flex-col border-r border-border bg-sidebar p-4 md:flex">
         <div className="mb-8">
-          <Link to="/app" className="flex items-center gap-2">
-            <Book className="h-6 w-6 text-primary" />
-            <span className="text-xl font-bold text-foreground">{t.appName}</span>
+          <Link to="/app" className="flex items-center">
+            <img src={runoLogo} alt="Runo" className="h-8" />
           </Link>
         </div>
         
@@ -106,9 +106,8 @@ export function AppLayout({ children }: AppLayoutProps) {
       {/* Mobile Header */}
       <div className="flex flex-1 flex-col">
         <header className="flex h-14 items-center justify-between border-b border-border bg-sidebar px-4 md:hidden">
-          <Link to="/app" className="flex items-center gap-2">
-            <Book className="h-5 w-5 text-primary" />
-            <span className="text-lg font-bold text-foreground">{t.appName}</span>
+          <Link to="/app" className="flex items-center">
+            <img src={runoLogo} alt="Runo" className="h-6" />
           </Link>
           
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
