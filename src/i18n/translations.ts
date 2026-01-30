@@ -277,7 +277,7 @@ export const translations = {
       // theyWillContact is no longer used - message simplified
       gotIt: "Разбрах!",
       footerText: "Това е",
-      footerCta: "Искаш ли",
+      footerCta: "Искаш ли и",
       footerCtaLink: "ти",
     },
     
