@@ -1,7 +1,6 @@
 import { ReactNode } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Home, Link2, MessageSquare, User, LogOut, Menu, Book } from "lucide-react";
-import runoLogo from "@/assets/runo-logo.png";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useProfile } from "@/hooks/useProfile";
@@ -76,7 +75,7 @@ export function AppLayout({ children }: AppLayoutProps) {
       <aside className="hidden w-64 flex-col border-r border-border bg-sidebar p-4 md:flex">
         <div className="mb-8">
           <Link to="/app" className="flex items-center">
-            <img src={runoLogo} alt="Runo" className="h-8" />
+            <span className="text-2xl font-semibold text-foreground" style={{ fontFamily: "'Source Serif 4', serif" }}>Runo</span>
           </Link>
         </div>
         
@@ -107,7 +106,7 @@ export function AppLayout({ children }: AppLayoutProps) {
       <div className="flex flex-1 flex-col">
         <header className="flex h-14 items-center justify-between border-b border-border bg-sidebar px-4 md:hidden">
           <Link to="/app" className="flex items-center">
-            <img src={runoLogo} alt="Runo" className="h-6" />
+            <span className="text-xl font-semibold text-foreground" style={{ fontFamily: "'Source Serif 4', serif" }}>Runo</span>
           </Link>
           
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
