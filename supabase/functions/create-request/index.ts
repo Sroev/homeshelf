@@ -224,23 +224,23 @@ serve(async (req) => {
 
       if (ownerEmail) {
         // Send notification to owner (escape user-controlled data to prevent XSS)
+        const adminRequestsLink = `${supabaseUrl.replace('.supabase.co', '.lovable.app')}/app/requests`;
         try {
           await resend.emails.send({
             from: "Runo <noreply@resend.dev>",
             to: [ownerEmail],
-            subject: `New book request: ${escapeHtml(book.title)}`,
+            subject: `Нова заявка за „${escapeHtml(book.title)}"`,
             html: `
-              <h1>New Book Request</h1>
-              <p><strong>${escapeHtml(requester_name)}</strong> would like to borrow:</p>
-              <h2>${escapeHtml(book.title)}</h2>
-              ${book.author ? `<p>by ${escapeHtml(book.author)}</p>` : ""}
-              <p><strong>Requester email:</strong> ${escapeHtml(requester_email)}</p>
-              ${message ? `<p><strong>Message:</strong> ${escapeHtml(message)}</p>` : ""}
-              <p>
-                <a href="${supabaseUrl.replace('.supabase.co', '.lovable.app')}/app/requests">
-                  View and respond to this request
-                </a>
-              </p>
+              <p>Здравей,</p>
+              <p>Имаш нова заявка за книга от библиотеката ти в Runo.</p>
+              <p><strong>Книга:</strong> ${escapeHtml(book.title)}<br/>
+              ${book.author ? `<strong>Автор:</strong> ${escapeHtml(book.author)}` : ""}</p>
+              <p><strong>Заявка от:</strong> ${escapeHtml(requester_name)}<br/>
+              <strong>Имейл:</strong> ${escapeHtml(requester_email)}</p>
+              ${message ? `<p><strong>Съобщение:</strong><br/>„${escapeHtml(message)}"</p>` : ""}
+              <p>Можеш да одобриш или откажеш заявката оттук:<br/>
+              <a href="${adminRequestsLink}">${adminRequestsLink}</a></p>
+              <p>Runo</p>
             `,
           });
         } catch (emailError) {
