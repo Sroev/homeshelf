@@ -235,15 +235,30 @@ export default function Books() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredBooks.map((book) => (
+                {filteredBooks.map((book) => (
                     <TableRow key={book.id}>
                       <TableCell className="font-medium">
-                        {book.title}
-                        {book.author && (
-                          <span className="block text-sm text-muted-foreground sm:hidden">
-                            {book.author}
-                          </span>
-                        )}
+                        <div className="flex items-center gap-3">
+                          {book.cover_url ? (
+                            <img
+                              src={book.cover_url}
+                              alt={book.title}
+                              className="h-12 w-9 rounded object-cover flex-shrink-0"
+                            />
+                          ) : (
+                            <div className="h-12 w-9 rounded bg-muted flex items-center justify-center flex-shrink-0">
+                              <span className="text-xs text-muted-foreground">📚</span>
+                            </div>
+                          )}
+                          <div>
+                            {book.title}
+                            {book.author && (
+                              <span className="block text-sm text-muted-foreground sm:hidden">
+                                {book.author}
+                              </span>
+                            )}
+                          </div>
+                        </div>
                       </TableCell>
                       <TableCell className="hidden sm:table-cell">
                         {book.author || "—"}
