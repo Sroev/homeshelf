@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Copy, ExternalLink, RefreshCw } from "lucide-react";
 import { useLibrary, useRegenerateShareToken } from "@/hooks/useLibrary";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -134,6 +135,9 @@ export default function Share() {
             </p>
             <p>
               <strong className="text-foreground">4. {t.share.step4Title}</strong> {t.share.step4Desc}
+              <Link to="/app/requests" className="font-medium text-primary underline hover:text-primary/80">
+                {t.share.step4Link}
+              </Link>.
             </p>
           </CardContent>
         </Card>
