@@ -50,7 +50,7 @@ export function AppLayout({ children }: AppLayoutProps) {
             to={item.href}
             onClick={() => setMobileOpen(false)}
             className={cn(
-              "flex items-center gap-3 rounded-lg py-2 text-sm font-medium transition-colors",
+              "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors -ml-3",
               isActive
                 ? "bg-primary text-primary-foreground"
                 : "text-foreground hover:bg-muted"
@@ -81,9 +81,9 @@ export function AppLayout({ children }: AppLayoutProps) {
         
         <NavContent />
         
-        <div className="mt-auto space-y-4 pt-4">
+        <div className="mt-auto space-y-4 pt-4 -ml-3">
           {profile && (
-            <div className="rounded-lg bg-muted p-3">
+            <div className="rounded-lg bg-muted p-3 ml-3">
               <p className="text-sm font-medium text-foreground">{profile.display_name}</p>
               {profile.city && (
                 <p className="text-xs text-muted-foreground">{profile.city}</p>
