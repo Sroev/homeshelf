@@ -14,6 +14,7 @@ import NewBook from "./pages/app/NewBook";
 import Share from "./pages/app/Share";
 import Requests from "./pages/app/Requests";
 import SharedLibrary from "./pages/SharedLibrary";
+import Admin from "./pages/app/Admin";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -77,6 +78,14 @@ const App = () => (
               element={
                 <ProtectedRoute>
                   <Requests />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/app/admin"
+              element={
+                <ProtectedRoute>
+                  <Admin />
                 </ProtectedRoute>
               }
             />

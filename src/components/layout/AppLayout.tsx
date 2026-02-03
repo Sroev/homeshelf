@@ -1,10 +1,11 @@
 import { ReactNode } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Home, Link2, MessageSquare, User, LogOut, Menu, Book } from "lucide-react";
+import { Home, Link2, MessageSquare, User, LogOut, Menu, Book, Shield } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useProfile } from "@/hooks/useProfile";
 import { usePendingRequestsCount } from "@/hooks/useRequests";
+import { useIsAdmin } from "@/hooks/useAdmin";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { LanguageToggle } from "@/components/LanguageToggle";
@@ -20,17 +21,23 @@ export function AppLayout({ children }: AppLayoutProps) {
   const { t } = useLanguage();
   const { data: profile } = useProfile();
   const { data: pendingCount } = usePendingRequestsCount();
+  const { data: isAdmin } = useIsAdmin();
   const location = useLocation();
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const navItems = [
+  const baseNavItems = [
     { href: "/app", label: t.nav.dashboard, icon: Home },
     { href: "/app/books", label: t.nav.books, icon: Book },
     { href: "/app/share", label: t.nav.shareLink, icon: Link2 },
     { href: "/app/requests", label: t.nav.requests, icon: MessageSquare },
     { href: "/app/profile", label: t.nav.profile, icon: User },
   ];
+
+  // Add admin link only for admins
+  const navItems = isAdmin 
+    ? [...baseNavItems, { href: "/app/admin", label: t.admin.title, icon: Shield }]
+    : baseNavItems;
 
   const handleSignOut = async () => {
     await signOut();

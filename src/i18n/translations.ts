@@ -305,6 +305,30 @@ export const translations = {
       cannotBeUndone: "Това действие не може да бъде отменено.",
     },
     
+    // Admin
+    admin: {
+      title: "Админ панел",
+      description: "Преглед на статистики за всички потребители",
+      totalUsers: "Общо потребители",
+      registeredUsers: "Регистрирани потребители",
+      totalBooks: "Общо книги",
+      acrossAllLibraries: "Във всички библиотеки",
+      totalRequests: "Общо заявки",
+      allTimeRequests: "За всички времена",
+      pendingRequests: "Чакащи заявки",
+      awaitingResponse: "Очакващи отговор",
+      userStatistics: "Статистики по потребители",
+      detailedBreakdown: "Детайлна разбивка за всеки потребител",
+      user: "Потребител",
+      joined: "Регистриран",
+      booksColumn: "Книги",
+      availableColumn: "Налични",
+      lentColumn: "Дадени",
+      requestsColumn: "Заявки",
+      pendingColumn: "Чакащи",
+      noUsers: "Няма потребители",
+    },
+    
     // Language
     language: {
       switchTo: "English",
@@ -616,6 +640,30 @@ export const translations = {
       deleteBook: "Delete Book",
       deleteBookConfirm: "Are you sure you want to delete",
       cannotBeUndone: "This action cannot be undone.",
+    },
+    
+    // Admin
+    admin: {
+      title: "Admin Panel",
+      description: "Overview statistics for all users",
+      totalUsers: "Total Users",
+      registeredUsers: "Registered users",
+      totalBooks: "Total Books",
+      acrossAllLibraries: "Across all libraries",
+      totalRequests: "Total Requests",
+      allTimeRequests: "All-time requests",
+      pendingRequests: "Pending Requests",
+      awaitingResponse: "Awaiting response",
+      userStatistics: "User Statistics",
+      detailedBreakdown: "Detailed breakdown for each user",
+      user: "User",
+      joined: "Joined",
+      booksColumn: "Books",
+      availableColumn: "Available",
+      lentColumn: "Lent",
+      requestsColumn: "Requests",
+      pendingColumn: "Pending",
+      noUsers: "No users yet",
     },
     
     // Language
