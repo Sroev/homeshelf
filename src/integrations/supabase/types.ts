@@ -177,14 +177,58 @@ export type Database = {
           },
         ]
       }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_admin_user_stats: {
+        Args: never
+        Returns: {
+          approved_requests: number
+          available_books: number
+          created_at: string
+          declined_requests: number
+          display_name: string
+          lent_out_books: number
+          pending_requests: number
+          reading_books: number
+          total_books: number
+          total_requests: number
+          user_id: string
+        }[]
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
+      app_role: "admin" | "user"
       book_status: "available" | "lent_out" | "reading" | "unavailable"
       request_status: "pending" | "approved" | "declined"
     }
@@ -314,6 +358,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      app_role: ["admin", "user"],
       book_status: ["available", "lent_out", "reading", "unavailable"],
       request_status: ["pending", "approved", "declined"],
     },
