@@ -15,6 +15,7 @@ import Share from "./pages/app/Share";
 import Requests from "./pages/app/Requests";
 import SharedLibrary from "./pages/SharedLibrary";
 import Admin from "./pages/app/Admin";
+import Landing from "./pages/Landing";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -91,7 +92,7 @@ const App = () => (
             />
             
             {/* Redirects */}
-            <Route path="/" element={<Navigate to="/app" replace />} />
+            <Route path="/" element={<Landing />} />
             
             {/* 404 */}
             <Route path="*" element={<NotFound />} />
