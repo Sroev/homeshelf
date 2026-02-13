@@ -16,9 +16,7 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             <div className="flex items-center gap-2">
-              <div className="bg-primary text-primary-foreground p-2 rounded-xl shadow-lg shadow-primary/30">
-                <BookOpen className="w-6 h-6" />
-              </div>
+            <img src="/favicon.png" alt="Runo" className="w-10 h-10 rounded-xl shadow-lg shadow-primary/30" />
               <span
                 className="text-2xl font-bold tracking-tight"
                 style={{ fontFamily: "'Source Serif 4', serif" }}>
@@ -241,9 +239,7 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="flex items-center gap-2">
-              <div className="bg-primary text-primary-foreground p-1.5 rounded-lg">
-                <BookOpen className="w-5 h-5" />
-              </div>
+              <img src="/favicon.png" alt="Runo" className="w-8 h-8 rounded-lg" />
               <span
                 className="text-xl font-bold"
                 style={{ fontFamily: "'Source Serif 4', serif" }}>
