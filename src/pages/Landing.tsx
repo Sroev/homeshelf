@@ -21,8 +21,8 @@ export default function Landing() {
               </div>
               <span
                 className="text-2xl font-bold tracking-tight"
-                style={{ fontFamily: "'Source Serif 4', serif" }}
-              >
+                style={{ fontFamily: "'Source Serif 4', serif" }}>
+
                 Runo
               </span>
             </div>
@@ -61,8 +61,8 @@ export default function Landing() {
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1
             className="text-5xl lg:text-7xl font-extrabold tracking-tight leading-[1.1] mb-6"
-            style={{ fontFamily: "'Source Serif 4', serif" }}
-          >
+            style={{ fontFamily: "'Source Serif 4', serif" }}>
+
             {l.heroTitle}{" "}
             <span className="text-primary">
               {l.heroTitleHighlight}
@@ -89,13 +89,13 @@ export default function Landing() {
       <section id="features" className="py-24 bg-card relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <p className="text-primary font-semibold tracking-wide uppercase text-sm mb-3">
-              {l.featuresLabel}
-            </p>
+            
+
+
             <h2
               className="text-3xl md:text-4xl font-bold mb-6"
-              style={{ fontFamily: "'Source Serif 4', serif" }}
-            >
+              style={{ fontFamily: "'Source Serif 4', serif" }}>
+
               {l.featuresTitle}
             </h2>
             <p className="text-lg text-muted-foreground">{l.featuresSubtitle}</p>
@@ -103,22 +103,22 @@ export default function Landing() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              { icon: BookOpen, title: l.feature1Title, desc: l.feature1Desc, iconBg: "bg-primary/10", iconColor: "text-primary" },
-              { icon: Share2, title: l.feature2Title, desc: l.feature2Desc, iconBg: "bg-accent/20", iconColor: "text-accent" },
-              { icon: MessageSquare, title: l.feature3Title, desc: l.feature3Desc, iconBg: "bg-primary/10", iconColor: "text-primary" },
-              { icon: Shield, title: l.feature4Title, desc: l.feature4Desc, iconBg: "bg-accent/20", iconColor: "text-accent" },
-            ].map((f, i) => (
-              <div
-                key={i}
-                className="group bg-background rounded-3xl p-8 shadow-card hover:shadow-card-hover transition-all duration-300 border border-border"
-              >
+            { icon: BookOpen, title: l.feature1Title, desc: l.feature1Desc, iconBg: "bg-primary/10", iconColor: "text-primary" },
+            { icon: Share2, title: l.feature2Title, desc: l.feature2Desc, iconBg: "bg-accent/20", iconColor: "text-accent" },
+            { icon: MessageSquare, title: l.feature3Title, desc: l.feature3Desc, iconBg: "bg-primary/10", iconColor: "text-primary" },
+            { icon: Shield, title: l.feature4Title, desc: l.feature4Desc, iconBg: "bg-accent/20", iconColor: "text-accent" }].
+            map((f, i) =>
+            <div
+              key={i}
+              className="group bg-background rounded-3xl p-8 shadow-card hover:shadow-card-hover transition-all duration-300 border border-border">
+
                 <div className={`w-14 h-14 rounded-2xl ${f.iconBg} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
                   <f.icon className={`w-7 h-7 ${f.iconColor}`} />
                 </div>
                 <h3 className="text-xl font-bold mb-3">{f.title}</h3>
                 <p className="text-muted-foreground leading-relaxed">{f.desc}</p>
               </div>
-            ))}
+            )}
           </div>
         </div>
       </section>
@@ -132,8 +132,8 @@ export default function Landing() {
             </p>
             <h2
               className="text-3xl md:text-4xl font-bold"
-              style={{ fontFamily: "'Source Serif 4', serif" }}
-            >
+              style={{ fontFamily: "'Source Serif 4', serif" }}>
+
               {l.howTitle}
             </h2>
           </div>
@@ -141,10 +141,10 @@ export default function Landing() {
           <div className="space-y-12 max-w-2xl mx-auto">
             {[l.step1, l.step2, l.step3].map((step, i) => {
               const colors = [
-                "bg-primary/10 text-primary",
-                "bg-accent/20 text-accent",
-                "bg-primary/10 text-primary",
-              ];
+              "bg-primary/10 text-primary",
+              "bg-accent/20 text-accent",
+              "bg-primary/10 text-primary"];
+
               return (
                 <div key={i} className="flex gap-6">
                   <div className="flex-shrink-0">
@@ -156,8 +156,8 @@ export default function Landing() {
                     <h3 className="text-xl font-bold mb-2">{step.title}</h3>
                     <p className="text-muted-foreground">{step.desc}</p>
                   </div>
-                </div>
-              );
+                </div>);
+
             })}
           </div>
 
@@ -178,20 +178,20 @@ export default function Landing() {
           <div className="text-center mb-16">
             <h2
               className="text-3xl md:text-4xl font-bold mb-4"
-              style={{ fontFamily: "'Source Serif 4', serif" }}
-            >
+              style={{ fontFamily: "'Source Serif 4', serif" }}>
+
               {l.faqTitle}
             </h2>
             <p className="text-muted-foreground">{l.faqSubtitle}</p>
           </div>
 
           <Accordion type="single" collapsible className="space-y-4">
-            {[l.faq1, l.faq2, l.faq3, l.faq4, l.faq5].map((faq, i) => (
-              <AccordionItem
-                key={i}
-                value={`faq-${i}`}
-                className="bg-background rounded-2xl border border-border overflow-hidden px-6"
-              >
+            {[l.faq1, l.faq2, l.faq3, l.faq4, l.faq5].map((faq, i) =>
+            <AccordionItem
+              key={i}
+              value={`faq-${i}`}
+              className="bg-background rounded-2xl border border-border overflow-hidden px-6">
+
                 <AccordionTrigger className="font-semibold hover:no-underline">
                   {faq.q}
                 </AccordionTrigger>
@@ -199,7 +199,7 @@ export default function Landing() {
                   {faq.a}
                 </AccordionContent>
               </AccordionItem>
-            ))}
+            )}
           </Accordion>
         </div>
       </section>
@@ -215,8 +215,8 @@ export default function Landing() {
             <div className="relative z-10">
               <h2
                 className="text-4xl md:text-5xl font-bold text-background mb-6"
-                style={{ fontFamily: "'Source Serif 4', serif" }}
-              >
+                style={{ fontFamily: "'Source Serif 4', serif" }}>
+
                 {l.ctaTitle}
               </h2>
               <p className="text-background/70 text-lg md:text-xl mb-10 max-w-2xl mx-auto">
@@ -226,8 +226,8 @@ export default function Landing() {
               <Button
                 asChild
                 size="lg"
-                className="rounded-full px-8 py-6 text-lg font-bold bg-background text-foreground hover:bg-background/90 hover:scale-105 transition-all duration-200"
-              >
+                className="rounded-full px-8 py-6 text-lg font-bold bg-background text-foreground hover:bg-background/90 hover:scale-105 transition-all duration-200">
+
                 <Link to="/login">{l.cta}</Link>
               </Button>
               <p className="mt-6 text-sm text-background/40">{l.ctaFree}</p>
@@ -246,8 +246,8 @@ export default function Landing() {
               </div>
               <span
                 className="text-xl font-bold"
-                style={{ fontFamily: "'Source Serif 4', serif" }}
-              >
+                style={{ fontFamily: "'Source Serif 4', serif" }}>
+
                 Runo
               </span>
             </div>
@@ -258,6 +258,6 @@ export default function Landing() {
           </div>
         </div>
       </footer>
-    </div>
-  );
+    </div>);
+
 }
