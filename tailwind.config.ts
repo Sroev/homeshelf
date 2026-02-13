@@ -61,6 +61,11 @@ export default {
         warning: "hsl(var(--warning))",
         info: "hsl(var(--info))",
       },
+      boxShadow: {
+        'soft': '0 20px 40px -15px hsl(var(--primary) / 0.15)',
+        'card': '0 0 0 1px rgba(0,0,0,0.03), 0 2px 8px rgba(0,0,0,0.04)',
+        'card-hover': '0 0 0 1px hsl(var(--primary) / 0.1), 0 12px 24px -8px hsl(var(--primary) / 0.15)',
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
