@@ -229,6 +229,30 @@ export const translations = {
       signInFailed: "Неуспешен вход",
       welcomeToHomeShelf: "Добре дошъл в Runo!",
       accountCreated: "Акаунтът ти беше създаден.",
+      forgotPassword: "Забравена парола?",
+    },
+    
+    // Reset Password
+    resetPassword: {
+      title: "Нова парола",
+      description: "Въведи новата си парола по-долу.",
+      newPassword: "Нова парола",
+      confirmPassword: "Потвърди паролата",
+      updatePassword: "Обнови паролата",
+      mismatch: "Паролите не съвпадат",
+      mismatchDesc: "Моля, увери се, че паролите съвпадат.",
+      failed: "Неуспешна промяна",
+      success: "Паролата е обновена",
+      successDesc: "Паролата ти беше обновена успешно.",
+      invalidLink: "Невалиден линк",
+      invalidLinkDesc: "Този линк за възстановяване на парола е невалиден или е изтекъл.",
+      backToLogin: "Обратно към вход",
+      forgotTitle: "Забравена парола",
+      forgotDescription: "Въведи имейла си и ще ти изпратим линк за възстановяване.",
+      sendResetLink: "Изпрати линк",
+      resetEmailSent: "Имейлът е изпратен",
+      resetEmailSentDesc: "Провери пощата си за линк за възстановяване на паролата.",
+      backToSignIn: "Обратно към вход",
     },
     
     // Not Found
