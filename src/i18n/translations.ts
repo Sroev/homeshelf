@@ -229,6 +229,30 @@ export const translations = {
       signInFailed: "Неуспешен вход",
       welcomeToHomeShelf: "Добре дошъл в Runo!",
       accountCreated: "Акаунтът ти беше създаден.",
+      forgotPassword: "Забравена парола?",
+    },
+    
+    // Reset Password
+    resetPassword: {
+      title: "Нова парола",
+      description: "Въведи новата си парола по-долу.",
+      newPassword: "Нова парола",
+      confirmPassword: "Потвърди паролата",
+      updatePassword: "Обнови паролата",
+      mismatch: "Паролите не съвпадат",
+      mismatchDesc: "Моля, увери се, че паролите съвпадат.",
+      failed: "Неуспешна промяна",
+      success: "Паролата е обновена",
+      successDesc: "Паролата ти беше обновена успешно.",
+      invalidLink: "Невалиден линк",
+      invalidLinkDesc: "Този линк за възстановяване на парола е невалиден или е изтекъл.",
+      backToLogin: "Обратно към вход",
+      forgotTitle: "Забравена парола",
+      forgotDescription: "Въведи имейла си и ще ти изпратим линк за възстановяване.",
+      sendResetLink: "Изпрати линк",
+      resetEmailSent: "Имейлът е изпратен",
+      resetEmailSentDesc: "Провери пощата си за линк за възстановяване на паролата.",
+      backToSignIn: "Обратно към вход",
     },
     
     // Not Found
@@ -606,6 +630,30 @@ export const translations = {
       signInFailed: "Sign in failed",
       welcomeToHomeShelf: "Welcome to Runo!",
       accountCreated: "Your account has been created.",
+      forgotPassword: "Forgot password?",
+    },
+    
+    // Reset Password
+    resetPassword: {
+      title: "New Password",
+      description: "Enter your new password below.",
+      newPassword: "New Password",
+      confirmPassword: "Confirm Password",
+      updatePassword: "Update Password",
+      mismatch: "Passwords don't match",
+      mismatchDesc: "Please make sure both passwords match.",
+      failed: "Update failed",
+      success: "Password updated",
+      successDesc: "Your password has been updated successfully.",
+      invalidLink: "Invalid link",
+      invalidLinkDesc: "This password reset link is invalid or has expired.",
+      backToLogin: "Back to login",
+      forgotTitle: "Forgot Password",
+      forgotDescription: "Enter your email and we'll send you a recovery link.",
+      sendResetLink: "Send reset link",
+      resetEmailSent: "Email sent",
+      resetEmailSentDesc: "Check your inbox for a password reset link.",
+      backToSignIn: "Back to sign in",
     },
     
     // Not Found
