@@ -32,6 +32,7 @@ const App = () => (
           <Routes>
             {/* Public routes */}
             <Route path="/login" element={<Login />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/s/:token" element={<SharedLibrary />} />
             
             {/* Protected app routes */}
