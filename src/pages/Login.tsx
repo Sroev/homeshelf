@@ -105,7 +105,18 @@ export default function Login() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">{t.login.password}</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password">{t.login.password}</Label>
+                {!isSignUp && (
+                  <button
+                    type="button"
+                    onClick={() => setShowForgot(true)}
+                    className="text-xs font-medium text-primary underline-offset-4 hover:underline"
+                  >
+                    {t.login.forgotPassword}
+                  </button>
+                )}
+              </div>
               <Input
                 id="password"
                 type="password"
