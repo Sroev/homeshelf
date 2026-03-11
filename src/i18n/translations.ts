@@ -630,6 +630,30 @@ export const translations = {
       signInFailed: "Sign in failed",
       welcomeToHomeShelf: "Welcome to Runo!",
       accountCreated: "Your account has been created.",
+      forgotPassword: "Forgot password?",
+    },
+    
+    // Reset Password
+    resetPassword: {
+      title: "New Password",
+      description: "Enter your new password below.",
+      newPassword: "New Password",
+      confirmPassword: "Confirm Password",
+      updatePassword: "Update Password",
+      mismatch: "Passwords don't match",
+      mismatchDesc: "Please make sure both passwords match.",
+      failed: "Update failed",
+      success: "Password updated",
+      successDesc: "Your password has been updated successfully.",
+      invalidLink: "Invalid link",
+      invalidLinkDesc: "This password reset link is invalid or has expired.",
+      backToLogin: "Back to login",
+      forgotTitle: "Forgot Password",
+      forgotDescription: "Enter your email and we'll send you a recovery link.",
+      sendResetLink: "Send reset link",
+      resetEmailSent: "Email sent",
+      resetEmailSentDesc: "Check your inbox for a password reset link.",
+      backToSignIn: "Back to sign in",
     },
     
     // Not Found
