@@ -36,11 +36,16 @@ export default function Login() {
       if (isSignUp) {
         const { error } = await signUp(email, password, displayName);
         if (error) {
-          toast({
-            title: t.login.signUpFailed,
-            description: error.message,
-            variant: "destructive",
-          });
+          const msg = error.message?.toLowerCase() || "";
+          if (msg.includes("weak") || msg.includes("easy to guess")) {
+            setPasswordError(t.login.weakPassword);
+          } else {
+            toast({
+              title: t.login.signUpFailed,
+              description: error.message,
+              variant: "destructive",
+            });
+          }
           return;
         }
         toast({
