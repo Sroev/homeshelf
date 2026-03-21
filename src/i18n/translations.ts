@@ -633,6 +633,8 @@ export const translations = {
       welcomeToHomeShelf: "Welcome to Runo!",
       accountCreated: "Your account has been created.",
       forgotPassword: "Forgot password?",
+      passwordHint: "Password must be at least 6 characters and not easy to guess.",
+      weakPassword: "Password is too weak. Please choose a stronger one.",
     },
     
     // Reset Password
