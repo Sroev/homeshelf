@@ -31,7 +31,7 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-
+    setPasswordError("");
     try {
       if (isSignUp) {
         const { error } = await signUp(email, password, displayName);
