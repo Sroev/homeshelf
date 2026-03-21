@@ -230,6 +230,8 @@ export const translations = {
       welcomeToHomeShelf: "Добре дошъл в Runo!",
       accountCreated: "Акаунтът ти беше създаден.",
       forgotPassword: "Забравена парола?",
+      passwordHint: "Паролата трябва да е поне 6 символа и да не е лесна за отгатване.",
+      weakPassword: "Паролата е твърде слаба. Моля, избери по-сигурна.",
     },
     
     // Reset Password
