@@ -19,6 +19,7 @@ export default function Login() {
   const [showForgot, setShowForgot] = useState(false);
   const [forgotEmail, setForgotEmail] = useState("");
   const [loading, setLoading] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
   const { signIn, signUp } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -30,16 +31,21 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-
+    setPasswordError("");
     try {
       if (isSignUp) {
         const { error } = await signUp(email, password, displayName);
         if (error) {
-          toast({
-            title: t.login.signUpFailed,
-            description: error.message,
-            variant: "destructive",
-          });
+          const msg = error.message?.toLowerCase() || "";
+          if (msg.includes("weak") || msg.includes("easy to guess")) {
+            setPasswordError(t.login.weakPassword);
+          } else {
+            toast({
+              title: t.login.signUpFailed,
+              description: error.message,
+              variant: "destructive",
+            });
+          }
           return;
         }
         toast({
@@ -196,10 +202,16 @@ export default function Login() {
                 type="password"
                 placeholder="••••••••"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => { setPassword(e.target.value); setPasswordError(""); }}
                 required
                 minLength={6}
+                className={passwordError ? "border-destructive" : ""}
               />
+              {passwordError ? (
+                <p className="text-sm text-destructive">{passwordError}</p>
+              ) : isSignUp ? (
+                <p className="text-xs text-muted-foreground">{t.login.passwordHint}</p>
+              ) : null}
             </div>
           </CardContent>
           <CardFooter className="flex flex-col gap-4">
