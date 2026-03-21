@@ -202,10 +202,16 @@ export default function Login() {
                 type="password"
                 placeholder="••••••••"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => { setPassword(e.target.value); setPasswordError(""); }}
                 required
                 minLength={6}
+                className={passwordError ? "border-destructive" : ""}
               />
+              {passwordError ? (
+                <p className="text-sm text-destructive">{passwordError}</p>
+              ) : isSignUp ? (
+                <p className="text-xs text-muted-foreground">{t.login.passwordHint}</p>
+              ) : null}
             </div>
           </CardContent>
           <CardFooter className="flex flex-col gap-4">
