@@ -136,6 +136,17 @@ export const translations = {
       uploadError: "Грешка при качване",
       uploadErrorDesc: "Неуспешно качване на корицата",
     },
+
+    // Scanner
+    scanner: {
+      scanBarcode: "Сканирай баркод",
+      pointCamera: "Насочи камерата към баркода на книгата",
+      lookingUp: "Търсене...",
+      notFound: "Книгата не е намерена по този баркод",
+      cameraError: "Няма достъп до камерата. Провери разрешенията.",
+      bookFound: "Книгата е намерена!",
+      bookFoundDesc: "Данните са попълнени автоматично.",
+    },
     
     // Share
     share: {
@@ -538,6 +549,17 @@ export const translations = {
       coverUploadedDesc: "Book cover has been uploaded successfully",
       uploadError: "Upload failed",
       uploadErrorDesc: "Failed to upload book cover",
+    },
+
+    // Scanner
+    scanner: {
+      scanBarcode: "Scan barcode",
+      pointCamera: "Point camera at the book's barcode",
+      lookingUp: "Looking up...",
+      notFound: "Book not found for this barcode",
+      cameraError: "Cannot access camera. Check permissions.",
+      bookFound: "Book found!",
+      bookFoundDesc: "Details filled in automatically.",
     },
     
     // Share
