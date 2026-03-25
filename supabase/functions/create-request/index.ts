@@ -224,7 +224,7 @@ serve(async (req) => {
 
       if (ownerEmail) {
         // Send notification to owner (escape user-controlled data to prevent XSS)
-        const adminRequestsLink = `https://homeshelf.lovable.app/app/requests`;
+        const adminRequestsLink = `https://runo.club/app/requests`;
         try {
           await resend.emails.send({
             from: "Runo <noreply@resend.dev>",
