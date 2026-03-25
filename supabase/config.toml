@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.create-request]
 verify_jwt = false
+
+[functions.scan-book]
+verify_jwt = true

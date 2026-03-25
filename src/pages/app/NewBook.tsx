@@ -15,6 +15,7 @@ import { Database } from "@/integrations/supabase/types";
 import { BookAutocomplete } from "@/components/BookAutocomplete";
 import { BookSuggestion } from "@/hooks/useBookSearch";
 import { BookCoverUpload } from "@/components/BookCoverUpload";
+import { BookScanner, DetectedBook } from "@/components/BookScanner";
 
 type BookStatus = Database["public"]["Enums"]["book_status"];
 
@@ -38,6 +39,13 @@ export default function NewBook() {
   const [status, setStatus] = useState<BookStatus>("available");
   const [shareable, setShareable] = useState(true);
   const [coverUrl, setCoverUrl] = useState<string | null>(null);
+
+  const handleBookDetected = (book: DetectedBook) => {
+    if (book.title) setTitle(book.title);
+    if (book.author) setAuthor(book.author);
+    if (book.isbn) setIsbn(book.isbn);
+    if (book.coverUrl) setCoverUrl(book.coverUrl);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -87,10 +95,15 @@ export default function NewBook() {
 
         <Card>
           <CardHeader>
-            <CardTitle>{t.newBook.bookDetails}</CardTitle>
-            <CardDescription>
-              {t.newBook.enterInfo}
-            </CardDescription>
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <CardTitle>{t.newBook.bookDetails}</CardTitle>
+                <CardDescription className="mt-1">
+                  {t.newBook.enterInfo}
+                </CardDescription>
+              </div>
+              <BookScanner onBookDetected={handleBookDetected} />
+            </div>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
