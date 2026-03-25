@@ -51,7 +51,7 @@ serve(async (req) => {
       );
     }
 
-    const resendFromEnv = Deno.env.get("RESEND_FROM_EMAIL") || "noreply@resend.dev";
+    const resendFromEnv = Deno.env.get("RESEND_FROM_EMAIL") || "noreply@runo.club";
     const resendFrom = resendFromEnv.includes("<")
       ? resendFromEnv
       : `Runo <${resendFromEnv}>`;
