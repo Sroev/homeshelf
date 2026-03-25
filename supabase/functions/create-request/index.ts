@@ -44,17 +44,13 @@ function isRateLimited(ip: string): boolean {
   const now = Date.now();
   const requests = rateLimitMap.get(ip) || [];
   
-  // Filter to only keep requests within the time window
   const recentRequests = requests.filter(time => now - time < RATE_LIMIT_WINDOW);
   
-  // Check if limit exceeded
   if (recentRequests.length >= MAX_REQUESTS_PER_WINDOW) {
-    // Update map with cleaned entries
     rateLimitMap.set(ip, recentRequests);
     return true;
   }
   
-  // Add current request timestamp and update map
   recentRequests.push(now);
   rateLimitMap.set(ip, recentRequests);
   return false;
@@ -66,7 +62,6 @@ serve(async (req) => {
   }
 
   try {
-    // Get client IP for rate limiting
     const clientIP = req.headers.get("x-forwarded-for")?.split(",")[0] || "unknown";
     
     if (isRateLimited(clientIP)) {
@@ -78,7 +73,6 @@ serve(async (req) => {
 
     const { token, book_id, requester_name, requester_email, message } = await req.json();
 
-    // Validate inputs
     if (!token || typeof token !== "string") {
       return new Response(
         JSON.stringify({ error: "Invalid token" }),
@@ -107,7 +101,6 @@ serve(async (req) => {
       );
     }
 
-    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!requester_email || !emailRegex.test(requester_email)) {
       return new Response(
@@ -130,12 +123,10 @@ serve(async (req) => {
       );
     }
 
-    // Create Supabase client with service role
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Verify library exists and get owner email
     const { data: library, error: libraryError } = await supabase
       .from("libraries")
       .select(`
@@ -156,7 +147,6 @@ serve(async (req) => {
       );
     }
 
-    // Verify book exists, is shareable, and belongs to this library
     const { data: book, error: bookError } = await supabase
       .from("books")
       .select("id, title, author, shareable, status, library_id")
@@ -178,7 +168,6 @@ serve(async (req) => {
       );
     }
 
-    // Create the request
     const { data: newRequest, error: insertError } = await supabase
       .from("requests")
       .insert({
@@ -200,7 +189,6 @@ serve(async (req) => {
       );
     }
 
-    // Calculate waitlist position for this book (count of pending requests created before this one)
     const { count: waitlistPosition } = await supabase
       .from("requests")
       .select("*", { count: "exact", head: true })
@@ -208,26 +196,24 @@ serve(async (req) => {
       .eq("status", "pending")
       .lte("created_at", newRequest.created_at);
 
-    // Determine if the book is currently unavailable (lent out or reading)
     const isOnWaitlist = book.status === "lent_out" || book.status === "reading";
 
-    // Send emails if RESEND_API_KEY is configured
     const resendApiKey = Deno.env.get("RESEND_API_KEY");
     if (resendApiKey) {
       const resend = new Resend(resendApiKey);
       const profile = Array.isArray(library.profiles) ? library.profiles[0] : library.profiles;
       const ownerName = profile?.display_name || "Book Owner";
 
-      // Get owner's email from auth.users
       const { data: authUser } = await supabase.auth.admin.getUserById(library.owner_id);
       const ownerEmail = authUser?.user?.email;
+      const fromEmail = Deno.env.get("RESEND_FROM_EMAIL") || "Runo <noreply@runo.club>";
 
       if (ownerEmail) {
-        // Send notification to owner (escape user-controlled data to prevent XSS)
-        const adminRequestsLink = `https://runo.club/app/requests`;
+        const appUrl = Deno.env.get("APP_URL") || "https://runo.club";
+        const adminRequestsLink = `${appUrl}/app/requests`;
         try {
           await resend.emails.send({
-            from: "Runo <noreply@resend.dev>",
+            from: fromEmail,
             to: [ownerEmail],
             subject: `Нова заявка за „${escapeHtml(book.title)}"`,
             html: `
@@ -248,10 +234,9 @@ serve(async (req) => {
         }
       }
 
-      // Send confirmation to requester (escape user-controlled data to prevent XSS)
       try {
         await resend.emails.send({
-          from: "Runo <noreply@resend.dev>",
+          from: fromEmail,
           to: [requester_email],
           subject: `Заявка за „${escapeHtml(book.title)}"`,
           html: `
