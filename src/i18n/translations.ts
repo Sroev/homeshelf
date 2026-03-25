@@ -393,6 +393,27 @@ export const translations = {
       footerTagline: "Организирай и споделяй книги с приятели. Направено с любов към книгите.",
     },
 
+    // Scanner
+    scanner: {
+      scanPhoto: "Сканирай снимка",
+      title: "Сканирай книга",
+      description: "Качи снимка на корицата или баркода, за да попълниш формата автоматично",
+      uploadPrompt: "Качи снимка на корицата или баркода на книгата",
+      choosePhoto: "Избери снимка",
+      stageBarcode: "Четене на баркод...",
+      stageVision: "Разпознаване на книга с ИИ...",
+      stageLookup: "Търсене на детайли за книгата...",
+      successNote: "Тези полета ще бъдат попълнени автоматично",
+      useThisBook: "Използвай тази книга",
+      scanAnother: "Сканирай друга",
+      errorInvalidFile: "Моля, избери валиден файл с изображение",
+      errorNotRecognized: "Не успяхме да разпознаем книга от тази снимка. Опитай с по-ясна снимка на корицата или баркода.",
+      errorNetwork: "Мрежова грешка. Провери връзката си и опитай отново.",
+      errorImageTooLarge: "Снимката е прекалено голяма. Използвай по-малка снимка.",
+      errorGeneric: "Нещо се обърка. Моля, опитай отново.",
+      tryAgain: "Опитай отново",
+    },
+
     // Language
     language: {
       switchTo: "English",
@@ -792,6 +813,27 @@ export const translations = {
       ctaSubtitle: "Join readers who already use Runo to organize and share their favorite books.",
       ctaFree: "Free. No credit card required.",
       footerTagline: "Organize and share books with friends. Made with love for books.",
+    },
+
+    // Scanner
+    scanner: {
+      scanPhoto: "Scan a photo",
+      title: "Scan Book",
+      description: "Upload a photo of the book cover or barcode to auto-fill the form",
+      uploadPrompt: "Upload a photo of a book cover or barcode",
+      choosePhoto: "Choose photo",
+      stageBarcode: "Reading barcode...",
+      stageVision: "Identifying book with AI...",
+      stageLookup: "Looking up book details...",
+      successNote: "These fields will be pre-filled in the form",
+      useThisBook: "Use this book",
+      scanAnother: "Scan another",
+      errorInvalidFile: "Please select a valid image file",
+      errorNotRecognized: "Could not identify a book in this photo. Try a clearer image of the cover or barcode.",
+      errorNetwork: "Network error. Please check your connection and try again.",
+      errorImageTooLarge: "Image is too large. Please use a smaller photo.",
+      errorGeneric: "Something went wrong. Please try again.",
+      tryAgain: "Try again",
     },
 
     // Language
