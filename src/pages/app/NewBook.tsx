@@ -15,6 +15,8 @@ import { Database } from "@/integrations/supabase/types";
 import { BookAutocomplete } from "@/components/BookAutocomplete";
 import { BookSuggestion } from "@/hooks/useBookSearch";
 import { BookCoverUpload } from "@/components/BookCoverUpload";
+import { BookScanner } from "@/components/BookScanner";
+import { IsbnBookData } from "@/hooks/useIsbnLookup";
 
 type BookStatus = Database["public"]["Enums"]["book_status"];
 
@@ -94,6 +96,22 @@ export default function NewBook() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <Label>{t.scanner.scanBarcode}</Label>
+                <BookScanner
+                  onBookFound={(book: IsbnBookData) => {
+                    setTitle(book.title);
+                    if (book.author) setAuthor(book.author);
+                    if (book.isbn) setIsbn(book.isbn);
+                    if (book.coverUrl) setCoverUrl(book.coverUrl);
+                    toast({
+                      title: t.scanner.bookFound,
+                      description: t.scanner.bookFoundDesc,
+                    });
+                  }}
+                />
+              </div>
+
               <div className="space-y-2">
                 <Label>{t.newBook.cover}</Label>
                 <BookCoverUpload
