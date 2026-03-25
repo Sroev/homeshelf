@@ -224,10 +224,11 @@ serve(async (req) => {
 
       if (ownerEmail) {
         // Send notification to owner (escape user-controlled data to prevent XSS)
-        const adminRequestsLink = `${supabaseUrl.replace('.supabase.co', '.lovable.app')}/app/requests`;
+        const appUrl = Deno.env.get("APP_URL") || "https://runo.club";
+        const adminRequestsLink = `${appUrl}/app/requests`;
         try {
           await resend.emails.send({
-            from: "Runo <noreply@resend.dev>",
+            from: Deno.env.get("RESEND_FROM_EMAIL") || "Runo <noreply@runo.club>",
             to: [ownerEmail],
             subject: `Нова заявка за „${escapeHtml(book.title)}"`,
             html: `
@@ -251,7 +252,7 @@ serve(async (req) => {
       // Send confirmation to requester (escape user-controlled data to prevent XSS)
       try {
         await resend.emails.send({
-          from: "Runo <noreply@resend.dev>",
+          from: Deno.env.get("RESEND_FROM_EMAIL") || "Runo <noreply@runo.club>",
           to: [requester_email],
           subject: `Заявка за „${escapeHtml(book.title)}"`,
           html: `
