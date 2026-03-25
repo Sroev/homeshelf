@@ -15,7 +15,8 @@ import { Database } from "@/integrations/supabase/types";
 import { BookAutocomplete } from "@/components/BookAutocomplete";
 import { BookSuggestion } from "@/hooks/useBookSearch";
 import { BookCoverUpload } from "@/components/BookCoverUpload";
-import { BookScanner, DetectedBook } from "@/components/BookScanner";
+import { BookScanner } from "@/components/BookScanner";
+import { IsbnBookData } from "@/hooks/useIsbnLookup";
 
 type BookStatus = Database["public"]["Enums"]["book_status"];
 
@@ -39,13 +40,6 @@ export default function NewBook() {
   const [status, setStatus] = useState<BookStatus>("available");
   const [shareable, setShareable] = useState(true);
   const [coverUrl, setCoverUrl] = useState<string | null>(null);
-
-  const handleBookDetected = (book: DetectedBook) => {
-    if (book.title) setTitle(book.title);
-    if (book.author) setAuthor(book.author);
-    if (book.isbn) setIsbn(book.isbn);
-    if (book.coverUrl) setCoverUrl(book.coverUrl);
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -95,18 +89,29 @@ export default function NewBook() {
 
         <Card>
           <CardHeader>
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <CardTitle>{t.newBook.bookDetails}</CardTitle>
-                <CardDescription className="mt-1">
-                  {t.newBook.enterInfo}
-                </CardDescription>
-              </div>
-              <BookScanner onBookDetected={handleBookDetected} />
-            </div>
+            <CardTitle>{t.newBook.bookDetails}</CardTitle>
+            <CardDescription>
+              {t.newBook.enterInfo}
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <Label>{t.scanner.scanBarcode}</Label>
+                <BookScanner
+                  onBookFound={(book: IsbnBookData) => {
+                    setTitle(book.title);
+                    if (book.author) setAuthor(book.author);
+                    if (book.isbn) setIsbn(book.isbn);
+                    if (book.coverUrl) setCoverUrl(book.coverUrl);
+                    toast({
+                      title: t.scanner.bookFound,
+                      description: t.scanner.bookFoundDesc,
+                    });
+                  }}
+                />
+              </div>
+
               <div className="space-y-2">
                 <Label>{t.newBook.cover}</Label>
                 <BookCoverUpload

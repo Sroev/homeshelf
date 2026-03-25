@@ -1,69 +1,43 @@
-export interface DetectedBook {
+import { useState, useCallback } from "react";
+
+export interface IsbnBookData {
   title: string;
   author: string | null;
-  isbn: string | null;
+  isbn: string;
   coverUrl: string | null;
 }
 
-interface OpenLibraryBookData {
-  title?: string;
-  authors?: Array<{ name: string; url: string }>;
-  cover?: {
-    small?: string;
-    medium?: string;
-    large?: string;
-  };
-}
+export function useIsbnLookup() {
+  const [isLoading, setIsLoading] = useState(false);
 
-interface OpenLibraryBooksResponse {
-  [bibkey: string]: OpenLibraryBookData;
-}
+  const lookupIsbn = useCallback(async (isbn: string): Promise<IsbnBookData | null> => {
+    const cleanIsbn = isbn.replace(/[^0-9X]/gi, "");
+    if (cleanIsbn.length !== 10 && cleanIsbn.length !== 13) return null;
 
-/**
- * Look up a book by ISBN using the Open Library /api/books endpoint.
- * Returns null if the book is not found or the request fails.
- */
-export async function lookupIsbn(isbn: string): Promise<DetectedBook | null> {
-  const cleanIsbn = isbn.replace(/[^0-9X]/gi, "");
-  const bibkey = `ISBN:${cleanIsbn}`;
-  const url = `https://openlibrary.org/api/books?bibkeys=${encodeURIComponent(bibkey)}&jscmd=data&format=json`;
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        `https://openlibrary.org/api/books?bibkeys=ISBN:${cleanIsbn}&format=json&jscmd=data`
+      );
+      if (!response.ok) throw new Error("Lookup failed");
 
-  try {
-    const response = await fetch(url);
-    if (!response.ok) return null;
+      const data = await response.json();
+      const bookData = data[`ISBN:${cleanIsbn}`];
+      if (!bookData) return null;
 
-    const data: OpenLibraryBooksResponse = await response.json();
-    const bookData = data[bibkey];
+      return {
+        title: bookData.title || "",
+        author: bookData.authors?.[0]?.name || null,
+        isbn: cleanIsbn,
+        coverUrl: bookData.cover?.medium || bookData.cover?.large || null,
+      };
+    } catch (error) {
+      console.error("ISBN lookup error:", error);
+      return null;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
-    // Open Library returns an empty object {} when not found
-    if (!bookData || !bookData.title) return null;
-
-    const author = bookData.authors?.[0]?.name ?? null;
-
-    // Prefer the cover URL from the response; fall back to the ISBN-based cover shortcut
-    const coverUrl =
-      bookData.cover?.medium ??
-      bookData.cover?.large ??
-      bookData.cover?.small ??
-      `https://covers.openlibrary.org/b/isbn/${cleanIsbn}-M.jpg`;
-
-    return {
-      title: bookData.title,
-      author,
-      isbn: cleanIsbn,
-      coverUrl,
-    };
-  } catch {
-    return null;
-  }
-}
-
-/**
- * Returns true if the string looks like a valid ISBN-10 or ISBN-13.
- */
-export function looksLikeIsbn(value: string): boolean {
-  const clean = value.replace(/[^0-9X]/gi, "");
-  if (clean.length === 13) return /^\d+$/.test(clean);
-  if (clean.length === 10) return /^\d{9}[\dX]$/i.test(clean);
-  return false;
+  return { lookupIsbn, isLoading };
 }
