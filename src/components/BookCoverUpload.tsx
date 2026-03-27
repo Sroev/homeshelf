@@ -151,6 +151,14 @@ export function BookCoverUpload({ coverUrl, onCoverChange, onScanResult, bookId 
         className="hidden"
         disabled={isUploading}
       />
+      <input
+        ref={scanInputRef}
+        type="file"
+        accept="image/*"
+        onChange={handleScanCover}
+        className="hidden"
+        disabled={isScanning}
+      />
 
       {previewUrl ? (
         <div className="relative inline-block">
