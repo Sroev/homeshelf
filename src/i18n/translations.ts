@@ -146,6 +146,9 @@ export const translations = {
       cameraError: "Няма достъп до камерата. Провери разрешенията.",
       bookFound: "Книгата е намерена!",
       bookFoundDesc: "Данните са попълнени автоматично.",
+      scanCover: "Сканирай корица",
+      scanning: "Сканиране...",
+      scanFailed: "Не успяхме да разпознаем книгата от корицата",
     },
     
     // Share
@@ -560,6 +563,9 @@ export const translations = {
       cameraError: "Cannot access camera. Check permissions.",
       bookFound: "Book found!",
       bookFoundDesc: "Details filled in automatically.",
+      scanCover: "Scan cover",
+      scanning: "Scanning...",
+      scanFailed: "Could not extract book info from cover",
     },
     
     // Share
