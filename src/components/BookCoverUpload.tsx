@@ -4,12 +4,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
-import { ImagePlus, X, Loader2 } from "lucide-react";
+import { ImagePlus, X, Loader2, ScanSearch } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useCoverScanner } from "@/hooks/useCoverScanner";
 
 interface BookCoverUploadProps {
   coverUrl: string | null;
   onCoverChange: (url: string | null) => void;
+  onScanResult?: (title: string, author: string | null) => void;
   bookId?: string;
 }
 
