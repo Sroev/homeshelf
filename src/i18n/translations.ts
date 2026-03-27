@@ -566,6 +566,7 @@ export const translations = {
       scanCover: "Scan cover",
       scanning: "Scanning...",
       scanFailed: "Could not extract book info from cover",
+      analyzingCover: "Analyzing...",
     },
     
     // Share
