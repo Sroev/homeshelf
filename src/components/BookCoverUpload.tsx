@@ -93,6 +93,49 @@ export function BookCoverUpload({ coverUrl, onCoverChange, onScanResult, bookId 
     }
   };
 
+  const handleScanCover = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) return;
+
+    try {
+      // Convert to base64
+      const reader = new FileReader();
+      const base64 = await new Promise<string>((resolve, reject) => {
+        reader.onload = () => {
+          const result = reader.result as string;
+          resolve(result.split(",")[1]); // strip data:... prefix
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+
+      const result = await scanCover(base64);
+      if (result) {
+        onScanResult?.(result.title, result.author);
+        toast({
+          title: t.scanner?.bookFound || "Book found!",
+          description: t.scanner?.bookFoundDesc || "Details filled in automatically.",
+        });
+      } else {
+        toast({
+          title: t.scanner?.notFound || "Could not recognize",
+          description: t.coverScanner?.scanFailed || "Could not extract book info from cover",
+          variant: "destructive",
+        });
+      }
+    } catch {
+      toast({
+        title: t.newBook?.error || "Error",
+        description: t.coverScanner?.scanFailed || "Cover scan failed",
+        variant: "destructive",
+      });
+    } finally {
+      if (scanInputRef.current) scanInputRef.current.value = "";
+    }
+  };
+
   const handleRemove = () => {
     setPreviewUrl(null);
     onCoverChange(null);
