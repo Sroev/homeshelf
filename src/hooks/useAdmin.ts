@@ -21,6 +21,7 @@ export interface AdminStats {
     totalBooks: number;
     totalRequests: number;
     totalLibraries: number;
+    pendingRequests: number;
   };
   requests: {
     pending: number;
@@ -28,6 +29,25 @@ export interface AdminStats {
     declined: number;
   };
   users: UserStats[];
+}
+
+export function useIsAdmin() {
+  return useQuery({
+    queryKey: ["isAdmin"],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return false;
+
+      const { data } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", user.id)
+        .eq("role", "admin")
+        .maybeSingle();
+
+      return !!data;
+    },
+  });
 }
 
 export function useAdminStats() {
@@ -58,6 +78,7 @@ export function useAdminStats() {
           totalBooks: totalBooks ?? 0,
           totalRequests: totalRequests ?? 0,
           totalLibraries: totalLibraries ?? 0,
+          pendingRequests: pendingRequests ?? 0,
         },
         requests: {
           pending: pendingRequests ?? 0,
