@@ -16,6 +16,7 @@ import { BookAutocomplete } from "@/components/BookAutocomplete";
 import { BookSuggestion } from "@/hooks/useBookSearch";
 import { BookCoverUpload } from "@/components/BookCoverUpload";
 import { BookScanner } from "@/components/BookScanner";
+import { BookCoverScanner } from "@/components/BookCoverScanner";
 import { IsbnBookData } from "@/hooks/useIsbnLookup";
 
 type BookStatus = Database["public"]["Enums"]["book_status"];
@@ -108,6 +109,12 @@ export default function NewBook() {
                       title: t.scanner.bookFound,
                       description: t.scanner.bookFoundDesc,
                     });
+                  }}
+                />
+                <BookCoverScanner
+                  onBookFound={(book) => {
+                    setTitle(book.title);
+                    if (book.author) setAuthor(book.author);
                   }}
                 />
               </div>
