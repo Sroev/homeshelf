@@ -121,14 +121,14 @@ export function BookCoverUpload({ coverUrl, onCoverChange, onScanResult, bookId 
       } else {
         toast({
           title: t.scanner?.notFound || "Could not recognize",
-          description: t.coverScanner?.scanFailed || "Could not extract book info from cover",
+          description: t.scanner?.scanFailed || "Could not extract book info from cover",
           variant: "destructive",
         });
       }
     } catch {
       toast({
         title: t.newBook?.error || "Error",
-        description: t.coverScanner?.scanFailed || "Cover scan failed",
+        description: t.scanner?.scanFailed || "Cover scan failed",
         variant: "destructive",
       });
     } finally {
