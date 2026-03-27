@@ -146,9 +146,10 @@ export const translations = {
       cameraError: "Няма достъп до камерата. Провери разрешенията.",
       bookFound: "Книгата е намерена!",
       bookFoundDesc: "Данните са попълнени автоматично.",
-      scanCover: "Сканирай корица",
+      scanCover: "Снимай корица",
       scanning: "Сканиране...",
       scanFailed: "Не успяхме да разпознаем книгата от корицата",
+      analyzingCover: "Анализиране...",
     },
     
     // Share
