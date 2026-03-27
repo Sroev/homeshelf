@@ -20,47 +20,53 @@ export interface AdminStats {
     totalUsers: number;
     totalBooks: number;
     totalRequests: number;
-    pendingRequests: number;
+    totalLibraries: number;
+  };
+  requests: {
+    pending: number;
+    approved: number;
+    declined: number;
   };
   users: UserStats[];
-}
-
-export function useIsAdmin() {
-  return useQuery({
-    queryKey: ["isAdmin"],
-    queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return false;
-
-      const { data } = await supabase
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", user.id)
-        .eq("role", "admin")
-        .maybeSingle();
-
-      return !!data;
-    },
-  });
 }
 
 export function useAdminStats() {
   return useQuery<AdminStats>({
     queryKey: ["adminStats"],
     queryFn: async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        throw new Error("Not authenticated");
-      }
+      const [
+        { count: totalUsers },
+        { count: totalBooks },
+        { count: totalRequests },
+        { count: pendingRequests },
+        { count: approvedRequests },
+        { count: declinedRequests },
+        { count: totalLibraries },
+      ] = await Promise.all([
+        supabase.from("profiles").select("*", { count: "exact", head: true }),
+        supabase.from("books").select("*", { count: "exact", head: true }),
+        supabase.from("requests").select("*", { count: "exact", head: true }),
+        supabase.from("requests").select("*", { count: "exact", head: true }).eq("status", "pending"),
+        supabase.from("requests").select("*", { count: "exact", head: true }).eq("status", "approved"),
+        supabase.from("requests").select("*", { count: "exact", head: true }).eq("status", "declined"),
+        supabase.from("libraries").select("*", { count: "exact", head: true }),
+      ]);
 
-      const response = await supabase.functions.invoke("get-admin-stats");
-      
-      if (response.error) {
-        throw new Error(response.error.message || "Failed to fetch admin stats");
-      }
-
-      return response.data as AdminStats;
+      return {
+        overview: {
+          totalUsers: totalUsers ?? 0,
+          totalBooks: totalBooks ?? 0,
+          totalRequests: totalRequests ?? 0,
+          totalLibraries: totalLibraries ?? 0,
+        },
+        requests: {
+          pending: pendingRequests ?? 0,
+          approved: approvedRequests ?? 0,
+          declined: declinedRequests ?? 0,
+        },
+        users: [],
+      } as AdminStats;
     },
-    staleTime: 30000, // 30 seconds
+    staleTime: 30000,
   });
 }
