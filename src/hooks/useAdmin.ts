@@ -54,6 +54,7 @@ export function useAdminStats() {
   return useQuery<AdminStats>({
     queryKey: ["adminStats"],
     queryFn: async () => {
+      // Fetch overview counts and user profiles in parallel
       const [
         { count: totalUsers },
         { count: totalBooks },
@@ -62,6 +63,7 @@ export function useAdminStats() {
         { count: approvedRequests },
         { count: declinedRequests },
         { count: totalLibraries },
+        { data: profiles },
       ] = await Promise.all([
         supabase.from("profiles").select("*", { count: "exact", head: true }),
         supabase.from("books").select("*", { count: "exact", head: true }),
@@ -70,7 +72,46 @@ export function useAdminStats() {
         supabase.from("requests").select("*", { count: "exact", head: true }).eq("status", "approved"),
         supabase.from("requests").select("*", { count: "exact", head: true }).eq("status", "declined"),
         supabase.from("libraries").select("*", { count: "exact", head: true }),
+        supabase.from("profiles").select("id, display_name, created_at").order("created_at", { ascending: false }),
       ]);
+
+      // Build per-user stats
+      const users: UserStats[] = [];
+      if (profiles) {
+        // Fetch all libraries, books, and requests for mapping
+        const [{ data: libraries }, { data: books }, { data: requests }] = await Promise.all([
+          supabase.from("libraries").select("id, owner_id"),
+          supabase.from("books").select("id, library_id, status"),
+          supabase.from("requests").select("id, library_id, status"),
+        ]);
+
+        const libsByOwner = new Map<string, string[]>();
+        (libraries ?? []).forEach((l) => {
+          const arr = libsByOwner.get(l.owner_id) ?? [];
+          arr.push(l.id);
+          libsByOwner.set(l.owner_id, arr);
+        });
+
+        for (const p of profiles) {
+          const userLibIds = new Set(libsByOwner.get(p.id) ?? []);
+          const userBooks = (books ?? []).filter((b) => userLibIds.has(b.library_id));
+          const userReqs = (requests ?? []).filter((r) => userLibIds.has(r.library_id));
+
+          users.push({
+            user_id: p.id,
+            display_name: p.display_name,
+            created_at: p.created_at,
+            total_books: userBooks.length,
+            available_books: userBooks.filter((b) => b.status === "available").length,
+            lent_out_books: userBooks.filter((b) => b.status === "lent_out").length,
+            reading_books: userBooks.filter((b) => b.status === "reading").length,
+            total_requests: userReqs.length,
+            pending_requests: userReqs.filter((r) => r.status === "pending").length,
+            approved_requests: userReqs.filter((r) => r.status === "approved").length,
+            declined_requests: userReqs.filter((r) => r.status === "declined").length,
+          });
+        }
+      }
 
       return {
         overview: {
@@ -85,7 +126,7 @@ export function useAdminStats() {
           approved: approvedRequests ?? 0,
           declined: declinedRequests ?? 0,
         },
-        users: [],
+        users,
       } as AdminStats;
     },
     staleTime: 30000,
