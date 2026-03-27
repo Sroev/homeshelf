@@ -4,12 +4,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
-import { ImagePlus, X, Loader2 } from "lucide-react";
+import { ImagePlus, X, Loader2, ScanSearch } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useCoverScanner } from "@/hooks/useCoverScanner";
 
 interface BookCoverUploadProps {
   coverUrl: string | null;
   onCoverChange: (url: string | null) => void;
+  onScanResult?: (title: string, author: string | null) => void;
   bookId?: string;
 }
 
@@ -20,13 +22,15 @@ const COMPRESSION_OPTIONS = {
   fileType: "image/webp" as const,
 };
 
-export function BookCoverUpload({ coverUrl, onCoverChange, bookId }: BookCoverUploadProps) {
+export function BookCoverUpload({ coverUrl, onCoverChange, onScanResult, bookId }: BookCoverUploadProps) {
   const { user } = useAuth();
   const { t } = useLanguage();
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const scanInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(coverUrl);
+  const { scanCover, isScanning } = useCoverScanner();
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -89,6 +93,49 @@ export function BookCoverUpload({ coverUrl, onCoverChange, bookId }: BookCoverUp
     }
   };
 
+  const handleScanCover = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) return;
+
+    try {
+      // Convert to base64
+      const reader = new FileReader();
+      const base64 = await new Promise<string>((resolve, reject) => {
+        reader.onload = () => {
+          const result = reader.result as string;
+          resolve(result.split(",")[1]); // strip data:... prefix
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+
+      const result = await scanCover(base64);
+      if (result) {
+        onScanResult?.(result.title, result.author);
+        toast({
+          title: t.scanner?.bookFound || "Book found!",
+          description: t.scanner?.bookFoundDesc || "Details filled in automatically.",
+        });
+      } else {
+        toast({
+          title: t.scanner?.notFound || "Could not recognize",
+          description: t.scanner?.scanFailed || "Could not extract book info from cover",
+          variant: "destructive",
+        });
+      }
+    } catch {
+      toast({
+        title: t.newBook?.error || "Error",
+        description: t.scanner?.scanFailed || "Cover scan failed",
+        variant: "destructive",
+      });
+    } finally {
+      if (scanInputRef.current) scanInputRef.current.value = "";
+    }
+  };
+
   const handleRemove = () => {
     setPreviewUrl(null);
     onCoverChange(null);
@@ -103,6 +150,14 @@ export function BookCoverUpload({ coverUrl, onCoverChange, bookId }: BookCoverUp
         onChange={handleFileSelect}
         className="hidden"
         disabled={isUploading}
+      />
+      <input
+        ref={scanInputRef}
+        type="file"
+        accept="image/*"
+        onChange={handleScanCover}
+        className="hidden"
+        disabled={isScanning}
       />
 
       {previewUrl ? (
@@ -139,6 +194,24 @@ export function BookCoverUpload({ coverUrl, onCoverChange, bookId }: BookCoverUp
               <span className="text-xs">{t.newBook.addCover || "Add cover"}</span>
             </>
           )}
+        </Button>
+      )}
+
+      {onScanResult && (
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          className="w-full gap-2"
+          onClick={() => scanInputRef.current?.click()}
+          disabled={isScanning || isUploading}
+        >
+          {isScanning ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <ScanSearch className="h-4 w-4" />
+          )}
+          {isScanning ? t.scanner?.scanning || "Scanning..." : t.scanner?.scanCover || "Scan cover"}
         </Button>
       )}
 

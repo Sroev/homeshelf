@@ -117,6 +117,10 @@ export default function NewBook() {
                 <BookCoverUpload
                   coverUrl={coverUrl}
                   onCoverChange={setCoverUrl}
+                  onScanResult={(scannedTitle, scannedAuthor) => {
+                    if (scannedTitle) setTitle(scannedTitle);
+                    if (scannedAuthor) setAuthor(scannedAuthor);
+                  }}
                 />
               </div>
 
