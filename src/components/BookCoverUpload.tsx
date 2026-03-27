@@ -197,6 +197,24 @@ export function BookCoverUpload({ coverUrl, onCoverChange, onScanResult, bookId 
         </Button>
       )}
 
+      {onScanResult && (
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          className="w-full gap-2"
+          onClick={() => scanInputRef.current?.click()}
+          disabled={isScanning || isUploading}
+        >
+          {isScanning ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <ScanSearch className="h-4 w-4" />
+          )}
+          {isScanning ? t.scanner?.scanning || "Scanning..." : t.scanner?.scanCover || "Scan cover"}
+        </Button>
+      )}
+
       <p className="text-xs text-muted-foreground">
         {t.newBook.coverHint || "Images are automatically compressed"}
       </p>
