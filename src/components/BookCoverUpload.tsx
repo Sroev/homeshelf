@@ -22,13 +22,15 @@ const COMPRESSION_OPTIONS = {
   fileType: "image/webp" as const,
 };
 
-export function BookCoverUpload({ coverUrl, onCoverChange, bookId }: BookCoverUploadProps) {
+export function BookCoverUpload({ coverUrl, onCoverChange, onScanResult, bookId }: BookCoverUploadProps) {
   const { user } = useAuth();
   const { t } = useLanguage();
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const scanInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(coverUrl);
+  const { scanCover, isScanning } = useCoverScanner();
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
