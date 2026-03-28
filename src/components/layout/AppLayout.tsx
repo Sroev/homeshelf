@@ -24,6 +24,7 @@ export function AppLayout({ children }: AppLayoutProps) {
   const { data: profile } = useProfile();
   const { data: pendingCount } = usePendingRequestsCount();
   const { data: isAdmin } = useIsAdmin();
+  const { needsOnboarding, completeOnboarding } = useOnboarding();
   const location = useLocation();
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
