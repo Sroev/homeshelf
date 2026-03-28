@@ -34,7 +34,7 @@ export default function Login() {
     setPasswordError("");
     try {
       if (isSignUp) {
-        const { error } = await signUp(email, password, displayName);
+        const { error } = await signUp(email, password);
         if (error) {
           const msg = error.message?.toLowerCase() || "";
           if (msg.includes("weak") || msg.includes("easy to guess")) {
@@ -161,18 +161,6 @@ export default function Login() {
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
-            {isSignUp && (
-              <div className="space-y-2">
-                <Label htmlFor="displayName">{t.login.displayName}</Label>
-                <Input
-                  id="displayName"
-                  placeholder={t.login.displayNamePlaceholder}
-                  value={displayName}
-                  onChange={(e) => setDisplayName(e.target.value)}
-                  required={isSignUp}
-                />
-              </div>
-            )}
             <div className="space-y-2">
               <Label htmlFor="email">{t.login.email}</Label>
               <Input
