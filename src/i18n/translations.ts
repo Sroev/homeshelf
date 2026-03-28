@@ -844,6 +844,22 @@ export const translations = {
       footerTagline: "Organize and share books with friends. Made with love for books.",
     },
 
+    // Onboarding
+    onboarding: {
+      step1Title: "Add your books",
+      step1Desc: "Build your personal library — add books manually or scan the cover.",
+      step2Title: "Share with friends",
+      step2Desc: "Generate a link and send it — your friends don't need an account.",
+      step3Title: "What should we call you?",
+      step3Desc: "Enter your name so friends know whose library they're browsing.",
+      nameLabel: "Your name",
+      namePlaceholder: "Enter your name...",
+      back: "Back",
+      next: "Next",
+      finish: "Get Started",
+      saving: "Saving...",
+    },
+
     // Language
     language: {
       switchTo: "Български",
