@@ -6,7 +6,8 @@ export function useOnboarding() {
   const [dismissed, setDismissed] = useState(false);
 
   const needsOnboarding =
-    !isLoading && !dismissed && (!profile?.display_name || profile.display_name.trim() === "");
+    !isLoading && !dismissed && !!profile && 
+    (!profile.display_name || profile.display_name.trim() === "" || profile.display_name === "Book Lover");
 
   const completeOnboarding = () => setDismissed(true);
 
