@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Book, Link2, MessageSquare, Plus, Clock } from "lucide-react";
 import { useProfile } from "@/hooks/useProfile";
@@ -7,13 +8,19 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AppLayout } from "@/components/layout/AppLayout";
+import { OnboardingModal } from "@/components/OnboardingModal";
 
 export default function Dashboard() {
-  const { data: profile } = useProfile();
+  const { data: profile, isLoading: profileLoading } = useProfile();
   const { data: books } = useBooks();
   const { data: pendingCount } = usePendingRequestsCount();
   const { data: waitlistCount } = useWaitlistCount();
   const { t } = useLanguage();
+  const [onboardingDismissed, setOnboardingDismissed] = useState(false);
+
+  const needsOnboarding = !profileLoading && profile && 
+    (!profile.display_name || profile.display_name === "Book Lover") && 
+    !onboardingDismissed;
 
   const bookCount = books?.length || 0;
   const availableCount = books?.filter(b => b.status === "available").length || 0;
