@@ -17,6 +17,7 @@ import Requests from "./pages/app/Requests";
 import SharedLibrary from "./pages/SharedLibrary";
 import Admin from "./pages/app/Admin";
 import Landing from "./pages/Landing";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -95,6 +96,7 @@ const App = () => (
             
             {/* Redirects */}
             <Route path="/" element={<Landing />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
             
             {/* 404 */}
             <Route path="*" element={<NotFound />} />
