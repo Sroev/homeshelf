@@ -96,6 +96,7 @@ const App = () => (
             
             {/* Redirects */}
             <Route path="/" element={<Landing />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
             
             {/* 404 */}
             <Route path="*" element={<NotFound />} />
