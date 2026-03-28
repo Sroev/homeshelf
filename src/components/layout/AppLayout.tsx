@@ -6,9 +6,11 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useProfile } from "@/hooks/useProfile";
 import { usePendingRequestsCount } from "@/hooks/useRequests";
 import { useIsAdmin } from "@/hooks/useAdmin";
+import { useOnboarding } from "@/hooks/useOnboarding";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { LanguageToggle } from "@/components/LanguageToggle";
+import { OnboardingModal } from "@/components/OnboardingModal";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
