@@ -27,6 +27,9 @@ export default function Dashboard() {
 
   return (
     <AppLayout>
+      {needsOnboarding && (
+        <OnboardingModal onComplete={() => setOnboardingDismissed(true)} />
+      )}
       <div className="space-y-8">
         {/* Welcome Section */}
         <div>
