@@ -410,6 +410,22 @@ export const translations = {
       footerTagline: "Организирай и споделяй книги с приятели. Направено с любов към книгите.",
     },
 
+    // Onboarding
+    onboarding: {
+      step1Title: "Добави книгите си",
+      step1Desc: "Създай личната си библиотека — добави книги ръчно или сканирай корицата.",
+      step2Title: "Сподели с приятели",
+      step2Desc: "Генерирай линк и го изпрати — приятелите ти не се нуждаят от акаунт.",
+      step3Title: "Как да те наричаме?",
+      step3Desc: "Въведи името си, за да знаят приятелите ти чия е библиотеката.",
+      nameLabel: "Твоето име",
+      namePlaceholder: "Напиши името си...",
+      back: "Назад",
+      next: "Напред",
+      finish: "Започни",
+      saving: "Запазване...",
+    },
+
     // Language
     language: {
       switchTo: "English",
@@ -826,6 +842,22 @@ export const translations = {
       ctaSubtitle: "Join readers who already use Runo to organize and share their favorite books.",
       ctaFree: "Free. No credit card required.",
       footerTagline: "Organize and share books with friends. Made with love for books.",
+    },
+
+    // Onboarding
+    onboarding: {
+      step1Title: "Add your books",
+      step1Desc: "Build your personal library — add books manually or scan the cover.",
+      step2Title: "Share with friends",
+      step2Desc: "Generate a link and send it — your friends don't need an account.",
+      step3Title: "What should we call you?",
+      step3Desc: "Enter your name so friends know whose library they're browsing.",
+      nameLabel: "Your name",
+      namePlaceholder: "Enter your name...",
+      back: "Back",
+      next: "Next",
+      finish: "Get Started",
+      saving: "Saving...",
     },
 
     // Language
