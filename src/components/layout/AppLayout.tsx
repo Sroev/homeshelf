@@ -80,7 +80,9 @@ export function AppLayout({ children }: AppLayoutProps) {
   );
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <>
+      {needsOnboarding && <OnboardingModal onComplete={completeOnboarding} />}
+      <div className="flex min-h-screen bg-background">
       {/* Desktop Sidebar */}
       <aside className="hidden w-64 flex-col border-r border-border bg-sidebar pt-8 pb-4 pl-8 pr-4 md:flex">
         <div className="mb-6">
