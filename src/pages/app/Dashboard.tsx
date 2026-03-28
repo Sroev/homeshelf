@@ -7,8 +7,6 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AppLayout } from "@/components/layout/AppLayout";
-import { OnboardingModal } from "@/components/OnboardingModal";
-import { useOnboarding } from "@/hooks/useOnboarding";
 
 export default function Dashboard() {
   const { data: profile } = useProfile();
@@ -16,16 +14,12 @@ export default function Dashboard() {
   const { data: pendingCount } = usePendingRequestsCount();
   const { data: waitlistCount } = useWaitlistCount();
   const { t } = useLanguage();
-  const { needsOnboarding, completeOnboarding } = useOnboarding();
 
   const bookCount = books?.length || 0;
   const availableCount = books?.filter(b => b.status === "available").length || 0;
 
   return (
     <AppLayout>
-      {needsOnboarding && (
-        <OnboardingModal onComplete={completeOnboarding} />
-      )}
       <div className="space-y-8">
         {/* Welcome Section */}
         <div>

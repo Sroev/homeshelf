@@ -6,9 +6,11 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useProfile } from "@/hooks/useProfile";
 import { usePendingRequestsCount } from "@/hooks/useRequests";
 import { useIsAdmin } from "@/hooks/useAdmin";
+import { useOnboarding } from "@/hooks/useOnboarding";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { LanguageToggle } from "@/components/LanguageToggle";
+import { OnboardingModal } from "@/components/OnboardingModal";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
@@ -22,6 +24,7 @@ export function AppLayout({ children }: AppLayoutProps) {
   const { data: profile } = useProfile();
   const { data: pendingCount } = usePendingRequestsCount();
   const { data: isAdmin } = useIsAdmin();
+  const { needsOnboarding, completeOnboarding } = useOnboarding();
   const location = useLocation();
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -77,7 +80,9 @@ export function AppLayout({ children }: AppLayoutProps) {
   );
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <>
+      {needsOnboarding && <OnboardingModal onComplete={completeOnboarding} />}
+      <div className="flex min-h-screen bg-background">
       {/* Desktop Sidebar */}
       <aside className="hidden w-64 flex-col border-r border-border bg-sidebar pt-8 pb-4 pl-8 pr-4 md:flex">
         <div className="mb-6">
@@ -158,5 +163,6 @@ export function AppLayout({ children }: AppLayoutProps) {
         </main>
       </div>
     </div>
+    </>
   );
 }
