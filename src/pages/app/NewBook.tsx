@@ -41,6 +41,7 @@ export default function NewBook() {
   const [status, setStatus] = useState<BookStatus>("available");
   const [shareable, setShareable] = useState(true);
   const [coverUrl, setCoverUrl] = useState<string | null>(null);
+  const [titleFromScan, setTitleFromScan] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -102,6 +103,7 @@ export default function NewBook() {
                 <BookScanner
                   onBookFound={(book: IsbnBookData) => {
                     setTitle(book.title);
+                    setTitleFromScan(true);
                     if (book.author) setAuthor(book.author);
                     if (book.isbn) setIsbn(book.isbn);
                     if (book.coverUrl) setCoverUrl(book.coverUrl);
@@ -119,7 +121,10 @@ export default function NewBook() {
                   coverUrl={coverUrl}
                   onCoverChange={setCoverUrl}
                   onScanResult={(scannedTitle, scannedAuthor) => {
-                    if (scannedTitle) setTitle(scannedTitle);
+                    if (scannedTitle) {
+                      setTitle(scannedTitle);
+                      setTitleFromScan(true);
+                    }
                     if (scannedAuthor) setAuthor(scannedAuthor);
                   }}
                 />
@@ -130,7 +135,8 @@ export default function NewBook() {
                 <BookAutocomplete
                   id="title"
                   value={title}
-                  onChange={setTitle}
+                  onChange={(v) => { setTitle(v); setTitleFromScan(false); }}
+                  skipSearch={titleFromScan}
                   onSelect={(suggestion: BookSuggestion) => {
                     setTitle(suggestion.title);
                     if (suggestion.author && !author) {

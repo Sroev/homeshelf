@@ -11,6 +11,7 @@ interface BookAutocompleteProps {
   placeholder?: string;
   id?: string;
   maxLength?: number;
+  skipSearch?: boolean;
 }
 
 export function BookAutocomplete({
@@ -20,11 +21,13 @@ export function BookAutocomplete({
   placeholder,
   id,
   maxLength,
+  skipSearch,
 }: BookAutocompleteProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const [hasSelected, setHasSelected] = useState(false);
-  const { suggestions, isLoading } = useBookSearch(value);
+  const searchQuery = hasSelected || skipSearch ? "" : value;
+  const { suggestions, isLoading } = useBookSearch(searchQuery);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const ignoreNextFocusRef = useRef(false);
