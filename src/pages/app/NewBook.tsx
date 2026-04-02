@@ -16,7 +16,7 @@ import { BookAutocomplete } from "@/components/BookAutocomplete";
 import { BookSuggestion } from "@/hooks/useBookSearch";
 import { BookCoverUpload } from "@/components/BookCoverUpload";
 import { BookScanner } from "@/components/BookScanner";
-import { BookCoverScanner } from "@/components/BookCoverScanner";
+
 import { IsbnBookData } from "@/hooks/useIsbnLookup";
 
 type BookStatus = Database["public"]["Enums"]["book_status"];
