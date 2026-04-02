@@ -100,12 +100,15 @@ export function BookCoverUpload({ coverUrl, onCoverChange, onScanResult, bookId 
     if (!file.type.startsWith("image/")) return;
 
     try {
-      // Compress before scanning
+      // Compress aggressively before scanning - desktop images can be very large
       const compressed = await imageCompression(file, {
-        maxSizeMB: 0.3,
-        maxWidthOrHeight: 1024,
+        maxSizeMB: 0.15,
+        maxWidthOrHeight: 800,
         useWebWorker: true,
+        fileType: "image/jpeg" as const,
       });
+
+      console.log("Scan: original", (file.size / 1024).toFixed(0), "KB -> compressed", (compressed.size / 1024).toFixed(0), "KB");
 
       // Convert to base64
       const reader = new FileReader();
@@ -117,6 +120,8 @@ export function BookCoverUpload({ coverUrl, onCoverChange, onScanResult, bookId 
         reader.onerror = reject;
         reader.readAsDataURL(compressed);
       });
+
+      console.log("Scan: base64 length", base64.length);
 
       const result = await scanCover(base64);
       if (result) {

@@ -21,6 +21,8 @@ serve(async (req) => {
       );
     }
 
+    console.log("Received image base64 length:", imageBase64.length);
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
       throw new Error("LOVABLE_API_KEY is not configured");
@@ -42,7 +44,7 @@ serve(async (req) => {
               content: [
                 {
                   type: "text",
-                  text: `Look at this book cover image. Extract ONLY the book title and author name. Respond ONLY with valid JSON in this exact format: {"title": "...", "author": "..."}. If the author is not visible, set author to null.`,
+                  text: `Look at this book cover image. Extract ONLY the book title and author name. Respond ONLY with valid JSON in this exact format: {"title": "...", "author": "..."}. If the author is not visible, set author to null. Do not add any other text or markdown formatting.`,
                 },
                 {
                   type: "image_url",
@@ -58,6 +60,8 @@ serve(async (req) => {
     );
 
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error("AI gateway error:", response.status, errorText);
       if (response.status === 429) {
         return new Response(
           JSON.stringify({ error: "Rate limited, please try again later." }),
@@ -70,13 +74,12 @@ serve(async (req) => {
           { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
-      const errorText = await response.text();
-      console.error("AI gateway error:", response.status, errorText);
       throw new Error(`AI gateway error: ${response.status}`);
     }
 
     const data = await response.json();
     const text = data.choices?.[0]?.message?.content;
+    console.log("AI response text:", text);
 
     if (!text) {
       throw new Error("No response from AI");
@@ -88,8 +91,14 @@ serve(async (req) => {
     if (jsonMatch) {
       jsonStr = jsonMatch[1].trim();
     }
+    // Also try to extract a JSON object if wrapped in other text
+    const objectMatch = jsonStr.match(/\{[\s\S]*\}/);
+    if (objectMatch) {
+      jsonStr = objectMatch[0];
+    }
 
     const result = JSON.parse(jsonStr);
+    console.log("Parsed result:", JSON.stringify(result));
 
     return new Response(JSON.stringify(result), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
