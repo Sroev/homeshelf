@@ -135,7 +135,8 @@ export default function NewBook() {
                 <BookAutocomplete
                   id="title"
                   value={title}
-                  onChange={setTitle}
+                  onChange={(v) => { setTitle(v); setTitleFromScan(false); }}
+                  skipSearch={titleFromScan}
                   onSelect={(suggestion: BookSuggestion) => {
                     setTitle(suggestion.title);
                     if (suggestion.author && !author) {
