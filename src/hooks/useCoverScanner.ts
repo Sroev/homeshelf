@@ -10,13 +10,17 @@ export function useCoverScanner() {
   const [isScanning, setIsScanning] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const scanCover = useCallback(async (imageBase64: string): Promise<CoverScanResult | null> => {
+  const scanCover = useCallback(async (imageSource: string): Promise<CoverScanResult | null> => {
     setIsScanning(true);
     setError(null);
 
     try {
+      const body = imageSource.startsWith("http")
+        ? { imageUrl: imageSource }
+        : { imageBase64: imageSource };
+
       const { data, error: fnError } = await supabase.functions.invoke("scan-book-cover", {
-        body: { imageBase64 },
+        body,
       });
 
       if (fnError) throw new Error(fnError.message);
