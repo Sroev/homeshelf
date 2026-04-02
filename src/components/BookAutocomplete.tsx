@@ -21,6 +21,7 @@ export function BookAutocomplete({
   placeholder,
   id,
   maxLength,
+  skipSearch,
 }: BookAutocompleteProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
