@@ -111,12 +111,6 @@ export default function NewBook() {
                     });
                   }}
                 />
-                <BookCoverScanner
-                  onBookFound={(book) => {
-                    setTitle(book.title);
-                    if (book.author) setAuthor(book.author);
-                  }}
-                />
               </div>
 
               <div className="space-y-2">
