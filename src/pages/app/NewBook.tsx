@@ -41,6 +41,7 @@ export default function NewBook() {
   const [status, setStatus] = useState<BookStatus>("available");
   const [shareable, setShareable] = useState(true);
   const [coverUrl, setCoverUrl] = useState<string | null>(null);
+  const [titleFromScan, setTitleFromScan] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
