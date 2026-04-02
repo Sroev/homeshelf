@@ -100,7 +100,8 @@ export function BookCoverUpload({ coverUrl, onCoverChange, onScanResult, bookId 
     if (!file.type.startsWith("image/")) return;
 
     try {
-      // Compress aggressively before scanning - desktop images can be very large
+      if (!user) return;
+
       const compressed = await imageCompression(file, {
         maxSizeMB: 0.15,
         maxWidthOrHeight: 800,
@@ -108,22 +109,22 @@ export function BookCoverUpload({ coverUrl, onCoverChange, onScanResult, bookId 
         fileType: "image/jpeg" as const,
       });
 
-      console.log("Scan: original", (file.size / 1024).toFixed(0), "KB -> compressed", (compressed.size / 1024).toFixed(0), "KB");
+      const scanFileName = `${user.id}/scan-${crypto.randomUUID()}.jpg`;
 
-      // Convert to base64
-      const reader = new FileReader();
-      const base64 = await new Promise<string>((resolve, reject) => {
-        reader.onload = () => {
-          const result = reader.result as string;
-          resolve(result.split(",")[1]);
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(compressed);
-      });
+      const { error: scanUploadError } = await supabase.storage
+        .from("book-covers")
+        .upload(scanFileName, compressed, {
+          contentType: "image/jpeg",
+          upsert: false,
+        });
 
-      console.log("Scan: base64 length", base64.length);
+      if (scanUploadError) throw scanUploadError;
 
-      const result = await scanCover(base64);
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from("book-covers").getPublicUrl(scanFileName);
+
+      const result = await scanCover(publicUrl);
       if (result) {
         onScanResult?.(result.title, result.author);
         toast({

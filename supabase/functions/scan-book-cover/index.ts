@@ -50,7 +50,7 @@ serve(async (req) => {
                 {
                   type: "image_url",
                   image_url: {
-                    url: `data:image/jpeg;base64,${imageBase64}`,
+                    url: imageUrl ?? `data:image/jpeg;base64,${imageBase64}`,
                   },
                 },
               ],
