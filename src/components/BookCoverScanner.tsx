@@ -3,6 +3,7 @@ import { Camera, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCoverScanner, CoverScanResult } from "@/hooks/useCoverScanner";
 import { useLanguage } from "@/contexts/LanguageContext";
+import imageCompression from "browser-image-compression";
 
 interface BookCoverScannerProps {
   onBookFound: (book: CoverScanResult) => void;
@@ -16,13 +17,20 @@ export function BookCoverScanner({ onBookFound }: BookCoverScannerProps) {
   const handleFileChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    const compressed = await imageCompression(file, {
+      maxSizeMB: 0.3,
+      maxWidthOrHeight: 1024,
+      useWebWorker: true,
+    });
+
     const reader = new FileReader();
     reader.onload = async () => {
       const base64 = (reader.result as string).split(",")[1];
       const result = await scanCover(base64);
       if (result?.title) onBookFound(result);
     };
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(compressed);
     e.target.value = "";
   }, [scanCover, onBookFound]);
 
