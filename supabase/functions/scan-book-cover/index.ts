@@ -13,9 +13,9 @@ serve(async (req) => {
   }
 
   try {
-    const { imageBase64 } = await req.json();
+    const { imageBase64, imageUrl } = await req.json();
 
-    if (!imageBase64) {
+    if (!imageBase64 && !imageUrl) {
       return new Response(
         JSON.stringify({ error: "No image provided" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
