@@ -100,15 +100,22 @@ export function BookCoverUpload({ coverUrl, onCoverChange, onScanResult, bookId 
     if (!file.type.startsWith("image/")) return;
 
     try {
+      // Compress before scanning
+      const compressed = await imageCompression(file, {
+        maxSizeMB: 0.3,
+        maxWidthOrHeight: 1024,
+        useWebWorker: true,
+      });
+
       // Convert to base64
       const reader = new FileReader();
       const base64 = await new Promise<string>((resolve, reject) => {
         reader.onload = () => {
           const result = reader.result as string;
-          resolve(result.split(",")[1]); // strip data:... prefix
+          resolve(result.split(",")[1]);
         };
         reader.onerror = reject;
-        reader.readAsDataURL(file);
+        reader.readAsDataURL(compressed);
       });
 
       const result = await scanCover(base64);
