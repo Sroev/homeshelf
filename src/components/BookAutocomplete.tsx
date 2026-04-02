@@ -11,6 +11,7 @@ interface BookAutocompleteProps {
   placeholder?: string;
   id?: string;
   maxLength?: number;
+  skipSearch?: boolean;
 }
 
 export function BookAutocomplete({
