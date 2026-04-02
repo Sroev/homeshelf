@@ -22,7 +22,7 @@ serve(async (req) => {
       );
     }
 
-    console.log("Received image base64 length:", imageBase64.length);
+    console.log("Received scan input:", imageUrl ? imageUrl : `base64:${imageBase64.length}`);
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
