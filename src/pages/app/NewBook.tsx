@@ -121,7 +121,10 @@ export default function NewBook() {
                   coverUrl={coverUrl}
                   onCoverChange={setCoverUrl}
                   onScanResult={(scannedTitle, scannedAuthor) => {
-                    if (scannedTitle) setTitle(scannedTitle);
+                    if (scannedTitle) {
+                      setTitle(scannedTitle);
+                      setTitleFromScan(true);
+                    }
                     if (scannedAuthor) setAuthor(scannedAuthor);
                   }}
                 />
