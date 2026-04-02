@@ -103,6 +103,7 @@ export default function NewBook() {
                 <BookScanner
                   onBookFound={(book: IsbnBookData) => {
                     setTitle(book.title);
+                    setTitleFromScan(true);
                     if (book.author) setAuthor(book.author);
                     if (book.isbn) setIsbn(book.isbn);
                     if (book.coverUrl) setCoverUrl(book.coverUrl);
