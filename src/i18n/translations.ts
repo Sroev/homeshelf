@@ -155,6 +155,28 @@ export const translations = {
       yes: "Да",
       no: "Не",
     },
+
+    // Bulk Add
+    bulkAdd: {
+      title: "Добави книги от снимка",
+      uploadDesc: "Снимай рафта си и ние ще разпознаем книгите",
+      reviewDesc: "Избери кои книги да добавиш в библиотеката си",
+      selectPhoto: "Избери снимка на рафт",
+      scanning: "Анализиране на рафта...",
+      noBooksFound: "Не бяха открити книги",
+      noBooksFoundDesc: "Не успяхме да разпознаем книги от снимката",
+      scanError: "Грешка при сканиране",
+      scanErrorDesc: "Не успяхме да сканираме снимката",
+      selectAll: "Избери всички",
+      cancel: "Отказ",
+      addSelected: "Добави избраните",
+      adding: "Добавяне...",
+      booksAdded: "Книгите са добавени!",
+      booksAddedDesc: "{count} книги бяха добавени в библиотеката ти",
+      addError: "Грешка при добавяне",
+      addedPartial: "Добавени {count} книги преди грешката",
+      bulkAddButton: "Добави от снимка",
+    },
     
     // Share
     share: {
