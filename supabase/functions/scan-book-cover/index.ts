@@ -98,7 +98,14 @@ serve(async (req) => {
       jsonStr = objectMatch[0];
     }
 
-    const result = JSON.parse(jsonStr);
+    const toTitleCase = (str: string) =>
+      str.toLowerCase().replace(/(?:^|\s)\S/g, (c) => c.toUpperCase());
+
+    const raw = JSON.parse(jsonStr);
+    const result = {
+      title: raw.title ? toTitleCase(raw.title) : raw.title,
+      author: raw.author ? toTitleCase(raw.author) : raw.author,
+    };
     console.log("Parsed result:", JSON.stringify(result));
 
     return new Response(JSON.stringify(result), {
