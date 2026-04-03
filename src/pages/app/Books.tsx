@@ -175,6 +175,7 @@ export default function Books() {
             <p className="mt-1 text-muted-foreground">
               {t.books.manageCollection}
             </p>
+          </div>
         </div>
 
         {/* Filters */}
