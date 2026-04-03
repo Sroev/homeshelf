@@ -17,6 +17,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Database } from "@/integrations/supabase/types";
 import { BulkAddBooks } from "@/components/BulkAddBooks";
+import { BookCoverUpload } from "@/components/BookCoverUpload";
 
 type BookStatus = Database["public"]["Enums"]["book_status"];
 
@@ -56,6 +57,7 @@ export default function Books() {
   const [editStatus, setEditStatus] = useState<BookStatus>("available");
   const [editShareable, setEditShareable] = useState(true);
   const [editLentTo, setEditLentTo] = useState("");
+  const [editCoverUrl, setEditCoverUrl] = useState<string | null>(null);
 
   const filteredBooks = books?.filter((book) => {
     const matchesSearch =
@@ -108,6 +110,7 @@ export default function Books() {
     setEditStatus(book.status);
     setEditShareable(book.shareable);
     setEditLentTo(book.lent_to || "");
+    setEditCoverUrl(book.cover_url || null);
   };
 
   const handleEditSubmit = async () => {
@@ -126,6 +129,7 @@ export default function Books() {
         status: editStatus,
         shareable: editShareable,
         lent_to: editStatus === "lent_out" ? (editLentTo.trim() || null) : null,
+        cover_url: editCoverUrl,
         notifyWaitlist: wasUnavailable && becomingAvailable,
       });
       
@@ -348,7 +352,15 @@ export default function Books() {
             <DialogTitle>{t.common.editBook}</DialogTitle>
             <DialogDescription>{t.common.updateBookDetails}</DialogDescription>
           </DialogHeader>
-          <div className="flex-1 overflow-y-auto space-y-4 pr-2">
+           <div className="flex-1 overflow-y-auto space-y-4 pr-2">
+            <div className="space-y-2">
+              <Label>{t.newBook?.cover || "Cover"}</Label>
+              <BookCoverUpload
+                coverUrl={editCoverUrl}
+                onCoverChange={setEditCoverUrl}
+                bookId={editingBook?.id}
+              />
+            </div>
             <div className="space-y-2">
               <Label htmlFor="edit-title">{t.common.title}</Label>
               <Input
