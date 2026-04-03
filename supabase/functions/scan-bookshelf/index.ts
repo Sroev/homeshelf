@@ -95,11 +95,17 @@ serve(async (req) => {
       jsonStr = objectMatch[0];
     }
 
-    const result = JSON.parse(jsonStr);
-    console.log("Parsed result:", JSON.stringify(result));
+    const toTitleCase = (str: string) =>
+      str.toLowerCase().replace(/(?:^|\s)\S/g, (c) => c.toUpperCase());
 
-    // Ensure we return the expected format
-    const books = Array.isArray(result.books) ? result.books : [];
+    const raw = JSON.parse(jsonStr);
+    console.log("Parsed result:", JSON.stringify(raw));
+
+    const rawBooks = Array.isArray(raw.books) ? raw.books : [];
+    const books = rawBooks.map((b: { title?: string; author?: string | null }) => ({
+      title: b.title ? toTitleCase(b.title) : b.title,
+      author: b.author ? toTitleCase(b.author) : b.author,
+    }));
 
     return new Response(JSON.stringify({ books }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
