@@ -3,7 +3,7 @@ import imageCompression from "browser-image-compression";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useCreateBook } from "@/hooks/useBooks";
+import { useCreateBook, useBooks } from "@/hooks/useBooks";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
