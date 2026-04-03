@@ -34,7 +34,9 @@ type BookStatus = Database["public"]["Enums"]["book_status"];
 export default function NewBook() {
   const navigate = useNavigate();
   const createBook = useCreateBook();
+  const { data: existingBooks } = useBooks();
   const { toast } = useToast();
+  const { t } = useLanguage();
   const { t } = useLanguage();
 
   const statusLabels: Record<BookStatus, string> = {
