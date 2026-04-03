@@ -110,6 +110,7 @@ export default function Books() {
     setEditStatus(book.status);
     setEditShareable(book.shareable);
     setEditLentTo(book.lent_to || "");
+    setEditCoverUrl(book.cover_url || null);
   };
 
   const handleEditSubmit = async () => {
