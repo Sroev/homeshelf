@@ -635,7 +635,7 @@ export const translations = {
       booksAddedDesc: "{count} books added to your library",
       addError: "Error adding books",
       addedPartial: "Added {count} books before the error",
-      bulkAddButton: "Add from photo",
+      bulkAddButton: "Add whole shelf",
     },
     
     // Share
