@@ -112,6 +112,12 @@ export function BulkAddBooks({ open, onOpenChange }: BulkAddBooksProps) {
     );
   };
 
+  const isDuplicate = (bookTitle: string) => {
+    if (!existingBooks) return false;
+    const normalized = bookTitle.trim().toLowerCase();
+    return existingBooks.some((b) => b.title.toLowerCase() === normalized);
+  };
+
   const toggleAll = () => {
     const allSelected = detectedBooks.every((b) => b.selected);
     setDetectedBooks((prev) => prev.map((b) => ({ ...b, selected: !allSelected })));
