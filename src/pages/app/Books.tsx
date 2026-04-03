@@ -176,12 +176,6 @@ export default function Books() {
               {t.books.manageCollection}
             </p>
           </div>
-          <Button asChild>
-            <Link to="/app/books/new">
-              <Plus className="mr-2 h-4 w-4" />
-              {t.dashboard.addBook}
-            </Link>
-          </Button>
         </div>
 
         {/* Filters */}
