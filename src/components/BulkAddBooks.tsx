@@ -244,7 +244,15 @@ export function BulkAddBooks({ open, onOpenChange }: BulkAddBooksProps) {
                     className="mt-0.5"
                   />
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium leading-tight truncate">{book.title}</p>
+                    <div className="flex items-center gap-1.5">
+                      <p className="text-sm font-medium leading-tight truncate">{book.title}</p>
+                      {isDuplicate(book.title) && (
+                        <span className="inline-flex items-center gap-1 shrink-0 rounded bg-destructive/10 px-1.5 py-0.5 text-[10px] font-medium text-destructive">
+                          <AlertTriangle className="h-3 w-3" />
+                          {t.newBook?.alreadyInLibrary || "Already in library"}
+                        </span>
+                      )}
+                    </div>
                     {book.author && (
                       <p className="text-xs text-muted-foreground truncate">{book.author}</p>
                     )}
