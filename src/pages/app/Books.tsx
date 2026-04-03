@@ -175,12 +175,18 @@ export default function Books() {
               {t.books.manageCollection}
             </p>
           </div>
-          <Button asChild>
-            <Link to="/app/books/new">
-              <Plus className="mr-2 h-4 w-4" />
-              {t.dashboard.addBook}
-            </Link>
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => setBulkAddOpen(true)}>
+              <BookCopy className="mr-2 h-4 w-4" />
+              {t.bulkAdd?.bulkAddButton || "Add from photo"}
+            </Button>
+            <Button asChild>
+              <Link to="/app/books/new">
+                <Plus className="mr-2 h-4 w-4" />
+                {t.dashboard.addBook}
+              </Link>
+            </Button>
+          </div>
         </div>
 
         {/* Filters */}
