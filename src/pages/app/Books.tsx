@@ -454,6 +454,8 @@ export default function Books() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <BulkAddBooks open={bulkAddOpen} onOpenChange={setBulkAddOpen} />
     </AppLayout>
   );
 }
