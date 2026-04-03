@@ -155,6 +155,28 @@ export const translations = {
       yes: "Да",
       no: "Не",
     },
+
+    // Bulk Add
+    bulkAdd: {
+      title: "Добави книги от снимка",
+      uploadDesc: "Снимай рафта си и ние ще разпознаем книгите",
+      reviewDesc: "Избери кои книги да добавиш в библиотеката си",
+      selectPhoto: "Избери снимка на рафт",
+      scanning: "Анализиране на рафта...",
+      noBooksFound: "Не бяха открити книги",
+      noBooksFoundDesc: "Не успяхме да разпознаем книги от снимката",
+      scanError: "Грешка при сканиране",
+      scanErrorDesc: "Не успяхме да сканираме снимката",
+      selectAll: "Избери всички",
+      cancel: "Отказ",
+      addSelected: "Добави избраните",
+      adding: "Добавяне...",
+      booksAdded: "Книгите са добавени!",
+      booksAddedDesc: "{count} книги бяха добавени в библиотеката ти",
+      addError: "Грешка при добавяне",
+      addedPartial: "Добавени {count} книги преди грешката",
+      bulkAddButton: "Добави от снимка",
+    },
     
     // Share
     share: {
@@ -592,6 +614,28 @@ export const translations = {
       useScanAsCoverTitle: "Use as cover",
       yes: "Yes",
       no: "No",
+    },
+
+    // Bulk Add
+    bulkAdd: {
+      title: "Add books from photo",
+      uploadDesc: "Take a photo of your bookshelf and we'll detect the books",
+      reviewDesc: "Select which books to add to your library",
+      selectPhoto: "Select bookshelf photo",
+      scanning: "Analyzing bookshelf...",
+      noBooksFound: "No books found",
+      noBooksFoundDesc: "Could not detect any books in the image",
+      scanError: "Scan failed",
+      scanErrorDesc: "Failed to scan the bookshelf photo",
+      selectAll: "Select all",
+      cancel: "Cancel",
+      addSelected: "Add selected",
+      adding: "Adding...",
+      booksAdded: "Books added!",
+      booksAddedDesc: "{count} books added to your library",
+      addError: "Error adding books",
+      addedPartial: "Added {count} books before the error",
+      bulkAddButton: "Add from photo",
     },
     
     // Share

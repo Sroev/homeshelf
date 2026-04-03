@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Plus, Search, Edit, Trash2 } from "lucide-react";
+import { Plus, Search, Edit, Trash2, BookCopy } from "lucide-react";
 import { useBooks, useUpdateBook, useDeleteBook, Book } from "@/hooks/useBooks";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Database } from "@/integrations/supabase/types";
+import { BulkAddBooks } from "@/components/BulkAddBooks";
 
 type BookStatus = Database["public"]["Enums"]["book_status"];
 
@@ -45,6 +46,7 @@ export default function Books() {
   const [shareableFilter, setShareableFilter] = useState<"all" | "shareable" | "private">("all");
   const [editingBook, setEditingBook] = useState<Book | null>(null);
   const [deleteConfirm, setDeleteConfirm] = useState<Book | null>(null);
+  const [bulkAddOpen, setBulkAddOpen] = useState(false);
 
   // Edit form state
   const [editTitle, setEditTitle] = useState("");
@@ -174,12 +176,18 @@ export default function Books() {
               {t.books.manageCollection}
             </p>
           </div>
-          <Button asChild>
-            <Link to="/app/books/new">
-              <Plus className="mr-2 h-4 w-4" />
-              {t.dashboard.addBook}
-            </Link>
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => setBulkAddOpen(true)}>
+              <BookCopy className="mr-2 h-4 w-4" />
+              {t.bulkAdd?.bulkAddButton || "Add from photo"}
+            </Button>
+            <Button asChild>
+              <Link to="/app/books/new">
+                <Plus className="mr-2 h-4 w-4" />
+                {t.dashboard.addBook}
+              </Link>
+            </Button>
+          </div>
         </div>
 
         {/* Filters */}
@@ -446,6 +454,8 @@ export default function Books() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <BulkAddBooks open={bulkAddOpen} onOpenChange={setBulkAddOpen} />
     </AppLayout>
   );
 }
