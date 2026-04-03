@@ -141,6 +141,9 @@ export function BookCoverUpload({ coverUrl, onCoverChange, onScanResult, bookId 
           title: t.scanner?.bookFound || "Book found!",
           description: t.scanner?.bookFoundDesc || "Details filled in automatically.",
         });
+        // Ask user if they want to use the scanned image as cover
+        setPendingScanUrl(publicUrl);
+        setScanCoverDialogOpen(true);
       } else {
         toast({
           title: t.scanner?.notFound || "Could not recognize",
