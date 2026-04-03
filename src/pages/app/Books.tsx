@@ -330,12 +330,18 @@ export default function Books() {
                   : t.books.adjustFilters}
               </p>
               {books?.length === 0 && (
-                <Button asChild className="mt-4">
-                  <Link to="/app/books/new">
-                    <Plus className="mr-2 h-4 w-4" />
-                    {t.books.addFirstBook}
-                  </Link>
-                </Button>
+                <div className="mt-4 flex flex-col sm:flex-row gap-2">
+                  <Button asChild>
+                    <Link to="/app/books/new">
+                      <Plus className="mr-2 h-4 w-4" />
+                      {t.books.addFirstBook}
+                    </Link>
+                  </Button>
+                  <Button variant="outline" onClick={() => setBulkAddOpen(true)}>
+                    <BookCopy className="mr-2 h-4 w-4" />
+                    {t.bulkAdd?.bulkAddButton || "Add from photo"}
+                  </Button>
+                </div>
               )}
             </CardContent>
           </Card>
