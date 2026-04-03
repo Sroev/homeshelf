@@ -352,7 +352,15 @@ export default function Books() {
             <DialogTitle>{t.common.editBook}</DialogTitle>
             <DialogDescription>{t.common.updateBookDetails}</DialogDescription>
           </DialogHeader>
-          <div className="flex-1 overflow-y-auto space-y-4 pr-2">
+           <div className="flex-1 overflow-y-auto space-y-4 pr-2">
+            <div className="space-y-2">
+              <Label>{t.newBook?.cover || "Cover"}</Label>
+              <BookCoverUpload
+                coverUrl={editCoverUrl}
+                onCoverChange={setEditCoverUrl}
+                bookId={editingBook?.id}
+              />
+            </div>
             <div className="space-y-2">
               <Label htmlFor="edit-title">{t.common.title}</Label>
               <Input
