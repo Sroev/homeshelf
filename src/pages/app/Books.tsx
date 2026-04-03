@@ -183,7 +183,6 @@ export default function Books() {
             </Link>
           </Button>
         </div>
-        </div>
 
         {/* Filters */}
         <Card>
