@@ -57,6 +57,7 @@ export default function Books() {
   const [editStatus, setEditStatus] = useState<BookStatus>("available");
   const [editShareable, setEditShareable] = useState(true);
   const [editLentTo, setEditLentTo] = useState("");
+  const [editCoverUrl, setEditCoverUrl] = useState<string | null>(null);
 
   const filteredBooks = books?.filter((book) => {
     const matchesSearch =
