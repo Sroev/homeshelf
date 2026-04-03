@@ -219,6 +219,20 @@ export default function Books() {
           </CardContent>
         </Card>
 
+        {/* Add Book Button */}
+        <div className="flex gap-2">
+          <Button asChild>
+            <Link to="/app/books/new">
+              <Plus className="mr-2 h-4 w-4" />
+              {t.books.addFirstBook}
+            </Link>
+          </Button>
+          <Button variant="outline" onClick={() => setBulkAddOpen(true)}>
+            <BookCopy className="mr-2 h-4 w-4" />
+            {t.bulkAdd?.bulkAddButton || "Add from photo"}
+          </Button>
+        </div>
+
         {/* Book List */}
         {filteredBooks && filteredBooks.length > 0 ? (
           <Card>
