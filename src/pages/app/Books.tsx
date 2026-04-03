@@ -17,6 +17,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Database } from "@/integrations/supabase/types";
 import { BulkAddBooks } from "@/components/BulkAddBooks";
+import { BookCoverUpload } from "@/components/BookCoverUpload";
 
 type BookStatus = Database["public"]["Enums"]["book_status"];
 
