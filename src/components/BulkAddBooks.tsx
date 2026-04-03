@@ -79,12 +79,16 @@ export function BulkAddBooks({ open, onOpenChange }: BulkAddBooksProps) {
       if (error) throw error;
 
       if (data?.books?.length > 0) {
+        const existingTitles = new Set(
+          (existingBooks || []).map((b) => b.title.toLowerCase())
+        );
         setDetectedBooks(
           data.books.map((b: { title: string; author: string | null }) => ({
             ...b,
-            selected: true,
+            selected: !existingTitles.has(b.title.trim().toLowerCase()),
           }))
         );
+
         setStep("review");
       } else {
         toast({
