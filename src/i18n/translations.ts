@@ -175,7 +175,7 @@ export const translations = {
       booksAddedDesc: "{count} книги бяха добавени в библиотеката ти",
       addError: "Грешка при добавяне",
       addedPartial: "Добавени {count} книги преди грешката",
-      bulkAddButton: "Добави от снимка",
+      bulkAddButton: "Добави цял рафт",
     },
     
     // Share
@@ -635,7 +635,7 @@ export const translations = {
       booksAddedDesc: "{count} books added to your library",
       addError: "Error adding books",
       addedPartial: "Added {count} books before the error",
-      bulkAddButton: "Add from photo",
+      bulkAddButton: "Add whole shelf",
     },
     
     // Share
