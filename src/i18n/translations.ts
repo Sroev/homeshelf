@@ -175,7 +175,7 @@ export const translations = {
       booksAddedDesc: "{count} книги бяха добавени в библиотеката ти",
       addError: "Грешка при добавяне",
       addedPartial: "Добавени {count} книги преди грешката",
-      bulkAddButton: "Добави от снимка",
+      bulkAddButton: "Добави цял рафт",
     },
     
     // Share
