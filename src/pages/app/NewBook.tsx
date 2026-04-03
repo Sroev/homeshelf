@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useCreateBook } from "@/hooks/useBooks";
+import { useCreateBook, useBooks } from "@/hooks/useBooks";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,6 +9,16 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { useToast } from "@/hooks/use-toast";
 import { Database } from "@/integrations/supabase/types";
@@ -24,6 +34,7 @@ type BookStatus = Database["public"]["Enums"]["book_status"];
 export default function NewBook() {
   const navigate = useNavigate();
   const createBook = useCreateBook();
+  const { data: existingBooks } = useBooks();
   const { toast } = useToast();
   const { t } = useLanguage();
 
@@ -42,19 +53,18 @@ export default function NewBook() {
   const [shareable, setShareable] = useState(true);
   const [coverUrl, setCoverUrl] = useState<string | null>(null);
   const [titleFromScan, setTitleFromScan] = useState(false);
+  const [showDuplicateDialog, setShowDuplicateDialog] = useState(false);
+  const [duplicateTitle, setDuplicateTitle] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const findDuplicate = (bookTitle: string) => {
+    if (!existingBooks || !bookTitle.trim()) return null;
+    const normalized = bookTitle.trim().toLowerCase();
+    return existingBooks.find(
+      (b) => b.title.toLowerCase() === normalized
+    );
+  };
 
-    if (!title.trim()) {
-      toast({
-        title: t.newBook.validationError,
-        description: t.newBook.titleRequired,
-        variant: "destructive",
-      });
-      return;
-    }
-
+  const doAddBook = async () => {
     try {
       await createBook.mutateAsync({
         title: title.trim(),
@@ -77,6 +87,28 @@ export default function NewBook() {
         variant: "destructive",
       });
     }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!title.trim()) {
+      toast({
+        title: t.newBook.validationError,
+        description: t.newBook.titleRequired,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const duplicate = findDuplicate(title);
+    if (duplicate) {
+      setDuplicateTitle(duplicate.title);
+      setShowDuplicateDialog(true);
+      return;
+    }
+
+    await doAddBook();
   };
 
   return (
@@ -237,6 +269,23 @@ export default function NewBook() {
           </CardContent>
         </Card>
       </div>
+
+      <AlertDialog open={showDuplicateDialog} onOpenChange={setShowDuplicateDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t.newBook.duplicateWarning}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {(t.newBook.duplicateDesc || "").replace("{title}", duplicateTitle)}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t.newBook.cancel}</AlertDialogCancel>
+            <AlertDialogAction onClick={() => { setShowDuplicateDialog(false); doAddBook(); }}>
+              {t.newBook.addAnyway}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </AppLayout>
   );
 }

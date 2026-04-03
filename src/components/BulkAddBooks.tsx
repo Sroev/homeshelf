@@ -3,11 +3,11 @@ import imageCompression from "browser-image-compression";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useCreateBook } from "@/hooks/useBooks";
+import { useCreateBook, useBooks } from "@/hooks/useBooks";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Loader2, BookCopy, ImagePlus } from "lucide-react";
+import { Loader2, BookCopy, ImagePlus, AlertTriangle } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -33,6 +33,7 @@ export function BulkAddBooks({ open, onOpenChange }: BulkAddBooksProps) {
   const { t } = useLanguage();
   const { toast } = useToast();
   const createBook = useCreateBook();
+  const { data: existingBooks } = useBooks();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [step, setStep] = useState<"upload" | "review" | "adding">("upload");
@@ -78,12 +79,16 @@ export function BulkAddBooks({ open, onOpenChange }: BulkAddBooksProps) {
       if (error) throw error;
 
       if (data?.books?.length > 0) {
+        const existingTitles = new Set(
+          (existingBooks || []).map((b) => b.title.toLowerCase())
+        );
         setDetectedBooks(
           data.books.map((b: { title: string; author: string | null }) => ({
             ...b,
-            selected: true,
+            selected: !existingTitles.has(b.title.trim().toLowerCase()),
           }))
         );
+
         setStep("review");
       } else {
         toast({
@@ -109,6 +114,12 @@ export function BulkAddBooks({ open, onOpenChange }: BulkAddBooksProps) {
     setDetectedBooks((prev) =>
       prev.map((b, i) => (i === index ? { ...b, selected: !b.selected } : b))
     );
+  };
+
+  const isDuplicate = (bookTitle: string) => {
+    if (!existingBooks) return false;
+    const normalized = bookTitle.trim().toLowerCase();
+    return existingBooks.some((b) => b.title.toLowerCase() === normalized);
   };
 
   const toggleAll = () => {
@@ -237,7 +248,15 @@ export function BulkAddBooks({ open, onOpenChange }: BulkAddBooksProps) {
                     className="mt-0.5"
                   />
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium leading-tight truncate">{book.title}</p>
+                    <div className="flex items-center gap-1.5">
+                      <p className="text-sm font-medium leading-tight truncate">{book.title}</p>
+                      {isDuplicate(book.title) && (
+                        <span className="inline-flex items-center gap-1 shrink-0 rounded bg-destructive/10 px-1.5 py-0.5 text-[10px] font-medium text-destructive">
+                          <AlertTriangle className="h-3 w-3" />
+                          {t.newBook?.alreadyInLibrary || "Already in library"}
+                        </span>
+                      )}
+                    </div>
                     {book.author && (
                       <p className="text-xs text-muted-foreground truncate">{book.author}</p>
                     )}
