@@ -33,6 +33,7 @@ export function BulkAddBooks({ open, onOpenChange }: BulkAddBooksProps) {
   const { t } = useLanguage();
   const { toast } = useToast();
   const createBook = useCreateBook();
+  const { data: existingBooks } = useBooks();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [step, setStep] = useState<"upload" | "review" | "adding">("upload");
