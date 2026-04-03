@@ -38,6 +38,8 @@ export function BookCoverUpload({ coverUrl, onCoverChange, onScanResult, bookId 
   const scanInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(coverUrl);
+  const [scanCoverDialogOpen, setScanCoverDialogOpen] = useState(false);
+  const [pendingScanUrl, setPendingScanUrl] = useState<string | null>(null);
   const { scanCover, isScanning } = useCoverScanner();
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
