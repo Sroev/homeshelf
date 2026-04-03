@@ -135,6 +135,10 @@ export const translations = {
       coverUploadedDesc: "Корицата на книгата е качена успешно",
       uploadError: "Грешка при качване",
       uploadErrorDesc: "Неуспешно качване на корицата",
+      duplicateWarning: "Възможен дубликат",
+      duplicateDesc: "Книга с подобно заглавие вече съществува в библиотеката ти: \"{title}\". Сигурен ли си, че искаш да я добавиш?",
+      addAnyway: "Добави все пак",
+      alreadyInLibrary: "Вече в библиотеката",
     },
 
     // Scanner
