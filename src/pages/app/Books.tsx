@@ -129,6 +129,7 @@ export default function Books() {
         status: editStatus,
         shareable: editShareable,
         lent_to: editStatus === "lent_out" ? (editLentTo.trim() || null) : null,
+        cover_url: editCoverUrl,
         notifyWaitlist: wasUnavailable && becomingAvailable,
       });
       
