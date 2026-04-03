@@ -615,6 +615,28 @@ export const translations = {
       yes: "Yes",
       no: "No",
     },
+
+    // Bulk Add
+    bulkAdd: {
+      title: "Add books from photo",
+      uploadDesc: "Take a photo of your bookshelf and we'll detect the books",
+      reviewDesc: "Select which books to add to your library",
+      selectPhoto: "Select bookshelf photo",
+      scanning: "Analyzing bookshelf...",
+      noBooksFound: "No books found",
+      noBooksFoundDesc: "Could not detect any books in the image",
+      scanError: "Scan failed",
+      scanErrorDesc: "Failed to scan the bookshelf photo",
+      selectAll: "Select all",
+      cancel: "Cancel",
+      addSelected: "Add selected",
+      adding: "Adding...",
+      booksAdded: "Books added!",
+      booksAddedDesc: "{count} books added to your library",
+      addError: "Error adding books",
+      addedPartial: "Added {count} books before the error",
+      bulkAddButton: "Add from photo",
+    },
     
     // Share
     share: {
