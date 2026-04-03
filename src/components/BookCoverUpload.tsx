@@ -7,6 +7,14 @@ import { Button } from "@/components/ui/button";
 import { ImagePlus, X, Loader2, ScanSearch } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useCoverScanner } from "@/hooks/useCoverScanner";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface BookCoverUploadProps {
   coverUrl: string | null;

@@ -588,6 +588,10 @@ export const translations = {
       scanning: "Scanning...",
       scanFailed: "Could not extract book info from cover",
       analyzingCover: "Analyzing...",
+      useScanAsCover: "Would you like to use this photo as the book cover?",
+      useScanAsCoverTitle: "Use as cover",
+      yes: "Yes",
+      no: "No",
     },
     
     // Share
