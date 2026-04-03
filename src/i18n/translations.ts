@@ -599,6 +599,10 @@ export const translations = {
       coverUploadedDesc: "Book cover has been uploaded successfully",
       uploadError: "Upload failed",
       uploadErrorDesc: "Failed to upload book cover",
+      duplicateWarning: "Possible duplicate",
+      duplicateDesc: "A book with a similar title already exists in your library: \"{title}\". Are you sure you want to add it?",
+      addAnyway: "Add anyway",
+      alreadyInLibrary: "Already in library",
     },
 
     // Scanner
