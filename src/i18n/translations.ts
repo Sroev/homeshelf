@@ -150,6 +150,10 @@ export const translations = {
       scanning: "Сканиране...",
       scanFailed: "Не успяхме да разпознаем книгата от корицата",
       analyzingCover: "Анализиране...",
+      useScanAsCover: "Искаш ли да качиш тази снимка и като корица на книгата?",
+      useScanAsCoverTitle: "Използвай като корица",
+      yes: "Да",
+      no: "Не",
     },
     
     // Share
@@ -584,6 +588,10 @@ export const translations = {
       scanning: "Scanning...",
       scanFailed: "Could not extract book info from cover",
       analyzingCover: "Analyzing...",
+      useScanAsCover: "Would you like to use this photo as the book cover?",
+      useScanAsCoverTitle: "Use as cover",
+      yes: "Yes",
+      no: "No",
     },
     
     // Share

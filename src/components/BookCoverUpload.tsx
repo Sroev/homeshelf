@@ -7,6 +7,14 @@ import { Button } from "@/components/ui/button";
 import { ImagePlus, X, Loader2, ScanSearch } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useCoverScanner } from "@/hooks/useCoverScanner";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface BookCoverUploadProps {
   coverUrl: string | null;
@@ -30,6 +38,8 @@ export function BookCoverUpload({ coverUrl, onCoverChange, onScanResult, bookId 
   const scanInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(coverUrl);
+  const [scanCoverDialogOpen, setScanCoverDialogOpen] = useState(false);
+  const [pendingScanUrl, setPendingScanUrl] = useState<string | null>(null);
   const { scanCover, isScanning } = useCoverScanner();
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -131,6 +141,9 @@ export function BookCoverUpload({ coverUrl, onCoverChange, onScanResult, bookId 
           title: t.scanner?.bookFound || "Book found!",
           description: t.scanner?.bookFoundDesc || "Details filled in automatically.",
         });
+        // Ask user if they want to use the scanned image as cover
+        setPendingScanUrl(publicUrl);
+        setScanCoverDialogOpen(true);
       } else {
         toast({
           title: t.scanner?.notFound || "Could not recognize",
@@ -152,6 +165,20 @@ export function BookCoverUpload({ coverUrl, onCoverChange, onScanResult, bookId 
   const handleRemove = () => {
     setPreviewUrl(null);
     onCoverChange(null);
+  };
+
+  const handleAcceptScanAsCover = () => {
+    if (pendingScanUrl) {
+      setPreviewUrl(pendingScanUrl);
+      onCoverChange(pendingScanUrl);
+    }
+    setScanCoverDialogOpen(false);
+    setPendingScanUrl(null);
+  };
+
+  const handleDeclineScanAsCover = () => {
+    setScanCoverDialogOpen(false);
+    setPendingScanUrl(null);
   };
 
   return (
@@ -231,6 +258,34 @@ export function BookCoverUpload({ coverUrl, onCoverChange, onScanResult, bookId 
       <p className="text-xs text-muted-foreground">
         {t.newBook.coverHint || "Images are automatically compressed"}
       </p>
+
+      <Dialog open={scanCoverDialogOpen} onOpenChange={setScanCoverDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>{t.scanner?.useScanAsCoverTitle || "Use as cover"}</DialogTitle>
+            <DialogDescription>
+              {t.scanner?.useScanAsCover || "Would you like to use this photo as the book cover?"}
+            </DialogDescription>
+          </DialogHeader>
+          {pendingScanUrl && (
+            <div className="flex justify-center py-2">
+              <img
+                src={pendingScanUrl}
+                alt="Scanned cover"
+                className="h-40 w-28 rounded-md object-cover border border-border"
+              />
+            </div>
+          )}
+          <DialogFooter className="flex-row gap-2 sm:justify-end">
+            <Button variant="outline" onClick={handleDeclineScanAsCover}>
+              {t.scanner?.no || "No"}
+            </Button>
+            <Button onClick={handleAcceptScanAsCover}>
+              {t.scanner?.yes || "Yes"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
