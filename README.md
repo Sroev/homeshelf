@@ -1,73 +1,60 @@
-# Welcome to your Lovable project
+# 📚 Runo — Personal Library Manager
 
-## Project info
+**Runo** is a web application for managing your personal book library and sharing it with friends. Built with React, TypeScript, and Lovable Cloud.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+🔗 **Live:** [homeshelf.lovable.app](https://homeshelf.lovable.app)
 
-## How can I edit this code?
+## Features
 
-There are several ways of editing your application.
+- **📖 Book Management** — Add, edit, and organize your books with status tracking (available, reading, lent out)
+- **📷 AI Book Scanner** — Scan book covers or bookshelves with AI to auto-detect title and author
+- **🔗 Library Sharing** — Generate a unique link so friends can browse your collection
+- **📩 Borrow Requests** — Friends can request to borrow books; you approve or decline
+- **🌐 Bilingual** — Full Bulgarian and English support
+- **🔐 Authentication** — Secure email-based signup and login
+- **👤 Admin Panel** — User statistics and management for administrators
 
-**Use Lovable**
+## Tech Stack
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+| Layer | Technology |
+|-------|-----------|
+| Frontend | React 18, TypeScript 5, Vite 5 |
+| Styling | Tailwind CSS 3, shadcn/ui |
+| Backend | Lovable Cloud (Supabase) |
+| AI | Lovable AI Gateway (Gemini 2.5 Flash) |
+| State | TanStack React Query |
+| Routing | React Router 6 |
 
-Changes made via Lovable will be committed automatically to this repo.
+## Project Structure
 
-**Use your preferred IDE**
+```
+src/
+├── components/       # Reusable UI components
+├── contexts/         # Auth & Language context providers
+├── hooks/            # Custom hooks (books, library, requests, etc.)
+├── i18n/             # Translations (BG/EN)
+├── pages/            # Route pages (Landing, Login, Dashboard, Books…)
+└── integrations/     # Supabase client & types (auto-generated)
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+supabase/
+└── functions/        # Edge functions (book scanning, notifications, etc.)
+```
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## Getting Started
 
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+```bash
+npm install
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+Requires Node.js 18+. Environment variables are managed automatically via Lovable Cloud.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Development
 
-**Use GitHub Codespaces**
+- **Lovable Editor:** [lovable.dev/projects/ae8e676a-20df-4270-a328-c39e18c288cd](https://lovable.dev/projects/ae8e676a-20df-4270-a328-c39e18c288cd)
+- Changes sync bidirectionally between Lovable and GitHub
+- Database schema and edge functions deploy automatically
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## License
 
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Private project.
