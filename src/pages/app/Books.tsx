@@ -224,7 +224,7 @@ export default function Books() {
           <Button asChild>
             <Link to="/app/books/new">
               <Plus className="mr-2 h-4 w-4" />
-              {t.books.addFirstBook}
+              {t.newBook?.addBook || "Add Book"}
             </Link>
           </Button>
           <Button variant="outline" onClick={() => setBulkAddOpen(true)}>
