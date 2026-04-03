@@ -269,6 +269,23 @@ export default function NewBook() {
           </CardContent>
         </Card>
       </div>
+
+      <AlertDialog open={showDuplicateDialog} onOpenChange={setShowDuplicateDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t.newBook.duplicateWarning}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {(t.newBook.duplicateDesc || "").replace("{title}", duplicateTitle)}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t.newBook.cancel}</AlertDialogCancel>
+            <AlertDialogAction onClick={() => { setShowDuplicateDialog(false); doAddBook(); }}>
+              {t.newBook.addAnyway}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </AppLayout>
   );
 }
