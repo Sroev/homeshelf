@@ -46,6 +46,7 @@ export default function Books() {
   const [shareableFilter, setShareableFilter] = useState<"all" | "shareable" | "private">("all");
   const [editingBook, setEditingBook] = useState<Book | null>(null);
   const [deleteConfirm, setDeleteConfirm] = useState<Book | null>(null);
+  const [bulkAddOpen, setBulkAddOpen] = useState(false);
 
   // Edit form state
   const [editTitle, setEditTitle] = useState("");
