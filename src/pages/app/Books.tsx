@@ -18,6 +18,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Database } from "@/integrations/supabase/types";
 import { BulkAddBooks } from "@/components/BulkAddBooks";
 import { BookCoverUpload } from "@/components/BookCoverUpload";
+import { LoanHistory } from "@/components/LoanHistory";
 
 type BookStatus = Database["public"]["Enums"]["book_status"];
 
@@ -443,6 +444,11 @@ export default function Books() {
               />
               <Label htmlFor="edit-shareable">{t.common.shareableWithFriends}</Label>
             </div>
+            {editingBook && (
+              <div className="border-t border-border pt-4">
+                <LoanHistory bookId={editingBook.id} libraryId={editingBook.library_id} />
+              </div>
+            )}
           </div>
           <DialogFooter className="mt-4">
             <Button variant="outline" onClick={() => setEditingBook(null)}>
