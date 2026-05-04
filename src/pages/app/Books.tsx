@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Plus, Search, Edit, Trash2, BookCopy } from "lucide-react";
+import { Plus, Search, Edit, Trash2, BookCopy, Mail } from "lucide-react";
 import { useBooks, useUpdateBook, useDeleteBook, Book } from "@/hooks/useBooks";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,7 @@ import { Database } from "@/integrations/supabase/types";
 import { BulkAddBooks } from "@/components/BulkAddBooks";
 import { BookCoverUpload } from "@/components/BookCoverUpload";
 import { LoanHistory } from "@/components/LoanHistory";
+import { supabase } from "@/integrations/supabase/client";
 
 type BookStatus = Database["public"]["Enums"]["book_status"];
 
@@ -49,6 +50,7 @@ export default function Books() {
   const [editingBook, setEditingBook] = useState<Book | null>(null);
   const [deleteConfirm, setDeleteConfirm] = useState<Book | null>(null);
   const [bulkAddOpen, setBulkAddOpen] = useState(false);
+  const [reminderLoadingId, setReminderLoadingId] = useState<string | null>(null);
 
   // Edit form state
   const [editTitle, setEditTitle] = useState("");
@@ -99,6 +101,44 @@ export default function Books() {
       toast({ title: shareable ? t.books.bookNowShareable : t.books.bookNowPrivate });
     } catch {
       toast({ title: t.books.failedToUpdate, variant: "destructive" });
+    }
+  };
+
+  const handleSendReminder = async (bookId: string) => {
+    setReminderLoadingId(bookId);
+    try {
+      // Find the open loan_history record for this book
+      const { data: loan, error: loanErr } = await supabase
+        .from("loan_history")
+        .select("id, borrower_email")
+        .eq("book_id", bookId)
+        .is("returned_at", null)
+        .order("lent_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (loanErr || !loan) {
+        toast({ title: t.loanHistory.reminderFailed, variant: "destructive" });
+        return;
+      }
+      if (!loan.borrower_email) {
+        toast({ title: t.loanHistory.reminderNoEmail, variant: "destructive" });
+        return;
+      }
+      const { data, error } = await supabase.functions.invoke("send-return-reminder", {
+        body: { loan_id: loan.id },
+      });
+      if (error) throw error;
+      if ((data as any)?.error) throw new Error((data as any).error);
+      toast({ title: t.loanHistory.reminderSent });
+    } catch (err) {
+      toast({
+        title: t.loanHistory.reminderFailed,
+        description: err instanceof Error ? err.message : undefined,
+        variant: "destructive",
+      });
+    } finally {
+      setReminderLoadingId(null);
     }
   };
 
@@ -308,6 +348,17 @@ export default function Books() {
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-2">
+                          {book.status === "lent_out" && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleSendReminder(book.id)}
+                              disabled={reminderLoadingId === book.id}
+                              title={t.loanHistory.sendReminder}
+                            >
+                              <Mail className="h-4 w-4" />
+                            </Button>
+                          )}
                           <Button
                             variant="ghost"
                             size="icon"

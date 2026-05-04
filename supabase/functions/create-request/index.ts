@@ -71,7 +71,7 @@ serve(async (req) => {
       );
     }
 
-    const { token, book_id, requester_name, requester_email, message } = await req.json();
+    const { token, book_id, requester_name, requester_email, message, proposed_return_date } = await req.json();
 
     if (!token || typeof token !== "string") {
       return new Response(
@@ -121,6 +121,18 @@ serve(async (req) => {
         JSON.stringify({ error: "Message must be less than 500 characters" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
+    }
+
+    let normalizedReturnDate: string | null = null;
+    if (proposed_return_date) {
+      const isoDate = String(proposed_return_date).slice(0, 10);
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(isoDate)) {
+        return new Response(
+          JSON.stringify({ error: "Invalid return date" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      normalizedReturnDate = isoDate;
     }
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
@@ -177,6 +189,7 @@ serve(async (req) => {
         requester_email: requester_email.trim().toLowerCase(),
         message: message?.trim() || null,
         status: "pending",
+        proposed_return_date: normalizedReturnDate,
       })
       .select("id, created_at")
       .single();
