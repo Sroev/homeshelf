@@ -26,6 +26,7 @@ import { BookAutocomplete } from "@/components/BookAutocomplete";
 import { BookSuggestion } from "@/hooks/useBookSearch";
 import { BookCoverUpload } from "@/components/BookCoverUpload";
 import { BookScanner } from "@/components/BookScanner";
+import { GENRE_KEYS } from "@/lib/genres";
 
 import { IsbnBookData } from "@/hooks/useIsbnLookup";
 
@@ -52,6 +53,7 @@ export default function NewBook() {
   const [status, setStatus] = useState<BookStatus>("available");
   const [shareable, setShareable] = useState(true);
   const [coverUrl, setCoverUrl] = useState<string | null>(null);
+  const [genre, setGenre] = useState<string>("");
   const [titleFromScan, setTitleFromScan] = useState(false);
   const [showDuplicateDialog, setShowDuplicateDialog] = useState(false);
   const [duplicateTitle, setDuplicateTitle] = useState("");
@@ -74,6 +76,7 @@ export default function NewBook() {
         status,
         shareable,
         cover_url: coverUrl || undefined,
+        genre: genre || undefined,
       });
       toast({
         title: t.newBook.bookAdded,
@@ -218,6 +221,23 @@ export default function NewBook() {
                   rows={3}
                   maxLength={1000}
                 />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="genre">{t.common.genre}</Label>
+                <Select value={genre || "__none__"} onValueChange={(v) => setGenre(v === "__none__" ? "" : v)}>
+                  <SelectTrigger id="genre">
+                    <SelectValue placeholder={t.common.genrePlaceholder} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="__none__">{t.common.noGenre}</SelectItem>
+                    {GENRE_KEYS.map((key) => (
+                      <SelectItem key={key} value={key}>
+                        {(t.genres as Record<string, string>)[key]}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="space-y-2">
