@@ -495,6 +495,34 @@ export const translations = {
       saving: "Запазване...",
     },
 
+    // Genres
+    genres: {
+      fiction: "Художествена",
+      nonfiction: "Документална",
+      mystery: "Мистерия",
+      thriller: "Трилър",
+      romance: "Романтика",
+      fantasy: "Фентъзи",
+      scifi: "Научна фантастика",
+      biography: "Биография",
+      history: "История",
+      selfhelp: "Самоусъвършенстване",
+      business: "Бизнес",
+      children: "Детска",
+      youngadult: "Младежка",
+      poetry: "Поезия",
+      classic: "Класика",
+      horror: "Хорър",
+      science: "Наука",
+      philosophy: "Философия",
+      religion: "Религия",
+      cookbook: "Готварска",
+      travel: "Пътуване",
+      art: "Изкуство",
+      comics: "Комикси",
+      other: "Друго",
+    },
+
     // Language
     language: {
       switchTo: "English",
