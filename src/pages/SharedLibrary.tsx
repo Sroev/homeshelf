@@ -53,12 +53,14 @@ export default function SharedLibrary() {
     name: z.string().trim().min(1, t.profile.displayNameRequired).max(100),
     email: z.string().trim().email().max(255),
     message: z.string().trim().max(500).optional(),
+    proposed_return_date: z.string().optional(),
   });
 
   const [requestingBook, setRequestingBook] = useState<SharedBook | null>(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [proposedReturnDate, setProposedReturnDate] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<{ name?: string; email?: string; message?: string }>({});
   const [successInfo, setSuccessInfo] = useState<{
@@ -86,7 +88,12 @@ export default function SharedLibrary() {
     if (!requestingBook || !data) return;
 
     // Validate
-    const result = requestSchema.safeParse({ name, email, message: message || undefined });
+    const result = requestSchema.safeParse({
+      name,
+      email,
+      message: message || undefined,
+      proposed_return_date: proposedReturnDate || undefined,
+    });
     if (!result.success) {
       const fieldErrors: { name?: string; email?: string; message?: string } = {};
       result.error.errors.forEach((err) => {
@@ -109,6 +116,7 @@ export default function SharedLibrary() {
           requester_name: result.data.name,
           requester_email: result.data.email,
           message: result.data.message || null,
+          proposed_return_date: result.data.proposed_return_date || null,
         },
       });
 
@@ -127,6 +135,7 @@ export default function SharedLibrary() {
       setName("");
       setEmail("");
       setMessage("");
+      setProposedReturnDate("");
     } catch (err) {
       toast({
         title: t.sharedLibrary.requestFailed,
@@ -317,6 +326,17 @@ export default function SharedLibrary() {
                 maxLength={500}
               />
               {errors.message && <p className="text-xs text-destructive">{errors.message}</p>}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="req-return-date">{t.sharedLibrary.proposedReturnDate}</Label>
+              <Input
+                id="req-return-date"
+                type="date"
+                value={proposedReturnDate}
+                onChange={(e) => setProposedReturnDate(e.target.value)}
+                min={new Date().toISOString().slice(0, 10)}
+              />
+              <p className="text-xs text-muted-foreground">{t.sharedLibrary.proposedReturnDateHelp}</p>
             </div>
           </div>
           <DialogFooter>
