@@ -181,7 +181,29 @@ export const translations = {
       addedPartial: "Добавени {count} книги преди грешката",
       bulkAddButton: "Добави цял рафт",
     },
-    
+
+    // Loan history
+    loanHistory: {
+      title: "История на заемите",
+      addEntry: "Добави запис",
+      borrower: "Заемащ",
+      lentAt: "Дадена на",
+      returnedAt: "Върната на",
+      notes: "Бележки",
+      save: "Запази",
+      cancel: "Отказ",
+      saved: "Записът е запазен",
+      saveFailed: "Неуспешно запазване",
+      deleted: "Записът е изтрит",
+      empty: "Все още няма история на заемите",
+      loading: "Зареждане...",
+      active: "Активен",
+      returned: "Върната",
+      markReturned: "Маркирай като върната",
+      markedReturned: "Маркирана като върната",
+      borrowerAndDateRequired: "Името на заемащия и датата са задължителни",
+    },
+
     // Share
     share: {
       title: "Сподели библиотеката си",
@@ -645,7 +667,29 @@ export const translations = {
       addedPartial: "Added {count} books before the error",
       bulkAddButton: "Add whole shelf",
     },
-    
+
+    // Loan history
+    loanHistory: {
+      title: "Loan history",
+      addEntry: "Add entry",
+      borrower: "Borrower",
+      lentAt: "Lent on",
+      returnedAt: "Returned on",
+      notes: "Notes",
+      save: "Save",
+      cancel: "Cancel",
+      saved: "Entry saved",
+      saveFailed: "Failed to save",
+      deleted: "Entry deleted",
+      empty: "No loan history yet",
+      loading: "Loading...",
+      active: "Active",
+      returned: "Returned",
+      markReturned: "Mark as returned",
+      markedReturned: "Marked as returned",
+      borrowerAndDateRequired: "Borrower name and date are required",
+    },
+
     // Share
     share: {
       title: "Share Your Library",
