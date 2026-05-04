@@ -250,7 +250,15 @@ export default function Landing() {
             <p className="text-sm text-muted-foreground text-center max-w-md">
               {l.footerTagline}
             </p>
-            <LanguageToggle variant="compact" />
+            <div className="flex items-center gap-4">
+              <Link
+                to="/changelog"
+                className="text-sm text-muted-foreground hover:text-primary transition-colors"
+              >
+                Changelog
+              </Link>
+              <LanguageToggle variant="compact" />
+            </div>
           </div>
         </div>
       </footer>
