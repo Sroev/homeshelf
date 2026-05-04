@@ -410,6 +410,9 @@ export const translations = {
       deleteBook: "Изтрий книга",
       deleteBookConfirm: "Сигурен ли си, че искаш да изтриеш",
       cannotBeUndone: "Това действие не може да бъде отменено.",
+      genre: "Жанр",
+      genrePlaceholder: "Избери жанр",
+      noGenre: "Без жанр",
     },
     
     // Admin
@@ -910,6 +913,9 @@ export const translations = {
       deleteBook: "Delete Book",
       deleteBookConfirm: "Are you sure you want to delete",
       cannotBeUndone: "This action cannot be undone.",
+      genre: "Genre",
+      genrePlaceholder: "Choose genre",
+      noGenre: "No genre",
     },
     
     // Admin
