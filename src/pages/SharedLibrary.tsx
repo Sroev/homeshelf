@@ -15,6 +15,8 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { supabase } from "@/integrations/supabase/client";
 import { z } from "zod";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { GENRE_KEYS } from "@/lib/genres";
 
 interface SharedBook {
   id: string;
@@ -22,6 +24,7 @@ interface SharedBook {
   author: string | null;
   status: "available" | "lent_out" | "reading";
   cover_url: string | null;
+  genre: string | null;
 }
 
 interface SharedLibraryData {
@@ -69,6 +72,7 @@ export default function SharedLibrary() {
     waitlistPosition: number | null;
   } | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [genreFilter, setGenreFilter] = useState<string>("all");
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["shared-library", token],
@@ -88,13 +92,24 @@ export default function SharedLibrary() {
   const filteredBooks = useMemo(() => {
     if (!data?.books) return [];
     const q = searchQuery.trim().toLowerCase();
-    if (!q) return data.books;
-    return data.books.filter(
-      (b) =>
+    return data.books.filter((b) => {
+      const matchesSearch =
+        !q ||
         b.title.toLowerCase().includes(q) ||
-        (b.author?.toLowerCase().includes(q) ?? false)
-    );
-  }, [data?.books, searchQuery]);
+        (b.author?.toLowerCase().includes(q) ?? false);
+      const matchesGenre = genreFilter === "all" || b.genre === genreFilter;
+      return matchesSearch && matchesGenre;
+    });
+  }, [data?.books, searchQuery, genreFilter]);
+
+  const availableGenres = useMemo(() => {
+    if (!data?.books) return [] as string[];
+    const set = new Set<string>();
+    data.books.forEach((b) => {
+      if (b.genre) set.add(b.genre);
+    });
+    return GENRE_KEYS.filter((g) => set.has(g));
+  }, [data?.books]);
 
   const handleSubmitRequest = async () => {
     if (!requestingBook || !data) return;
