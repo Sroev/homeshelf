@@ -384,6 +384,8 @@ export const translations = {
       searchPlaceholder: "Търсене по заглавие или автор...",
       noSearchResults: "Няма намерени книги за търсенето ти.",
       clearSearch: "Изчисти търсенето",
+      allGenres: "Всички жанрове",
+      filterByGenre: "Филтър по жанр",
     },
     
     // Common
@@ -882,6 +884,8 @@ export const translations = {
       searchPlaceholder: "Search by title or author...",
       noSearchResults: "No books match your search.",
       clearSearch: "Clear search",
+      allGenres: "All genres",
+      filterByGenre: "Filter by genre",
     },
     
     // Common
