@@ -381,6 +381,9 @@ export const translations = {
       footerCtaLink: "ти",
       proposedReturnDate: "Очаквана дата за връщане (по избор)",
       proposedReturnDateHelp: "Помогни на собственика, като посочиш кога планираш да върнеш книгата.",
+      searchPlaceholder: "Търсене по заглавие или автор...",
+      noSearchResults: "Няма намерени книги за търсенето ти.",
+      clearSearch: "Изчисти търсенето",
     },
     
     // Common
@@ -876,6 +879,9 @@ export const translations = {
       footerCtaLink: "too",
       proposedReturnDate: "Proposed return date (optional)",
       proposedReturnDateHelp: "Help the owner by indicating when you plan to return the book.",
+      searchPlaceholder: "Search by title or author...",
+      noSearchResults: "No books match your search.",
+      clearSearch: "Clear search",
     },
     
     // Common
