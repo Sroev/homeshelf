@@ -62,7 +62,7 @@ serve(async (req) => {
     // Get shareable books (not unavailable)
     const { data: books, error: booksError } = await supabase
       .from("books")
-      .select("id, title, author, status, cover_url")
+      .select("id, title, author, status, cover_url, genre")
       .eq("library_id", library.id)
       .eq("shareable", true)
       .neq("status", "unavailable")
