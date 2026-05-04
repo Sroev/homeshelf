@@ -6,6 +6,9 @@ export interface LoanRecord {
   book_id: string;
   library_id: string;
   borrower_name: string;
+  borrower_email: string | null;
+  due_date: string | null;
+  last_reminder_sent_at: string | null;
   lent_at: string;
   returned_at: string | null;
   notes: string | null;
@@ -37,6 +40,8 @@ export function useCreateLoanRecord() {
       book_id: string;
       library_id: string;
       borrower_name: string;
+      borrower_email?: string | null;
+      due_date?: string | null;
       lent_at: string;
       returned_at?: string | null;
       notes?: string | null;
