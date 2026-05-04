@@ -249,7 +249,8 @@ export default function SharedLibrary() {
                 {filteredBooks.length} / {data.books.length}{" "}
                 {data.books.length !== 1 ? t.sharedLibrary.booksAvailablePlural : t.sharedLibrary.booksAvailable}
               </p>
-              <div className="relative w-full sm:max-w-xs">
+              <div className="flex w-full flex-col gap-2 sm:max-w-md sm:flex-row">
+              <div className="relative w-full">
                 <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   type="search"
@@ -268,6 +269,22 @@ export default function SharedLibrary() {
                     <X className="h-4 w-4" />
                   </button>
                 )}
+              </div>
+              {availableGenres.length > 0 && (
+                <Select value={genreFilter} onValueChange={setGenreFilter}>
+                  <SelectTrigger className="w-full sm:w-48" aria-label={t.sharedLibrary.filterByGenre}>
+                    <SelectValue placeholder={t.sharedLibrary.filterByGenre} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">{t.sharedLibrary.allGenres}</SelectItem>
+                    {availableGenres.map((key) => (
+                      <SelectItem key={key} value={key}>
+                        {(t.genres as Record<string, string>)[key]}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
               </div>
             </div>
             {filteredBooks.length === 0 ? (
