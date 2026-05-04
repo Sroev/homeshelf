@@ -466,6 +466,22 @@ export default function Books() {
               />
             </div>
             <div className="space-y-2">
+              <Label htmlFor="edit-genre">{t.common.genre}</Label>
+              <Select value={editGenre || "__none__"} onValueChange={(v) => setEditGenre(v === "__none__" ? "" : v)}>
+                <SelectTrigger id="edit-genre">
+                  <SelectValue placeholder={t.common.genrePlaceholder} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="__none__">{t.common.noGenre}</SelectItem>
+                  {GENRE_KEYS.map((key) => (
+                    <SelectItem key={key} value={key}>
+                      {(t.genres as Record<string, string>)[key]}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
               <Label>{t.common.status}</Label>
               <Select value={editStatus} onValueChange={(v) => setEditStatus(v as BookStatus)}>
                 <SelectTrigger>
