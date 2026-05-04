@@ -21,6 +21,11 @@ const ENTRIES: ChangelogEntry[] = [
     changes: [
       {
         type: "new",
+        bg: "Жанр на книгите – избор при добавяне и филтриране в споделената библиотека.",
+        en: "Book genre – set on each book and filter by it in the shared library.",
+      },
+      {
+        type: "new",
         bg: "Страница /changelog с история на промените.",
         en: "/changelog page with product history.",
       },
