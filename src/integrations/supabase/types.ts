@@ -19,6 +19,7 @@ export type Database = {
           author: string | null
           cover_url: string | null
           created_at: string
+          genre: string | null
           id: string
           isbn: string | null
           lent_to: string | null
@@ -33,6 +34,7 @@ export type Database = {
           author?: string | null
           cover_url?: string | null
           created_at?: string
+          genre?: string | null
           id?: string
           isbn?: string | null
           lent_to?: string | null
@@ -47,6 +49,7 @@ export type Database = {
           author?: string | null
           cover_url?: string | null
           created_at?: string
+          genre?: string | null
           id?: string
           isbn?: string | null
           lent_to?: string | null

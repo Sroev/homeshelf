@@ -15,6 +15,8 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { supabase } from "@/integrations/supabase/client";
 import { z } from "zod";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { GENRE_KEYS } from "@/lib/genres";
 
 interface SharedBook {
   id: string;
@@ -22,6 +24,7 @@ interface SharedBook {
   author: string | null;
   status: "available" | "lent_out" | "reading";
   cover_url: string | null;
+  genre: string | null;
 }
 
 interface SharedLibraryData {
@@ -69,6 +72,7 @@ export default function SharedLibrary() {
     waitlistPosition: number | null;
   } | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [genreFilter, setGenreFilter] = useState<string>("all");
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["shared-library", token],
@@ -88,13 +92,24 @@ export default function SharedLibrary() {
   const filteredBooks = useMemo(() => {
     if (!data?.books) return [];
     const q = searchQuery.trim().toLowerCase();
-    if (!q) return data.books;
-    return data.books.filter(
-      (b) =>
+    return data.books.filter((b) => {
+      const matchesSearch =
+        !q ||
         b.title.toLowerCase().includes(q) ||
-        (b.author?.toLowerCase().includes(q) ?? false)
-    );
-  }, [data?.books, searchQuery]);
+        (b.author?.toLowerCase().includes(q) ?? false);
+      const matchesGenre = genreFilter === "all" || b.genre === genreFilter;
+      return matchesSearch && matchesGenre;
+    });
+  }, [data?.books, searchQuery, genreFilter]);
+
+  const availableGenres = useMemo(() => {
+    if (!data?.books) return [] as string[];
+    const set = new Set<string>();
+    data.books.forEach((b) => {
+      if (b.genre) set.add(b.genre);
+    });
+    return GENRE_KEYS.filter((g) => set.has(g));
+  }, [data?.books]);
 
   const handleSubmitRequest = async () => {
     if (!requestingBook || !data) return;
@@ -234,7 +249,8 @@ export default function SharedLibrary() {
                 {filteredBooks.length} / {data.books.length}{" "}
                 {data.books.length !== 1 ? t.sharedLibrary.booksAvailablePlural : t.sharedLibrary.booksAvailable}
               </p>
-              <div className="relative w-full sm:max-w-xs">
+              <div className="flex w-full flex-col gap-2 sm:max-w-md sm:flex-row">
+              <div className="relative w-full">
                 <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   type="search"
@@ -253,6 +269,22 @@ export default function SharedLibrary() {
                     <X className="h-4 w-4" />
                   </button>
                 )}
+              </div>
+              {availableGenres.length > 0 && (
+                <Select value={genreFilter} onValueChange={setGenreFilter}>
+                  <SelectTrigger className="w-full sm:w-48" aria-label={t.sharedLibrary.filterByGenre}>
+                    <SelectValue placeholder={t.sharedLibrary.filterByGenre} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">{t.sharedLibrary.allGenres}</SelectItem>
+                    {availableGenres.map((key) => (
+                      <SelectItem key={key} value={key}>
+                        {(t.genres as Record<string, string>)[key]}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
               </div>
             </div>
             {filteredBooks.length === 0 ? (
@@ -290,9 +322,16 @@ export default function SharedLibrary() {
                     )}
                   </CardHeader>
                   <CardContent className="space-y-3 p-3 pt-0">
-                    <Badge className={statusColors[book.status]}>
-                      {statusLabels[book.status]}
-                    </Badge>
+                    <div className="flex flex-wrap gap-1">
+                      <Badge className={statusColors[book.status]}>
+                        {statusLabels[book.status]}
+                      </Badge>
+                      {book.genre && (
+                        <Badge variant="outline">
+                          {(t.genres as Record<string, string>)[book.genre] ?? book.genre}
+                        </Badge>
+                      )}
+                    </div>
                     <Button
                       className="w-full"
                       variant="outline"

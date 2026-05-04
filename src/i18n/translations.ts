@@ -384,6 +384,8 @@ export const translations = {
       searchPlaceholder: "Търсене по заглавие или автор...",
       noSearchResults: "Няма намерени книги за търсенето ти.",
       clearSearch: "Изчисти търсенето",
+      allGenres: "Всички жанрове",
+      filterByGenre: "Филтър по жанр",
     },
     
     // Common
@@ -408,6 +410,9 @@ export const translations = {
       deleteBook: "Изтрий книга",
       deleteBookConfirm: "Сигурен ли си, че искаш да изтриеш",
       cannotBeUndone: "Това действие не може да бъде отменено.",
+      genre: "Жанр",
+      genrePlaceholder: "Избери жанр",
+      noGenre: "Без жанр",
     },
     
     // Admin
@@ -488,6 +493,34 @@ export const translations = {
       next: "Напред",
       finish: "Започни",
       saving: "Запазване...",
+    },
+
+    // Genres
+    genres: {
+      fiction: "Художествена",
+      nonfiction: "Документална",
+      mystery: "Мистерия",
+      thriller: "Трилър",
+      romance: "Романтика",
+      fantasy: "Фентъзи",
+      scifi: "Научна фантастика",
+      biography: "Биография",
+      history: "История",
+      selfhelp: "Самоусъвършенстване",
+      business: "Бизнес",
+      children: "Детска",
+      youngadult: "Младежка",
+      poetry: "Поезия",
+      classic: "Класика",
+      horror: "Хорър",
+      science: "Наука",
+      philosophy: "Философия",
+      religion: "Религия",
+      cookbook: "Готварска",
+      travel: "Пътуване",
+      art: "Изкуство",
+      comics: "Комикси",
+      other: "Друго",
     },
 
     // Language
@@ -882,6 +915,8 @@ export const translations = {
       searchPlaceholder: "Search by title or author...",
       noSearchResults: "No books match your search.",
       clearSearch: "Clear search",
+      allGenres: "All genres",
+      filterByGenre: "Filter by genre",
     },
     
     // Common
@@ -906,6 +941,9 @@ export const translations = {
       deleteBook: "Delete Book",
       deleteBookConfirm: "Are you sure you want to delete",
       cannotBeUndone: "This action cannot be undone.",
+      genre: "Genre",
+      genrePlaceholder: "Choose genre",
+      noGenre: "No genre",
     },
     
     // Admin
@@ -986,6 +1024,34 @@ export const translations = {
       next: "Next",
       finish: "Get started",
       saving: "Saving...",
+    },
+
+    // Genres
+    genres: {
+      fiction: "Fiction",
+      nonfiction: "Non-fiction",
+      mystery: "Mystery",
+      thriller: "Thriller",
+      romance: "Romance",
+      fantasy: "Fantasy",
+      scifi: "Science Fiction",
+      biography: "Biography",
+      history: "History",
+      selfhelp: "Self-help",
+      business: "Business",
+      children: "Children",
+      youngadult: "Young Adult",
+      poetry: "Poetry",
+      classic: "Classic",
+      horror: "Horror",
+      science: "Science",
+      philosophy: "Philosophy",
+      religion: "Religion",
+      cookbook: "Cookbook",
+      travel: "Travel",
+      art: "Art",
+      comics: "Comics",
+      other: "Other",
     },
 
     // Language

@@ -20,6 +20,7 @@ import { BulkAddBooks } from "@/components/BulkAddBooks";
 import { BookCoverUpload } from "@/components/BookCoverUpload";
 import { LoanHistory } from "@/components/LoanHistory";
 import { supabase } from "@/integrations/supabase/client";
+import { GENRE_KEYS } from "@/lib/genres";
 
 type BookStatus = Database["public"]["Enums"]["book_status"];
 
@@ -61,6 +62,7 @@ export default function Books() {
   const [editShareable, setEditShareable] = useState(true);
   const [editLentTo, setEditLentTo] = useState("");
   const [editCoverUrl, setEditCoverUrl] = useState<string | null>(null);
+  const [editGenre, setEditGenre] = useState<string>("");
 
   const filteredBooks = books?.filter((book) => {
     const matchesSearch =
@@ -152,6 +154,7 @@ export default function Books() {
     setEditShareable(book.shareable);
     setEditLentTo(book.lent_to || "");
     setEditCoverUrl(book.cover_url || null);
+    setEditGenre(book.genre || "");
   };
 
   const handleEditSubmit = async () => {
@@ -171,6 +174,7 @@ export default function Books() {
         shareable: editShareable,
         lent_to: editStatus === "lent_out" ? (editLentTo.trim() || null) : null,
         cover_url: editCoverUrl,
+        genre: editGenre || null,
         notifyWaitlist: wasUnavailable && becomingAvailable,
       });
       
@@ -460,6 +464,22 @@ export default function Books() {
                 onChange={(e) => setEditNotes(e.target.value)}
                 rows={3}
               />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-genre">{t.common.genre}</Label>
+              <Select value={editGenre || "__none__"} onValueChange={(v) => setEditGenre(v === "__none__" ? "" : v)}>
+                <SelectTrigger id="edit-genre">
+                  <SelectValue placeholder={t.common.genrePlaceholder} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="__none__">{t.common.noGenre}</SelectItem>
+                  {GENRE_KEYS.map((key) => (
+                    <SelectItem key={key} value={key}>
+                      {(t.genres as Record<string, string>)[key]}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div className="space-y-2">
               <Label>{t.common.status}</Label>

@@ -16,6 +16,7 @@ export interface Book {
   shareable: boolean;
   lent_to: string | null;
   cover_url: string | null;
+  genre: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -28,6 +29,7 @@ export interface CreateBookInput {
   status?: BookStatus;
   shareable?: boolean;
   cover_url?: string;
+  genre?: string;
 }
 
 export function useBooks() {
@@ -89,6 +91,7 @@ export function useCreateBook() {
           status: input.status || "available",
           shareable: input.shareable ?? true,
           cover_url: input.cover_url || null,
+          genre: input.genre || null,
         })
         .select()
         .single();
