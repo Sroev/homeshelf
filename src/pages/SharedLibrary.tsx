@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { Book, MapPin, Send, Clock, CheckCircle, AlertCircle } from "lucide-react";
+import { Book, MapPin, Send, Clock, CheckCircle, AlertCircle, Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -68,6 +68,7 @@ export default function SharedLibrary() {
     ownerName: string;
     waitlistPosition: number | null;
   } | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["shared-library", token],
@@ -83,6 +84,17 @@ export default function SharedLibrary() {
     enabled: !!token,
     retry: false,
   });
+
+  const filteredBooks = useMemo(() => {
+    if (!data?.books) return [];
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return data.books;
+    return data.books.filter(
+      (b) =>
+        b.title.toLowerCase().includes(q) ||
+        (b.author?.toLowerCase().includes(q) ?? false)
+    );
+  }, [data?.books, searchQuery]);
 
   const handleSubmitRequest = async () => {
     if (!requestingBook || !data) return;
@@ -217,11 +229,44 @@ export default function SharedLibrary() {
       <main className="container mx-auto px-4 py-8">
         {data.books.length > 0 ? (
           <>
-            <p className="mb-6 text-muted-foreground">
-              {data.books.length} {data.books.length !== 1 ? t.sharedLibrary.booksAvailablePlural : t.sharedLibrary.booksAvailable}
-            </p>
+            <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-muted-foreground">
+                {filteredBooks.length} / {data.books.length}{" "}
+                {data.books.length !== 1 ? t.sharedLibrary.booksAvailablePlural : t.sharedLibrary.booksAvailable}
+              </p>
+              <div className="relative w-full sm:max-w-xs">
+                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  type="search"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder={t.sharedLibrary.searchPlaceholder}
+                  className="pl-9 pr-9"
+                />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery("")}
+                    aria-label={t.sharedLibrary.clearSearch}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-muted-foreground hover:text-foreground"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                )}
+              </div>
+            </div>
+            {filteredBooks.length === 0 ? (
+              <Card className="border-dashed">
+                <CardContent className="flex flex-col items-center justify-center py-12">
+                  <Search className="h-12 w-12 text-muted-foreground" />
+                  <p className="mt-4 text-center text-sm text-muted-foreground">
+                    {t.sharedLibrary.noSearchResults}
+                  </p>
+                </CardContent>
+              </Card>
+            ) : (
             <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-            {data.books.map((book) => (
+            {filteredBooks.map((book) => (
                 <Card key={book.id} className="flex flex-col overflow-hidden max-w-[180px]">
                   {book.cover_url ? (
                     <div className="aspect-[2/3] w-full overflow-hidden bg-muted">
@@ -260,6 +305,7 @@ export default function SharedLibrary() {
                 </Card>
               ))}
             </div>
+            )}
           </>
         ) : (
           <Card className="border-dashed">
