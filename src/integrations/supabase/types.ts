@@ -105,9 +105,12 @@ export type Database = {
       loan_history: {
         Row: {
           book_id: string
+          borrower_email: string | null
           borrower_name: string
           created_at: string
+          due_date: string | null
           id: string
+          last_reminder_sent_at: string | null
           lent_at: string
           library_id: string
           notes: string | null
@@ -116,9 +119,12 @@ export type Database = {
         }
         Insert: {
           book_id: string
+          borrower_email?: string | null
           borrower_name: string
           created_at?: string
+          due_date?: string | null
           id?: string
+          last_reminder_sent_at?: string | null
           lent_at?: string
           library_id: string
           notes?: string | null
@@ -127,9 +133,12 @@ export type Database = {
         }
         Update: {
           book_id?: string
+          borrower_email?: string | null
           borrower_name?: string
           created_at?: string
+          due_date?: string | null
           id?: string
+          last_reminder_sent_at?: string | null
           lent_at?: string
           library_id?: string
           notes?: string | null
@@ -184,6 +193,7 @@ export type Database = {
           id: string
           library_id: string
           message: string | null
+          proposed_return_date: string | null
           requester_email: string
           requester_name: string
           status: Database["public"]["Enums"]["request_status"]
@@ -195,6 +205,7 @@ export type Database = {
           id?: string
           library_id: string
           message?: string | null
+          proposed_return_date?: string | null
           requester_email: string
           requester_name: string
           status?: Database["public"]["Enums"]["request_status"]
@@ -206,6 +217,7 @@ export type Database = {
           id?: string
           library_id?: string
           message?: string | null
+          proposed_return_date?: string | null
           requester_email?: string
           requester_name?: string
           status?: Database["public"]["Enums"]["request_status"]
