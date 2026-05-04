@@ -202,6 +202,13 @@ export const translations = {
       markReturned: "Маркирай като върната",
       markedReturned: "Маркирана като върната",
       borrowerAndDateRequired: "Името на заемащия и датата са задължителни",
+      borrowerEmail: "Имейл на заемащия",
+      dueDate: "Очаквано връщане",
+      lastReminder: "Последно напомняне",
+      sendReminder: "Изпрати напомняне за връщане",
+      reminderSent: "Напомнянето е изпратено",
+      reminderFailed: "Неуспешно изпращане на напомняне",
+      reminderNoEmail: "Няма имейл на заемащия за този запис",
     },
 
     // Share
@@ -688,6 +695,13 @@ export const translations = {
       markReturned: "Mark as returned",
       markedReturned: "Marked as returned",
       borrowerAndDateRequired: "Borrower name and date are required",
+      borrowerEmail: "Borrower email",
+      dueDate: "Due date",
+      lastReminder: "Last reminder",
+      sendReminder: "Send return reminder",
+      reminderSent: "Reminder sent",
+      reminderFailed: "Failed to send reminder",
+      reminderNoEmail: "No borrower email on file for this entry",
     },
 
     // Share
