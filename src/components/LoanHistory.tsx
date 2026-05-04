@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Trash2, Check, Pencil, X } from "lucide-react";
+import { Plus, Trash2, Check, Pencil, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { useLoanHistory, useCreateLoanRecord, useUpdateLoanRecord, useDeleteLoanRecord, LoanRecord } from "@/hooks/useLoanHistory";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Props {
   bookId: string;
@@ -33,14 +34,19 @@ export function LoanHistory({ bookId, libraryId }: Props) {
 
   const [adding, setAdding] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [sendingReminderId, setSendingReminderId] = useState<string | null>(null);
 
   const [borrower, setBorrower] = useState("");
+  const [borrowerEmail, setBorrowerEmail] = useState("");
+  const [dueDate, setDueDate] = useState("");
   const [lentAt, setLentAt] = useState(toDateInput(new Date().toISOString()));
   const [returnedAt, setReturnedAt] = useState("");
   const [notes, setNotes] = useState("");
 
   const resetForm = () => {
     setBorrower("");
+    setBorrowerEmail("");
+    setDueDate("");
     setLentAt(toDateInput(new Date().toISOString()));
     setReturnedAt("");
     setNotes("");
@@ -54,6 +60,8 @@ export function LoanHistory({ bookId, libraryId }: Props) {
 
   const startEdit = (r: LoanRecord) => {
     setBorrower(r.borrower_name);
+    setBorrowerEmail(r.borrower_email || "");
+    setDueDate(toDateInput(r.due_date));
     setLentAt(toDateInput(r.lent_at));
     setReturnedAt(toDateInput(r.returned_at));
     setNotes(r.notes || "");
@@ -78,6 +86,8 @@ export function LoanHistory({ bookId, libraryId }: Props) {
           id: editingId,
           book_id: bookId,
           borrower_name: borrower.trim(),
+          borrower_email: borrowerEmail.trim() || null,
+          due_date: dueDate ? fromDateInput(dueDate) : null,
           lent_at: fromDateInput(lentAt),
           returned_at: returnedAt ? fromDateInput(returnedAt) : null,
           notes: notes.trim() || null,
@@ -87,6 +97,8 @@ export function LoanHistory({ bookId, libraryId }: Props) {
           book_id: bookId,
           library_id: libraryId,
           borrower_name: borrower.trim(),
+          borrower_email: borrowerEmail.trim() || null,
+          due_date: dueDate ? fromDateInput(dueDate) : null,
           lent_at: fromDateInput(lentAt),
           returned_at: returnedAt ? fromDateInput(returnedAt) : null,
           notes: notes.trim() || null,
@@ -121,6 +133,30 @@ export function LoanHistory({ bookId, libraryId }: Props) {
     }
   };
 
+  const sendReminder = async (r: LoanRecord) => {
+    if (!r.borrower_email) {
+      toast({ title: t.loanHistory.reminderNoEmail, variant: "destructive" });
+      return;
+    }
+    setSendingReminderId(r.id);
+    try {
+      const { data, error } = await supabase.functions.invoke("send-return-reminder", {
+        body: { loan_id: r.id },
+      });
+      if (error) throw error;
+      if ((data as any)?.error) throw new Error((data as any).error);
+      toast({ title: t.loanHistory.reminderSent });
+    } catch (err) {
+      toast({
+        title: t.loanHistory.reminderFailed,
+        description: err instanceof Error ? err.message : undefined,
+        variant: "destructive",
+      });
+    } finally {
+      setSendingReminderId(null);
+    }
+  };
+
   const fmt = (iso: string | null) =>
     iso ? new Date(iso).toLocaleDateString(language === "bg" ? "bg-BG" : "en-US") : "—";
 
@@ -140,6 +176,16 @@ export function LoanHistory({ bookId, libraryId }: Props) {
           <div className="space-y-1">
             <Label htmlFor="lh-borrower" className="text-xs">{t.loanHistory.borrower}</Label>
             <Input id="lh-borrower" value={borrower} onChange={(e) => setBorrower(e.target.value)} />
+          </div>
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            <div className="space-y-1">
+              <Label htmlFor="lh-email" className="text-xs">{t.loanHistory.borrowerEmail}</Label>
+              <Input id="lh-email" type="email" value={borrowerEmail} onChange={(e) => setBorrowerEmail(e.target.value)} placeholder="email@example.com" />
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="lh-due" className="text-xs">{t.loanHistory.dueDate}</Label>
+              <Input id="lh-due" type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
+            </div>
           </div>
           <div className="grid grid-cols-2 gap-2">
             <div className="space-y-1">
@@ -182,12 +228,38 @@ export function LoanHistory({ bookId, libraryId }: Props) {
                       </Badge>
                     )}
                   </div>
+                  {r.borrower_email && (
+                    <div className="mt-0.5 text-xs text-muted-foreground">{r.borrower_email}</div>
+                  )}
                   <div className="mt-1 text-xs text-muted-foreground">
                     {fmt(r.lent_at)} → {fmt(r.returned_at)}
                   </div>
+                  {r.due_date && !r.returned_at && (
+                    <div className="mt-0.5 text-xs text-muted-foreground">
+                      {t.loanHistory.dueDate}: {fmt(r.due_date)}
+                    </div>
+                  )}
+                  {r.last_reminder_sent_at && (
+                    <div className="mt-0.5 text-xs text-muted-foreground">
+                      {t.loanHistory.lastReminder}: {fmt(r.last_reminder_sent_at)}
+                    </div>
+                  )}
                   {r.notes && <div className="mt-1 text-xs text-muted-foreground">{r.notes}</div>}
                 </div>
                 <div className="flex shrink-0 gap-1">
+                  {!r.returned_at && r.borrower_email && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="h-7 w-7"
+                      onClick={() => sendReminder(r)}
+                      disabled={sendingReminderId === r.id}
+                      title={t.loanHistory.sendReminder}
+                    >
+                      <Mail className="h-3.5 w-3.5" />
+                    </Button>
+                  )}
                   {!r.returned_at && (
                     <Button type="button" variant="ghost" size="icon" className="h-7 w-7" onClick={() => markReturned(r)} title={t.loanHistory.markReturned}>
                       <Check className="h-3.5 w-3.5" />
