@@ -322,9 +322,16 @@ export default function SharedLibrary() {
                     )}
                   </CardHeader>
                   <CardContent className="space-y-3 p-3 pt-0">
-                    <Badge className={statusColors[book.status]}>
-                      {statusLabels[book.status]}
-                    </Badge>
+                    <div className="flex flex-wrap gap-1">
+                      <Badge className={statusColors[book.status]}>
+                        {statusLabels[book.status]}
+                      </Badge>
+                      {book.genre && (
+                        <Badge variant="outline">
+                          {(t.genres as Record<string, string>)[book.genre] ?? book.genre}
+                        </Badge>
+                      )}
+                    </div>
                     <Button
                       className="w-full"
                       variant="outline"
