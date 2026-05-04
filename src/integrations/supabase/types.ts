@@ -102,6 +102,57 @@ export type Database = {
           },
         ]
       }
+      loan_history: {
+        Row: {
+          book_id: string
+          borrower_name: string
+          created_at: string
+          id: string
+          lent_at: string
+          library_id: string
+          notes: string | null
+          returned_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          book_id: string
+          borrower_name: string
+          created_at?: string
+          id?: string
+          lent_at?: string
+          library_id: string
+          notes?: string | null
+          returned_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          book_id?: string
+          borrower_name?: string
+          created_at?: string
+          id?: string
+          lent_at?: string
+          library_id?: string
+          notes?: string | null
+          returned_at?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "loan_history_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "books"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "loan_history_library_id_fkey"
+            columns: ["library_id"]
+            isOneToOne: false
+            referencedRelation: "libraries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           city: string | null
