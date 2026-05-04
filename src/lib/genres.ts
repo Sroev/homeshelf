@@ -1,0 +1,28 @@
+export const GENRE_KEYS = [
+  "fiction",
+  "nonfiction",
+  "mystery",
+  "thriller",
+  "romance",
+  "fantasy",
+  "scifi",
+  "biography",
+  "history",
+  "selfhelp",
+  "business",
+  "children",
+  "youngadult",
+  "poetry",
+  "classic",
+  "horror",
+  "science",
+  "philosophy",
+  "religion",
+  "cookbook",
+  "travel",
+  "art",
+  "comics",
+  "other",
+] as const;
+
+export type GenreKey = (typeof GENRE_KEYS)[number];
