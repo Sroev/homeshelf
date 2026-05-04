@@ -1026,6 +1026,34 @@ export const translations = {
       saving: "Saving...",
     },
 
+    // Genres
+    genres: {
+      fiction: "Fiction",
+      nonfiction: "Non-fiction",
+      mystery: "Mystery",
+      thriller: "Thriller",
+      romance: "Romance",
+      fantasy: "Fantasy",
+      scifi: "Science Fiction",
+      biography: "Biography",
+      history: "History",
+      selfhelp: "Self-help",
+      business: "Business",
+      children: "Children",
+      youngadult: "Young Adult",
+      poetry: "Poetry",
+      classic: "Classic",
+      horror: "Horror",
+      science: "Science",
+      philosophy: "Philosophy",
+      religion: "Religion",
+      cookbook: "Cookbook",
+      travel: "Travel",
+      art: "Art",
+      comics: "Comics",
+      other: "Other",
+    },
+
     // Language
     language: {
       switchTo: "Български",
