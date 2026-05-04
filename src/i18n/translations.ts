@@ -379,6 +379,8 @@ export const translations = {
       footerText: "Това е",
       footerCta: "Искаш ли и",
       footerCtaLink: "ти",
+      proposedReturnDate: "Очаквана дата за връщане (по избор)",
+      proposedReturnDateHelp: "Помогни на собственика, като посочиш кога планираш да върнеш книгата.",
     },
     
     // Common
@@ -872,6 +874,8 @@ export const translations = {
       footerText: "This is",
       footerCta: "Want one",
       footerCtaLink: "too",
+      proposedReturnDate: "Proposed return date (optional)",
+      proposedReturnDateHelp: "Help the owner by indicating when you plan to return the book.",
     },
     
     // Common
